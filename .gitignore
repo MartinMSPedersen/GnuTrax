@@ -4,3 +4,6 @@
 *.jar
 *.war
 *.ear
+
+# main project
+gnutrax.jar
