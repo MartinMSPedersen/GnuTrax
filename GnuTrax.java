@@ -1387,9 +1387,9 @@ public class GnuTrax
     while (true)
       {
 	if (tb.whoToMove () == Traxboard.WHITE)
-	  System.out.print ("White");
+	  System.out.print ("White ('o')");
 	else
-	  System.out.print ("Black");
+	  System.out.print ("Black ('#')");
 	System.out.print ("(");
 	//System.out.print(moveHistory.length+1);
 	System.out.print ("): ");
