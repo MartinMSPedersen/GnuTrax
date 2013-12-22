@@ -31,7 +31,7 @@ public class GnuTrax
       {
 	cp = new ComputerPlayerSimple ();
       }
-    if (computer_algorithme.equals ("uct"))
+    else if (computer_algorithme.equals ("uct"))
       {
 	cp = new ComputerPlayerUct ();
       }
