@@ -42,11 +42,11 @@ public class GnuTrax extends JFrame {
 		}
 		JPanel outerPanel = new JPanel();
 		outerPanel.setLayout(new GridLayout(8, 8));
-		imagePanel InnerPanel;
+		ImagePanel InnerPanel;
 
 		for (i = 0; i < 8; i++) {
 			for (j = 0; j < 8; j++) {
-				InnerPanel = new imagePanel(image[1 + (i + j) % 6]);
+				InnerPanel = new ImagePanel(image[1 + (i + j) % 6]);
 				outerPanel.add(InnerPanel);
 			}
 		}
