@@ -24,6 +24,7 @@ public class GnuTraxGui extends JFrame {
 		setMinimumSize(new Dimension(640, 640));
 		board = new ArrayList<ImagePanel>();
 		this.gnuTraxGame = new GnuTrax("simple");
+		this.gnuTraxGame.userNew();
 	}
 
 	public void setMove(int x, int y, BufferedImage image) {
@@ -33,6 +34,7 @@ public class GnuTraxGui extends JFrame {
 
 	public java.util.List<BufferedImage> getPossibleTilesForPosition(int x, int y) {
 		java.util.List<BufferedImage> possibleMoves = new ArrayList<BufferedImage>();
+		java.util.List<String> theMoves = this.gnuTraxGame.getPossibleMoves();
 		possibleMoves.add(image[Traxboard.NS]);
 		possibleMoves.add(image[Traxboard.EN]);
 		possibleMoves.add(image[Traxboard.ES]);

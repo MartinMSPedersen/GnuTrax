@@ -10,6 +10,7 @@ package org.traxgame;
 
  */
 import java.util.ArrayList;
+import java.util.List;
 
 public class GnuTrax {
 
@@ -481,7 +482,7 @@ public class GnuTrax {
 		;
 	}
 
-	private void userNew() {
+	public void userNew() {
 		tb = new Traxboard();
 		computerColour = Traxboard.BLACK;
 		/*
@@ -489,6 +490,10 @@ public class GnuTrax {
 		 */
 	}
 
+	public List<String> getPossibleMoves() {
+		return tb.uniqueMoves();
+	}
+	
 	private void userNoise(ArrayList<String> command) {
 		;
 	}
