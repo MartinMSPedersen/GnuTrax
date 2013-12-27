@@ -1,8 +1,0 @@
-The files easy.trx, medium.trx and hard.trx contains puzzles for the
-trax engine to solve.
-
-The engine should play all moves on the first line until the - 
-If the engine can compute one of the moves after the - then the
-puzzle is correct solved.
-
-Empty lines or lines starting with a # should be ignored

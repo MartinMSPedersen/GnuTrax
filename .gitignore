@@ -1,9 +1,0 @@
-*.class
-
-# Package Files #
-*.jar
-*.war
-*.ear
-
-# main project
-gnutrax.jar
