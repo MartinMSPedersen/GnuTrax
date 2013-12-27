@@ -5,6 +5,8 @@ import javax.swing.*;
 import java.awt.image.*;
 import java.io.*;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashSet;
 
 import javax.imageio.*;
 import org.traxgame.*;
@@ -17,7 +19,7 @@ public class GnuTraxGui extends JFrame {
 	private JPanel outerPanel;
 	private java.util.List<ImagePanel> board;
 	private GnuTrax gnuTraxGame;
-	
+
 	public GnuTraxGui() {
 		super("GnuTrax 1.0");
 		setResizable(false);
@@ -32,13 +34,36 @@ public class GnuTraxGui extends JFrame {
 		this.repaint();
 	}
 
-	public java.util.List<BufferedImage> getPossibleTilesForPosition(int x, int y) {
+	public java.util.List<BufferedImage> getPossibleTilesForPosition(int x,
+			int y) {
 		java.util.List<BufferedImage> possibleMoves = new ArrayList<BufferedImage>();
 		java.util.List<String> theMoves = this.gnuTraxGame.getPossibleMoves();
-		possibleMoves.add(image[Traxboard.NS]);
-		possibleMoves.add(image[Traxboard.EN]);
-		possibleMoves.add(image[Traxboard.ES]);
-		return possibleMoves;
+		for (String s : theMoves) {
+			String[] data = s.split("");
+			switch (data[3]) {
+			case "+":
+				possibleMoves.add(image[Traxboard.NS]);
+				possibleMoves.add(image[Traxboard.SN]);
+				possibleMoves.add(image[Traxboard.EW]);
+				possibleMoves.add(image[Traxboard.WE]);
+				break;
+			case "/":
+				possibleMoves.add(image[Traxboard.ES]);
+				possibleMoves.add(image[Traxboard.SE]);
+				possibleMoves.add(image[Traxboard.WN]);
+				possibleMoves.add(image[Traxboard.NW]);
+				break;
+			case "\\":
+				possibleMoves.add(image[Traxboard.EN]);
+				possibleMoves.add(image[Traxboard.NE]);
+				possibleMoves.add(image[Traxboard.SW]);
+				possibleMoves.add(image[Traxboard.WS]);
+				break;
+			}
+		}
+		HashSet hs = new HashSet<BufferedImage>();
+		hs.addAll(possibleMoves);
+		return new ArrayList<BufferedImage>(hs);
 	}
 
 	public void addComponentsToPane(final Container pane) {
