@@ -4,24 +4,46 @@ import java.awt.*;
 import javax.swing.*;
 import java.awt.image.*;
 import java.io.*;
+import java.util.ArrayList;
+
 import javax.imageio.*;
 import org.traxgame.*;
 
-public class GnuTrax extends JFrame {
+public class GnuTraxGui extends JFrame {
 
-	public GnuTrax() {
+	// TODO Store the images in another structure where image and some metadata
+	// can be combined.
+	private BufferedImage[] image;
+	private JPanel outerPanel;
+	private java.util.List<ImagePanel> board;
+	private GnuTrax gnuTraxGame;
+	
+	public GnuTraxGui() {
 		super("GnuTrax 1.0");
 		setResizable(false);
 		setMinimumSize(new Dimension(640, 640));
+		board = new ArrayList<ImagePanel>();
+		this.gnuTraxGame = new GnuTrax("simple");
+	}
+
+	public void setMove(int x, int y, BufferedImage image) {
+		board.get(x * 8 + y).setImage(image);
+		this.repaint();
+	}
+
+	public java.util.List<BufferedImage> getPossibleTilesForPosition(int x, int y) {
+		java.util.List<BufferedImage> possibleMoves = new ArrayList<BufferedImage>();
+		possibleMoves.add(image[Traxboard.NS]);
+		possibleMoves.add(image[Traxboard.EN]);
+		possibleMoves.add(image[Traxboard.ES]);
+		return possibleMoves;
 	}
 
 	public void addComponentsToPane(final Container pane) {
-		int i, j;
-		BufferedImage[] image = new BufferedImage[8];
+		image = new BufferedImage[8];
 		try {
 			image[Traxboard.NS] = ImageIO.read(getClass().getClassLoader()
 					.getResource("images/large/ns.gif")); // 80x80 gif
-															//
 			image[Traxboard.WE] = ImageIO.read(getClass().getClassLoader()
 					.getResource("images/large/we.gif")); // 80x80 gif
 			image[Traxboard.NW] = ImageIO.read(getClass().getClassLoader()
@@ -40,14 +62,15 @@ public class GnuTrax extends JFrame {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		JPanel outerPanel = new JPanel();
+		outerPanel = new JPanel();
 		outerPanel.setLayout(new GridLayout(8, 8));
-		ImagePanel InnerPanel;
+		ImagePanel innerPanel;
 
-		for (i = 0; i < 8; i++) {
-			for (j = 0; j < 8; j++) {
-				InnerPanel = new ImagePanel(image[1 + (i + j) % 6]);
-				outerPanel.add(InnerPanel);
+		for (int i = 0; i < 8; i++) {
+			for (int j = 0; j < 8; j++) {
+				innerPanel = new ImagePanel(image[Traxboard.EMPTY], this, i, j);
+				outerPanel.add(innerPanel);
+				board.add(innerPanel);
 			}
 		}
 		pane.add(outerPanel);
@@ -59,7 +82,7 @@ public class GnuTrax extends JFrame {
 	 */
 	private static void createAndShowGUI() {
 		// Create and set up the window.
-		GnuTrax frame = new GnuTrax();
+		GnuTraxGui frame = new GnuTraxGui();
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		// Set up the content pane.
 		frame.addComponentsToPane(frame.getContentPane());

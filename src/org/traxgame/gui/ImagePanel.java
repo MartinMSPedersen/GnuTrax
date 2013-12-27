@@ -1,33 +1,47 @@
 package org.traxgame.gui;
 
+import javax.swing.BorderFactory;
+import javax.swing.JDialog;
 import javax.swing.JPanel;
-import java.awt.event.MouseListener;
 import java.awt.image.*;
 import java.awt.*;
 
 public class ImagePanel extends JPanel {
-	BufferedImage image;
-
-	ImagePanel(BufferedImage image) {
+	private BufferedImage image;
+	private GnuTraxGui gnuTrax;
+	private int x,y;
+	
+	ImagePanel(BufferedImage image, GnuTraxGui gnuTrax, int x, int y) {
 		setImage(image);
+		this.gnuTrax = gnuTrax;
+		this.addMouseListener(new ImageClickHandler());
+		this.setBorder(BorderFactory.createLineBorder(Color.black));
+		this.x = x;
+		this.y = y;
 	}
 
 	ImagePanel() {
 		image = null;
 	}
 
+	public void showMovesDialog() {
+		java.util.List<BufferedImage> possibleMoves = gnuTrax.getPossibleTilesForPosition(this.x, this.y);
+		ChooseTile ct = new ChooseTile(this.gnuTrax, possibleMoves);
+		ct.setVisible(true);
+		this.gnuTrax.setMove(this.x, this.y, possibleMoves.get(ct.getChosenMove()));
+	}
+	
 	public void setImage(BufferedImage image) {
 		this.image = image;
+	}
+	
+	public BufferedImage getImage() {
+		return this.image;
 	}
 
 	protected void paintComponent(Graphics g) {
 		super.paintComponent(g);
 		g.drawImage(image, 0, 0, this);
-	}
-
-	public synchronized void addMouseListener(MouseListener l) {
-		System.out.println("image" + image);
-		super.addMouseListener(l);
 	}
 
 	public static final long serialVersionUID = 14362462L;
