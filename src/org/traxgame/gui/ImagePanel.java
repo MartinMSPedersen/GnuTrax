@@ -28,7 +28,9 @@ public class ImagePanel extends JPanel {
 		java.util.List<BufferedImage> possibleMoves = gnuTrax.getPossibleTilesForPosition(this.x, this.y);
 		ChooseTile ct = new ChooseTile(this.gnuTrax, possibleMoves);
 		ct.setVisible(true);
-		this.gnuTrax.setMove(this.x, this.y, possibleMoves.get(ct.getChosenMove()));
+		if (ct.getChosenMove() != -1) {
+			this.gnuTrax.setMove(this.x, this.y, possibleMoves.get(ct.getChosenMove()));
+		}
 	}
 	
 	public void setImage(BufferedImage image) {

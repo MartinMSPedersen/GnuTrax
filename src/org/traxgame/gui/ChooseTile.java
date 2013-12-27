@@ -22,9 +22,24 @@ public class ChooseTile extends JDialog {
 		super(owner, "Choose move", true);
 		this.possibleMoves = possibleMoves;
 		buttons = new JPanel();
+		chosenMove = -1;
 		buttons.setLayout(new BoxLayout(buttons, BoxLayout.X_AXIS));
 		for (int i = 0; i < possibleMoves.size(); i++) {
 			this.addImageButton(possibleMoves.get(i), i);
+		}
+		if (possibleMoves.size() == 0) {
+			JButton button;
+			button = new JButton();
+			button.setMargin(new Insets(0, 0, 0, 0));
+			button.setBorder(null);
+			button.setSize(90,90);
+			button.setText("No moves available");
+			button.addActionListener(new ActionListener() {
+	            public void actionPerformed(ActionEvent e) {
+	            	ChooseTile.this.setVisible(false);
+	            }
+	        });
+			buttons.add(button);
 		}
 		this.add(buttons);
 		this.pack();
