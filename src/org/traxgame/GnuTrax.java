@@ -54,6 +54,10 @@ public class GnuTrax {
 		computerColour = Traxboard.NOPLAYER;
 	}
 
+	public int getTileAt(int x, int y) {
+		return this.tb.getAt(x, y);
+	}
+	
 	void userAnnotate() {
 		;
 	}
@@ -82,6 +86,10 @@ public class GnuTrax {
 		;
 	}
 
+	public int isGameOver() {
+		return tb.isGameOver();
+	}
+	
 	private void userDisplay() {
 		System.out.println(tb);
 		System.out.println(tb.getBorder(false));
@@ -111,6 +119,16 @@ public class GnuTrax {
 		computerColour = tb.whoToMove();
 	}
 
+	public String getTheBoard() {
+		return this.tb.toString();
+	}
+	
+	public String makeComputerMove() {
+		String line;
+		line = cp.computerMove(tb);
+		return line;
+	}
+	
 	private void userHelp(ArrayList<String> command) {
 		String topic;
 
@@ -1007,7 +1025,7 @@ public class GnuTrax {
 		return false;
 	}
 
-	private void checkForWin() {
+	public void checkForWin() {
 		int gameValue;
 
 		gameValue = tb.isGameOver();
@@ -1031,16 +1049,11 @@ public class GnuTrax {
 		}
 	}
 
-	private void gotAMove(String theMove) {
-		try {
-			tb.makeMove(theMove);
-		} catch (IllegalMoveException e) {
-			System.out.println(theMove + ":  " + e);
-			return;
-		}
-		System.out.println(tb);
+	public void gotAMove(String theMove) throws IllegalMoveException {
+		tb.makeMove(theMove);
+		//System.out.println(tb);
 		/* (*moveHistory).push_back(theMove); */
-		checkForWin();
+		//checkForWin();
 	}
 
 	private static boolean pbem() {
@@ -1299,7 +1312,10 @@ public class GnuTrax {
 				continue;
 			} else {
 				if (tb.isGameOver() == Traxboard.NOPLAYER)
-					gotAMove(line);
+					try {
+						gotAMove(line);
+					} catch (IllegalMoveException ime)
+					{}
 			}
 		}
 	}

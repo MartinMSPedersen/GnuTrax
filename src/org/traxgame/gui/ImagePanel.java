@@ -25,7 +25,7 @@ public class ImagePanel extends JPanel {
 	}
 
 	public void showMovesDialog() {
-		java.util.List<BufferedImage> possibleMoves = gnuTrax.getPossibleTilesForPosition(this.x, this.y);
+		java.util.List<Tile> possibleMoves = gnuTrax.getPossibleTilesForPosition(this.x, this.y);
 		ChooseTile ct = new ChooseTile(this.gnuTrax, possibleMoves);
 		ct.setVisible(true);
 		if (ct.getChosenMove() != -1) {

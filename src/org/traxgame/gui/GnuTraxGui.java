@@ -13,9 +13,8 @@ import org.traxgame.*;
 
 public class GnuTraxGui extends JFrame {
 
-	// TODO Store the images in another structure where image and some metadata
-	// can be combined.
-	private BufferedImage[] image;
+	// TODO Remove all unneeded system.out
+	private Tile[] tiles;
 	private JPanel outerPanel;
 	private java.util.List<ImagePanel> board;
 	private GnuTrax gnuTraxGame;
@@ -23,79 +22,192 @@ public class GnuTraxGui extends JFrame {
 	public GnuTraxGui() {
 		super("GnuTrax 1.0");
 		setResizable(false);
-		setMinimumSize(new Dimension(640, 640));
+		setMinimumSize(new Dimension(720, 720));
 		board = new ArrayList<ImagePanel>();
 		this.gnuTraxGame = new GnuTrax("simple");
 		this.gnuTraxGame.userNew();
 	}
 
-	public void setMove(int x, int y, BufferedImage image) {
-		board.get(x * 8 + y).setImage(image);
-		this.repaint();
+	private String position(int x, int y, int tileType) {
+		StringBuilder sb = new StringBuilder();
+		System.out.println("POS: x: "+x+" Y: "+y);
+		switch (x) {
+		case 0:
+			sb.append("@");
+			break;
+		case 1:
+		case 2:
+		case 3:
+		case 4:
+		case 5:
+		case 6:
+		case 7:
+		case 8:
+			sb.append(Character.toString((char) (x - 1 + 65)));
+			break;
+		}
+		sb.append(y);
+		switch (tileType) {
+		case Traxboard.NS:
+		case Traxboard.EW:
+			sb.append("+");
+			break;
+		case Traxboard.SE:
+		case Traxboard.WN:
+			sb.append("/");
+			break;
+		case Traxboard.NE:
+		case Traxboard.WS:
+			sb.append("\\");
+			break;
+		}
+		System.out.println(sb.toString());
+		return sb.toString();
 	}
 
-	public java.util.List<BufferedImage> getPossibleTilesForPosition(int x,
-			int y) {
-		java.util.List<BufferedImage> possibleMoves = new ArrayList<BufferedImage>();
+	private void clearBoard() {
+		for (ImagePanel ip : board) {
+			ip.setImage(tiles[Traxboard.EMPTY].getImage());
+		}
+	}
+
+	private void drawBoard() {
+		for (int i = 0; i < 9; i++) {
+			for (int j = 0; j < 9; j++) {
+				board.get(i * 9 + j).setImage(
+						tiles[this.gnuTraxGame.getTileAt(i, j)].getImage());
+			}
+		}
+	}
+
+	private boolean checkForWinner() {
+		if (this.gnuTraxGame.isGameOver() != Traxboard.NOPLAYER) {
+			// Show message box with winner and if you want to
+			// play again
+			switch (this.gnuTraxGame.isGameOver()) {
+			case Traxboard.BLACK:
+				showNewGameDialog("black");
+				break;
+			case Traxboard.WHITE:
+				showNewGameDialog("white");
+				break;
+			default:
+				showNewGameDialog("everyone");
+			}
+			return true;
+		}
+		return false;
+	}
+
+	private void showNewGameDialog(String winner) {
+		JOptionPane.showMessageDialog(this, "Good game. The winner was "+winner, "Game Over", JOptionPane.INFORMATION_MESSAGE);
+	}
+	
+	public void setMove(int x, int y, Tile tile) {
+		boolean aiMayMove = false;
+		String theMove = position(x, y, tile.getTileType());
+		try {
+			this.gnuTraxGame.gotAMove(theMove);
+			board.get(x * 9 + y).setImage(tile.getImage());
+			clearBoard();
+			drawBoard();
+			aiMayMove = true;
+			this.repaint();
+			if (checkForWinner())
+				return;
+		} catch (IllegalMoveException ime) {
+			// Show message to the user and say try again
+			System.out.println("ERROR " + ime.getMessage()+"\nThe move: "+theMove);
+		}
+		if (aiMayMove) {
+			try {
+				System.out.println("AI is thinking....");
+				String aiMove = this.gnuTraxGame.makeComputerMove();
+				this.gnuTraxGame.gotAMove(aiMove);
+				System.out.println("AI had made its move");
+				clearBoard();
+				drawBoard();
+				this.repaint();
+				if (checkForWinner())
+					return;
+			} catch (IllegalMoveException ime) {
+				System.out.println("AI made an illegal move... very strange");
+			}
+		}
+		//System.out.println(this.gnuTraxGame.getTheBoard());
+	}
+
+	public java.util.List<Tile> getPossibleTilesForPosition(int x, int y) {
+		java.util.List<Tile> possibleMoves = new ArrayList<Tile>();
 		java.util.List<String> theMoves = this.gnuTraxGame.getPossibleMoves();
 		for (String s : theMoves) {
 			String[] data = s.split("");
 			switch (data[3]) {
 			case "+":
-				possibleMoves.add(image[Traxboard.NS]);
-				possibleMoves.add(image[Traxboard.SN]);
-				possibleMoves.add(image[Traxboard.EW]);
-				possibleMoves.add(image[Traxboard.WE]);
+				possibleMoves.add(tiles[Traxboard.NS]);
+				possibleMoves.add(tiles[Traxboard.SN]);
+				possibleMoves.add(tiles[Traxboard.EW]);
+				possibleMoves.add(tiles[Traxboard.WE]);
 				break;
 			case "/":
-				possibleMoves.add(image[Traxboard.ES]);
-				possibleMoves.add(image[Traxboard.SE]);
-				possibleMoves.add(image[Traxboard.WN]);
-				possibleMoves.add(image[Traxboard.NW]);
+				possibleMoves.add(tiles[Traxboard.ES]);
+				possibleMoves.add(tiles[Traxboard.SE]);
+				possibleMoves.add(tiles[Traxboard.WN]);
+				possibleMoves.add(tiles[Traxboard.NW]);
 				break;
 			case "\\":
-				possibleMoves.add(image[Traxboard.EN]);
-				possibleMoves.add(image[Traxboard.NE]);
-				possibleMoves.add(image[Traxboard.SW]);
-				possibleMoves.add(image[Traxboard.WS]);
+				possibleMoves.add(tiles[Traxboard.EN]);
+				possibleMoves.add(tiles[Traxboard.NE]);
+				possibleMoves.add(tiles[Traxboard.SW]);
+				possibleMoves.add(tiles[Traxboard.WS]);
 				break;
 			}
 		}
-		HashSet hs = new HashSet<BufferedImage>();
+		// TODO How to make the moves unique s.t. not to many are shown?
+		HashSet hs = new HashSet<Tile>();
 		hs.addAll(possibleMoves);
-		return new ArrayList<BufferedImage>(hs);
+		return new ArrayList<Tile>(hs);
 	}
 
 	public void addComponentsToPane(final Container pane) {
-		image = new BufferedImage[8];
+		tiles = new Tile[8];
 		try {
-			image[Traxboard.NS] = ImageIO.read(getClass().getClassLoader()
-					.getResource("images/large/ns.gif")); // 80x80 gif
-			image[Traxboard.WE] = ImageIO.read(getClass().getClassLoader()
-					.getResource("images/large/we.gif")); // 80x80 gif
-			image[Traxboard.NW] = ImageIO.read(getClass().getClassLoader()
-					.getResource("images/large/nw.gif")); // 80x80 gif
-			image[Traxboard.NE] = ImageIO.read(getClass().getClassLoader()
-					.getResource("images/large/ne.gif")); // 80x80 gif
-			image[Traxboard.WS] = ImageIO.read(getClass().getClassLoader()
-					.getResource("images/large/ws.gif")); // 80x80 gif
-			//
-			image[Traxboard.SE] = ImageIO.read(getClass().getClassLoader()
-					.getResource("images/large/se.gif")); // 80x80 gif
-			image[Traxboard.INVALID] = ImageIO.read(getClass().getClassLoader()
-					.getResource("images/large/invalid.gif")); // 80x80 gif
-			image[Traxboard.EMPTY] = ImageIO.read(getClass().getClassLoader()
-					.getResource("images/large/blank.gif")); // 80x80 gif
+
+			tiles[Traxboard.NS] = new Tile(ImageIO.read(getClass()
+					.getClassLoader().getResource("images/large/ns.gif")),
+					Traxboard.NS); // 80x80 gif
+			tiles[Traxboard.WE] = new Tile(ImageIO.read(getClass()
+					.getClassLoader().getResource("images/large/we.gif")),
+					Traxboard.WE); // 80x80 gif
+			tiles[Traxboard.NW] = new Tile(ImageIO.read(getClass()
+					.getClassLoader().getResource("images/large/nw.gif")),
+					Traxboard.NW); // 80x80 gif
+			tiles[Traxboard.NE] = new Tile(ImageIO.read(getClass()
+					.getClassLoader().getResource("images/large/ne.gif")),
+					Traxboard.NE); // 80x80 gif
+			tiles[Traxboard.WS] = new Tile(ImageIO.read(getClass()
+					.getClassLoader().getResource("images/large/ws.gif")),
+					Traxboard.WS); // 80x80 gif
+			tiles[Traxboard.SE] = new Tile(ImageIO.read(getClass()
+					.getClassLoader().getResource("images/large/se.gif")),
+					Traxboard.SE); // 80x80 gif
+			tiles[Traxboard.INVALID] = new Tile(ImageIO.read(getClass()
+					.getClassLoader().getResource("images/large/invalid.gif")),
+					Traxboard.INVALID); // 80x80 gif
+			tiles[Traxboard.EMPTY] = new Tile(ImageIO.read(getClass()
+					.getClassLoader().getResource("images/large/blank.gif")),
+					Traxboard.EMPTY); // 80x80 gif
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 		outerPanel = new JPanel();
-		outerPanel.setLayout(new GridLayout(8, 8));
+		outerPanel.setLayout(new GridLayout(9, 9));
 		ImagePanel innerPanel;
 
-		for (int i = 0; i < 8; i++) {
-			for (int j = 0; j < 8; j++) {
-				innerPanel = new ImagePanel(image[Traxboard.EMPTY], this, i, j);
+		for (int i = 0; i < 9; i++) {
+			for (int j = 0; j < 9; j++) {
+				innerPanel = new ImagePanel(tiles[Traxboard.EMPTY].getImage(),
+						this, j, i);
 				outerPanel.add(innerPanel);
 				board.add(innerPanel);
 			}

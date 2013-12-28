@@ -229,7 +229,7 @@ public class Traxboard {
 	public boolean isBlank(int row, int col) {
 		return (getAt(row, col) == EMPTY);
 	}
-
+	
 	@Override
 	public String toString() {
 		StringBuffer result = new StringBuffer(1000);

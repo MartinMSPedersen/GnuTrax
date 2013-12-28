@@ -14,11 +14,11 @@ import javax.swing.JPanel;
 
 public class ChooseTile extends JDialog {
 
-	private java.util.List<BufferedImage> possibleMoves;
+	private java.util.List<Tile> possibleMoves;
 	private JPanel buttons;
 	private int chosenMove;
 	
-	public ChooseTile(JFrame owner, java.util.List<BufferedImage> possibleMoves) {
+	public ChooseTile(JFrame owner, java.util.List<Tile> possibleMoves) {
 		super(owner, "Choose move", true);
 		this.possibleMoves = possibleMoves;
 		buttons = new JPanel();
@@ -49,13 +49,13 @@ public class ChooseTile extends JDialog {
 		return chosenMove;
 	}
 	
-	private void addImageButton(BufferedImage possibleMove, final int pos) {
+	private void addImageButton(Tile possibleMove, final int pos) {
 		JButton button;
 		button = new JButton();
 		button.setMargin(new Insets(0, 0, 0, 0));
 		button.setBorder(null);
 		button.setSize(90,90);
-		button.setIcon(new ImageIcon(possibleMove));
+		button.setIcon(new ImageIcon(possibleMove.getImage()));
 		button.setName(""+pos);
 		button.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
