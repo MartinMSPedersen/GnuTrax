@@ -57,7 +57,7 @@ public class GnuTrax {
 	public int getTileAt(int x, int y) {
 		return this.tb.getAt(x, y);
 	}
-	
+
 	void userAnnotate() {
 		;
 	}
@@ -89,7 +89,7 @@ public class GnuTrax {
 	public int isGameOver() {
 		return tb.isGameOver();
 	}
-	
+
 	private void userDisplay() {
 		System.out.println(tb);
 		System.out.println(tb.getBorder(false));
@@ -122,13 +122,13 @@ public class GnuTrax {
 	public String getTheBoard() {
 		return this.tb.toString();
 	}
-	
+
 	public String makeComputerMove() {
 		String line;
 		line = cp.computerMove(tb);
 		return line;
 	}
-	
+
 	private void userHelp(ArrayList<String> command) {
 		String topic;
 
@@ -511,7 +511,7 @@ public class GnuTrax {
 	public List<String> getPossibleMoves() {
 		return tb.uniqueMoves();
 	}
-	
+
 	private void userNoise(ArrayList<String> command) {
 		;
 	}
@@ -1051,9 +1051,9 @@ public class GnuTrax {
 
 	public void gotAMove(String theMove) throws IllegalMoveException {
 		tb.makeMove(theMove);
-		//System.out.println(tb);
+		// System.out.println(tb);
 		/* (*moveHistory).push_back(theMove); */
-		//checkForWin();
+		// checkForWin();
 	}
 
 	private static boolean pbem() {
@@ -1314,8 +1314,11 @@ public class GnuTrax {
 				if (tb.isGameOver() == Traxboard.NOPLAYER)
 					try {
 						gotAMove(line);
-					} catch (IllegalMoveException ime)
-					{}
+						System.out.println(tb);
+					} catch (IllegalMoveException ime) {
+						System.err.println("Illegal move. " + ime.getMessage());
+					}
+				checkForWin();
 			}
 		}
 	}
