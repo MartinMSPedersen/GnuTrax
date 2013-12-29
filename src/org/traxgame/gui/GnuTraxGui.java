@@ -24,10 +24,14 @@ public class GnuTraxGui extends JFrame {
 		setResizable(false);
 		setMinimumSize(new Dimension(720, 720));
 		board = new ArrayList<ImagePanel>();
-		this.gnuTraxGame = new GnuTrax("simple");
-		this.gnuTraxGame.userNew();
+		newGame("simple");
 	}
 
+	private void newGame(String ai) {
+		this.gnuTraxGame = new GnuTrax(ai);
+		this.gnuTraxGame.userNew();
+	}
+	
 	private String position(int x, int y, int tileType) {
 		StringBuilder sb = new StringBuilder();
 		System.out.println("POS: x: "+x+" Y: "+y);
@@ -206,12 +210,13 @@ public class GnuTraxGui extends JFrame {
 
 		for (int i = 0; i < 9; i++) {
 			for (int j = 0; j < 9; j++) {
-				innerPanel = new ImagePanel(tiles[Traxboard.EMPTY].getImage(),
+				innerPanel = new ImagePanel(tiles[Traxboard.INVALID].getImage(),
 						this, j, i);
 				outerPanel.add(innerPanel);
 				board.add(innerPanel);
 			}
 		}
+		board.get(0).setImage(tiles[Traxboard.EMPTY].getImage());
 		pane.add(outerPanel);
 	}
 
