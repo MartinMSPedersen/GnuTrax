@@ -18,11 +18,15 @@ public class GnuTraxGui extends JFrame {
 	private JPanel outerPanel;
 	private java.util.List<ImagePanel> board;
 	private GnuTrax gnuTraxGame;
+	private Loading loading;
+	private boolean isGameDone;
 
 	public GnuTraxGui() {
 		super("GnuTrax 1.0");
 		setResizable(false);
 		setMinimumSize(new Dimension(720, 720));
+		loading = new Loading();
+		loading.setVisible(false);
 		board = new ArrayList<ImagePanel>();
 		newGame("simple");
 	}
@@ -30,11 +34,19 @@ public class GnuTraxGui extends JFrame {
 	private void newGame(String ai) {
 		this.gnuTraxGame = new GnuTrax(ai);
 		this.gnuTraxGame.userNew();
+		isGameDone = false;
+		if (board != null && board.size() > 0) {
+			for (int i = 0; i < 81; i++) {
+				board.get(i).setImage(tiles[Traxboard.INVALID].getImage());
+			}
+			board.get(0).setImage(tiles[Traxboard.EMPTY].getImage());
+			this.repaint();
+		}
 	}
-	
+
 	private String position(int x, int y, int tileType) {
 		StringBuilder sb = new StringBuilder();
-		System.out.println("POS: x: "+x+" Y: "+y);
+		// System.out.println("POS: x: " + x + " Y: " + y);
 		switch (x) {
 		case 0:
 			sb.append("@");
@@ -65,7 +77,7 @@ public class GnuTraxGui extends JFrame {
 			sb.append("\\");
 			break;
 		}
-		System.out.println(sb.toString());
+		// System.out.println(sb.toString());
 		return sb.toString();
 	}
 
@@ -98,15 +110,57 @@ public class GnuTraxGui extends JFrame {
 			default:
 				showNewGameDialog("everyone");
 			}
+			isGameDone = true; 
 			return true;
 		}
 		return false;
 	}
 
 	private void showNewGameDialog(String winner) {
-		JOptionPane.showMessageDialog(this, "Good game. The winner was "+winner, "Game Over", JOptionPane.INFORMATION_MESSAGE);
+		JOptionPane.showMessageDialog(this, "Good game. The winner was "
+				+ winner, "Game Over", JOptionPane.INFORMATION_MESSAGE);
+		showAndChooseAi();
+	}
+
+	private void setToLoad(boolean showBoard) {
+		loading.setVisible(!showBoard);
+		this.setVisible(showBoard);
 	}
 	
+	//TODO Make the AI wait as a modal box
+	private void makeAiMove() {
+		setToLoad(false);
+		new Thread(new Runnable() {
+
+			@Override
+			public void run() {
+				boolean done = false;
+				try {
+					String aiMove = gnuTraxGame.makeComputerMove();
+					gnuTraxGame.gotAMove(aiMove);
+					done = true;
+				} catch (IllegalMoveException ime) {
+					System.out.println("AI made an illegal move... very strange");
+				}
+
+				if (done) {
+					done = false;
+					SwingUtilities.invokeLater(new Runnable() {
+						@Override
+						public void run() {
+							setToLoad(true);
+							clearBoard();
+							drawBoard();
+							repaint();
+							checkForWinner();
+						}
+					});
+				}
+			}
+
+		}).start();
+	}
+
 	public void setMove(int x, int y, Tile tile) {
 		boolean aiMayMove = false;
 		String theMove = position(x, y, tile.getTileType());
@@ -121,24 +175,15 @@ public class GnuTraxGui extends JFrame {
 				return;
 		} catch (IllegalMoveException ime) {
 			// Show message to the user and say try again
-			System.out.println("ERROR " + ime.getMessage()+"\nThe move: "+theMove);
+			System.out.println("ERROR " + ime.getMessage() + "\nThe move: "
+					+ theMove);
 		}
 		if (aiMayMove) {
-			try {
-				System.out.println("AI is thinking....");
-				String aiMove = this.gnuTraxGame.makeComputerMove();
-				this.gnuTraxGame.gotAMove(aiMove);
-				System.out.println("AI had made its move");
-				clearBoard();
-				drawBoard();
-				this.repaint();
-				if (checkForWinner())
-					return;
-			} catch (IllegalMoveException ime) {
-				System.out.println("AI made an illegal move... very strange");
-			}
+			makeAiMove();
+			if (checkForWinner())
+				return;
 		}
-		//System.out.println(this.gnuTraxGame.getTheBoard());
+		// System.out.println(this.gnuTraxGame.getTheBoard());
 	}
 
 	public java.util.List<Tile> getPossibleTilesForPosition(int x, int y) {
@@ -210,14 +255,16 @@ public class GnuTraxGui extends JFrame {
 
 		for (int i = 0; i < 9; i++) {
 			for (int j = 0; j < 9; j++) {
-				innerPanel = new ImagePanel(tiles[Traxboard.INVALID].getImage(),
-						this, j, i);
+				innerPanel = new ImagePanel(
+						tiles[Traxboard.INVALID].getImage(), this, j, i);
 				outerPanel.add(innerPanel);
 				board.add(innerPanel);
 			}
 		}
 		board.get(0).setImage(tiles[Traxboard.EMPTY].getImage());
 		pane.add(outerPanel);
+
+		showAndChooseAi();
 	}
 
 	/**
@@ -233,6 +280,19 @@ public class GnuTraxGui extends JFrame {
 		// Display the window.
 		frame.pack();
 		frame.setVisible(true);
+	}
+
+	private void showAndChooseAi() {
+		Object[] possibilities = { "simple (easy)", "uct (hard)" };
+		String s = (String) JOptionPane.showInputDialog(this, "Choose AI:",
+				"New game", JOptionPane.PLAIN_MESSAGE, null, possibilities,
+				"simple (easy)");
+		if ((s != null) && (s.length() > 0)) {
+			newGame(s.split(" ")[0]);
+		} else {
+			JOptionPane.showMessageDialog(this, "Please choose a correct AI",
+					"Wrong chose", JOptionPane.INFORMATION_MESSAGE);
+		}
 	}
 
 	public static void main(String[] args) {
