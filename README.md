@@ -32,3 +32,24 @@ All questions about this code just email me at: martin@linux.com and
 you will normally get an answer within 48 hours.
 
 Martin M. S. Pedersen
+
+The GUI version:
+
+Run with:
+
+```
+java org.traxgame.gui.GnuTraxGui
+```
+
+or run the ant script in the src directory:
+
+```
+ant
+```
+
+afterwards use jar. Run from the commandline like this:
+
+```
+java -jar gnutraxgui.jar
+```
+
