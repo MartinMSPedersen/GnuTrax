@@ -43,7 +43,7 @@ public class GnuTraxGui extends JFrame {
 		}
 	}
 
-	private String position(int x, int y, int tileType) {
+	private String getRowColForPos(int x, int y) {
 		StringBuilder sb = new StringBuilder();
 		// System.out.println("POS: x: " + x + " Y: " + y);
 		switch (x) {
@@ -62,6 +62,12 @@ public class GnuTraxGui extends JFrame {
 			break;
 		}
 		sb.append(y);
+		return sb.toString();
+	}
+
+	private String position(int x, int y, int tileType) {
+		StringBuilder sb = new StringBuilder();
+		sb.append(getRowColForPos(x, y));
 		switch (tileType) {
 		case Traxboard.NS:
 		case Traxboard.EW:
@@ -87,6 +93,10 @@ public class GnuTraxGui extends JFrame {
 	}
 
 	// TODO Auto extend board when needed. See also init function and set move
+	// Make it like the board on goldtoken.
+	// How to:
+	// Create new grid layout with layout that is +2 to board height and width
+	// Fill with method that looks like this
 	private void drawBoard() {
 		for (int i = 0; i < 9; i++) {
 			for (int j = 0; j < 9; j++) {
@@ -181,33 +191,30 @@ public class GnuTraxGui extends JFrame {
 		// System.out.println(this.gnuTraxGame.getTheBoard());
 	}
 
+	//TODO Make the moves s.t. only the real moves is shown, with correct colors
 	public java.util.List<Tile> getPossibleTilesForPosition(int x, int y) {
 		java.util.List<Tile> possibleMoves = new ArrayList<Tile>();
 		java.util.List<String> theMoves = this.gnuTraxGame.getPossibleMoves();
 		for (String s : theMoves) {
 			String[] data = s.split("");
-			switch (data[3]) {
-			case "+":
-				possibleMoves.add(tiles[Traxboard.NS]);
-				possibleMoves.add(tiles[Traxboard.SN]);
-				possibleMoves.add(tiles[Traxboard.EW]);
-				possibleMoves.add(tiles[Traxboard.WE]);
-				break;
-			case "/":
-				possibleMoves.add(tiles[Traxboard.ES]);
-				possibleMoves.add(tiles[Traxboard.SE]);
-				possibleMoves.add(tiles[Traxboard.WN]);
-				possibleMoves.add(tiles[Traxboard.NW]);
-				break;
-			case "\\":
-				possibleMoves.add(tiles[Traxboard.EN]);
-				possibleMoves.add(tiles[Traxboard.NE]);
-				possibleMoves.add(tiles[Traxboard.SW]);
-				possibleMoves.add(tiles[Traxboard.WS]);
-				break;
+			String pos = getRowColForPos(x, y);
+			if (s.startsWith(pos)) {
+				switch (data[3]) {
+				case "+":
+					possibleMoves.add(tiles[Traxboard.SN]);
+					possibleMoves.add(tiles[Traxboard.WE]);
+					break;
+				case "/":
+					possibleMoves.add(tiles[Traxboard.ES]);
+					possibleMoves.add(tiles[Traxboard.NW]);
+					break;
+				case "\\":
+					possibleMoves.add(tiles[Traxboard.EN]);
+					possibleMoves.add(tiles[Traxboard.WS]);
+					break;
+				}
 			}
 		}
-		// TODO How to make the moves unique s.t. not to many are shown?
 		HashSet hs = new HashSet<Tile>();
 		hs.addAll(possibleMoves);
 		return new ArrayList<Tile>(hs);
