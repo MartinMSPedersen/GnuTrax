@@ -49,6 +49,14 @@ public class GnuTrax {
 		;
 	}
 
+	public int getBoardCols() {
+		return tb.getColSize();
+	}
+	
+	public int getBoardRows() {
+		return tb.getRowSize();
+	}
+	
 	private void userAnalyze() {
 		analyzeMode = true;
 		computerColour = Traxboard.NOPLAYER;

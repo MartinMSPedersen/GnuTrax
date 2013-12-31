@@ -1727,7 +1727,7 @@ public class Traxboard {
 			return EMPTY;
 		return board[firstrow + row - 1][firstcol + col - 1];
 	}
-
+	
 	public void putAt(int row, int col, int piece) {
 		assert (row + col > 0);
 		if (piece == EMPTY) {

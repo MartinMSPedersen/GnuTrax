@@ -18,12 +18,12 @@ public class GnuTraxGui extends JFrame {
 	private java.util.List<ImagePanel> board;
 	private GnuTrax gnuTraxGame;
 	private Loading loading;
-	private boolean isGameDone;
 
 	public GnuTraxGui() {
 		super("GnuTrax 1.0");
 		setResizable(false);
-		setMinimumSize(new Dimension(720, 720));
+		setMinimumSize(new Dimension(80, 80));
+		// setMaximumSize(new Dimension(80, 80));
 		loading = new Loading(this);
 		loading.setVisible(false);
 		board = new ArrayList<ImagePanel>();
@@ -33,9 +33,8 @@ public class GnuTraxGui extends JFrame {
 	private void newGame(String ai) {
 		this.gnuTraxGame = new GnuTrax(ai);
 		this.gnuTraxGame.userNew();
-		isGameDone = false;
 		if (board != null && board.size() > 0) {
-			for (int i = 0; i < 81; i++) {
+			for (int i = 0; i < 1; i++) {
 				board.get(i).setImage(tiles[Traxboard.INVALID].getImage());
 			}
 			board.get(0).setImage(tiles[Traxboard.EMPTY].getImage());
@@ -92,18 +91,41 @@ public class GnuTraxGui extends JFrame {
 		}
 	}
 
-	// TODO Auto extend board when needed. See also init function and set move
-	// Make it like the board on goldtoken.
-	// How to:
-	// Create new grid layout with layout that is +2 to board height and width
-	// Fill with method that looks like this
+	private int noToDraw(int a) {
+		return (a == 8) ? 8 : a + 2;
+	}
+
 	private void drawBoard() {
-		for (int i = 0; i < 9; i++) {
-			for (int j = 0; j < 9; j++) {
-				board.get(i * 9 + j).setImage(
+		outerPanel = new JPanel();
+		board.clear();
+		int noOfRowsToDraw = noToDraw(this.gnuTraxGame.getBoardRows());
+		int noOfColsToDraw = noToDraw(this.gnuTraxGame.getBoardCols());
+		outerPanel.setLayout(new GridLayout(noOfRowsToDraw, noOfColsToDraw));
+		//TODO: Set size to match in a real manner
+		setMinimumSize(new Dimension(noOfRowsToDraw * 80, noOfColsToDraw * 80));
+		setMaximumSize(new Dimension(noOfRowsToDraw * 80, noOfColsToDraw * 80));
+		setSize(new Dimension(noOfRowsToDraw * 80, noOfColsToDraw * 80));
+		ImagePanel innerPanel;
+
+		for (int i = 0; i < noOfRowsToDraw; i++) {
+			for (int j = 0; j < noOfColsToDraw; j++) {
+				innerPanel = new ImagePanel(
+						tiles[Traxboard.EMPTY].getImage(), this, j, i);
+				outerPanel.add(innerPanel);
+				board.add(innerPanel);
+			}
+		}
+		this.getContentPane().remove(0);
+		this.getContentPane().add(outerPanel);
+		this.pack();
+
+		for (int i = 1; i <= this.gnuTraxGame.getBoardRows(); i++) {
+			for (int j = 1; j <= this.gnuTraxGame.getBoardCols(); j++) {
+				board.get(i * noOfColsToDraw + j).setImage(
 						tiles[this.gnuTraxGame.getTileAt(i, j)].getImage());
 			}
 		}
+		System.out.println(this.gnuTraxGame.getTheBoard());
 	}
 
 	private boolean checkForWinner() {
@@ -120,7 +142,6 @@ public class GnuTraxGui extends JFrame {
 			default:
 				showNewGameDialog("everyone");
 			}
-			isGameDone = true;
 			return true;
 		}
 		return false;
@@ -171,7 +192,8 @@ public class GnuTraxGui extends JFrame {
 		String theMove = position(x, y, tile.getTileType());
 		try {
 			this.gnuTraxGame.gotAMove(theMove);
-			board.get(x * 9 + y).setImage(tile.getImage());
+			drawBoard();
+			board.get(y * noToDraw(this.gnuTraxGame.getBoardCols()) + x).setImage(tile.getImage());
 			clearBoard();
 			drawBoard();
 			aiMayMove = true;
@@ -191,7 +213,8 @@ public class GnuTraxGui extends JFrame {
 		// System.out.println(this.gnuTraxGame.getTheBoard());
 	}
 
-	//TODO Make the moves s.t. only the real moves is shown, with correct colors
+	// TODO Make the moves s.t. only the real moves is shown, with correct
+	// colors
 	public java.util.List<Tile> getPossibleTilesForPosition(int x, int y) {
 		java.util.List<Tile> possibleMoves = new ArrayList<Tile>();
 		java.util.List<String> theMoves = this.gnuTraxGame.getPossibleMoves();
@@ -252,11 +275,11 @@ public class GnuTraxGui extends JFrame {
 			e.printStackTrace();
 		}
 		outerPanel = new JPanel();
-		outerPanel.setLayout(new GridLayout(9, 9));
+		outerPanel.setLayout(new GridLayout(1, 1));
 		ImagePanel innerPanel;
 
-		for (int i = 0; i < 9; i++) {
-			for (int j = 0; j < 9; j++) {
+		for (int i = 0; i < 1; i++) {
+			for (int j = 0; j < 1; j++) {
 				innerPanel = new ImagePanel(
 						tiles[Traxboard.INVALID].getImage(), this, j, i);
 				outerPanel.add(innerPanel);
