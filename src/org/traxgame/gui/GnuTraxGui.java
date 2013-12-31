@@ -13,7 +13,6 @@ import org.traxgame.*;
 
 public class GnuTraxGui extends JFrame {
 
-	// TODO Remove all unneeded system.out
 	private Tile[] tiles;
 	private JPanel outerPanel;
 	private java.util.List<ImagePanel> board;
@@ -25,7 +24,7 @@ public class GnuTraxGui extends JFrame {
 		super("GnuTrax 1.0");
 		setResizable(false);
 		setMinimumSize(new Dimension(720, 720));
-		loading = new Loading();
+		loading = new Loading(this);
 		loading.setVisible(false);
 		board = new ArrayList<ImagePanel>();
 		newGame("simple");
@@ -87,6 +86,7 @@ public class GnuTraxGui extends JFrame {
 		}
 	}
 
+	// TODO Auto extend board when needed. See also init function and set move
 	private void drawBoard() {
 		for (int i = 0; i < 9; i++) {
 			for (int j = 0; j < 9; j++) {
@@ -110,7 +110,7 @@ public class GnuTraxGui extends JFrame {
 			default:
 				showNewGameDialog("everyone");
 			}
-			isGameDone = true; 
+			isGameDone = true;
 			return true;
 		}
 		return false;
@@ -122,40 +122,35 @@ public class GnuTraxGui extends JFrame {
 		showAndChooseAi();
 	}
 
-	private void setToLoad(boolean showBoard) {
-		loading.setVisible(!showBoard);
-		this.setVisible(showBoard);
-	}
-	
-	//TODO Make the AI wait as a modal box
 	private void makeAiMove() {
-		setToLoad(false);
 		new Thread(new Runnable() {
-
 			@Override
 			public void run() {
-				boolean done = false;
+				SwingUtilities.invokeLater(new Runnable() {
+					@Override
+					public void run() {
+						loading.setVisible(true);
+					}
+				});
+
 				try {
 					String aiMove = gnuTraxGame.makeComputerMove();
 					gnuTraxGame.gotAMove(aiMove);
-					done = true;
 				} catch (IllegalMoveException ime) {
-					System.out.println("AI made an illegal move... very strange");
+					System.out
+							.println("AI made an illegal move... very strange");
 				}
 
-				if (done) {
-					done = false;
-					SwingUtilities.invokeLater(new Runnable() {
-						@Override
-						public void run() {
-							setToLoad(true);
-							clearBoard();
-							drawBoard();
-							repaint();
-							checkForWinner();
-						}
-					});
-				}
+				SwingUtilities.invokeLater(new Runnable() {
+					@Override
+					public void run() {
+						loading.setVisible(false);
+						clearBoard();
+						drawBoard();
+						repaint();
+						checkForWinner();
+					}
+				});
 			}
 
 		}).start();
