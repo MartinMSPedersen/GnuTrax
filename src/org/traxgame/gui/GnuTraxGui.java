@@ -198,7 +198,7 @@ public class GnuTraxGui extends JFrame {
 		for (String s : theMoves) {
 			String[] data = s.split("");
 			String pos = getRowColForPos(x, y);
-			if (s.startsWith(pos)) {
+			if (true || s.startsWith(pos)) {
 				switch (data[3]) {
 				case "+":
 					possibleMoves.add(tiles[Traxboard.SN]);
