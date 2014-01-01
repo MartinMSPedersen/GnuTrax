@@ -16,6 +16,7 @@ public class ImagePanel extends JPanel {
 		this.gnuTrax = gnuTrax;
 		this.addMouseListener(new ImageClickHandler());
 		this.setBorder(BorderFactory.createLineBorder(Color.black));
+		this.setPreferredSize(new Dimension(80, 80));
 		this.x = x;
 		this.y = y;
 	}

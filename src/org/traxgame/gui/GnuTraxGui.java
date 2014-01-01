@@ -96,28 +96,25 @@ public class GnuTraxGui extends JFrame {
 	}
 
 	private void drawBoard() {
+		this.setVisible(false);
 		outerPanel = new JPanel();
 		board.clear();
 		int noOfRowsToDraw = noToDraw(this.gnuTraxGame.getBoardRows());
 		int noOfColsToDraw = noToDraw(this.gnuTraxGame.getBoardCols());
 		outerPanel.setLayout(new GridLayout(noOfRowsToDraw, noOfColsToDraw));
-		//TODO: Set size to match in a real manner
-		setMinimumSize(new Dimension(noOfRowsToDraw * 80, noOfColsToDraw * 80));
-		setMaximumSize(new Dimension(noOfRowsToDraw * 80, noOfColsToDraw * 80));
-		setSize(new Dimension(noOfRowsToDraw * 80, noOfColsToDraw * 80));
 		ImagePanel innerPanel;
 
 		for (int i = 0; i < noOfRowsToDraw; i++) {
 			for (int j = 0; j < noOfColsToDraw; j++) {
-				innerPanel = new ImagePanel(
-						tiles[Traxboard.EMPTY].getImage(), this, j, i);
+				innerPanel = new ImagePanel(tiles[Traxboard.EMPTY].getImage(),
+						this, j, i);
+				innerPanel.setSize(new Dimension(80, 80));
 				outerPanel.add(innerPanel);
 				board.add(innerPanel);
 			}
 		}
 		this.getContentPane().remove(0);
 		this.getContentPane().add(outerPanel);
-		this.pack();
 
 		for (int i = 1; i <= this.gnuTraxGame.getBoardRows(); i++) {
 			for (int j = 1; j <= this.gnuTraxGame.getBoardCols(); j++) {
@@ -125,7 +122,8 @@ public class GnuTraxGui extends JFrame {
 						tiles[this.gnuTraxGame.getTileAt(i, j)].getImage());
 			}
 		}
-		System.out.println(this.gnuTraxGame.getTheBoard());
+		this.pack();
+		this.setVisible(true);
 	}
 
 	private boolean checkForWinner() {
@@ -151,6 +149,7 @@ public class GnuTraxGui extends JFrame {
 		JOptionPane.showMessageDialog(this, "Good game. The winner was "
 				+ winner, "Game Over", JOptionPane.INFORMATION_MESSAGE);
 		showAndChooseAi();
+		newGameBoard();
 	}
 
 	private void makeAiMove() {
@@ -193,7 +192,8 @@ public class GnuTraxGui extends JFrame {
 		try {
 			this.gnuTraxGame.gotAMove(theMove);
 			drawBoard();
-			board.get(y * noToDraw(this.gnuTraxGame.getBoardCols()) + x).setImage(tile.getImage());
+			board.get(y * noToDraw(this.gnuTraxGame.getBoardCols()) + x)
+					.setImage(tile.getImage());
 			clearBoard();
 			drawBoard();
 			aiMayMove = true;
@@ -243,6 +243,27 @@ public class GnuTraxGui extends JFrame {
 		return new ArrayList<Tile>(hs);
 	}
 
+	private void newGameBoard() {
+		board.clear();
+		outerPanel = new JPanel();
+		outerPanel.setLayout(new GridLayout(1, 1));
+		ImagePanel innerPanel;
+
+		for (int i = 0; i < 1; i++) {
+			for (int j = 0; j < 1; j++) {
+				innerPanel = new ImagePanel(
+						tiles[Traxboard.INVALID].getImage(), this, j, i);
+				outerPanel.add(innerPanel);
+				board.add(innerPanel);
+			}
+		}
+		board.get(0).setImage(tiles[Traxboard.EMPTY].getImage());
+		if (this.getContentPane().getComponentCount() > 0)
+			this.getContentPane().remove(0);
+		this.getContentPane().add(outerPanel);
+		this.pack();
+	}
+
 	public void addComponentsToPane(final Container pane) {
 		tiles = new Tile[8];
 		try {
@@ -274,21 +295,17 @@ public class GnuTraxGui extends JFrame {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		outerPanel = new JPanel();
-		outerPanel.setLayout(new GridLayout(1, 1));
-		ImagePanel innerPanel;
-
-		for (int i = 0; i < 1; i++) {
-			for (int j = 0; j < 1; j++) {
-				innerPanel = new ImagePanel(
-						tiles[Traxboard.INVALID].getImage(), this, j, i);
-				outerPanel.add(innerPanel);
-				board.add(innerPanel);
-			}
-		}
-		board.get(0).setImage(tiles[Traxboard.EMPTY].getImage());
-		pane.add(outerPanel);
-
+		/*
+		 * outerPanel = new JPanel(); outerPanel.setLayout(new GridLayout(1,
+		 * 1)); ImagePanel innerPanel;
+		 * 
+		 * for (int i = 0; i < 1; i++) { for (int j = 0; j < 1; j++) {
+		 * innerPanel = new ImagePanel( tiles[Traxboard.INVALID].getImage(),
+		 * this, j, i); outerPanel.add(innerPanel); board.add(innerPanel); } }
+		 * board.get(0).setImage(tiles[Traxboard.EMPTY].getImage());
+		 * pane.add(outerPanel);
+		 */
+		newGameBoard();
 		showAndChooseAi();
 	}
 
@@ -304,20 +321,17 @@ public class GnuTraxGui extends JFrame {
 		frame.addComponentsToPane(frame.getContentPane());
 		// Display the window.
 		frame.pack();
+		frame.setLocationByPlatform(true);
 		frame.setVisible(true);
 	}
 
 	private void showAndChooseAi() {
-		Object[] possibilities = { "simple (easy)", "uct (hard)" };
-		String s = (String) JOptionPane.showInputDialog(this, "Choose AI:",
-				"New game", JOptionPane.PLAIN_MESSAGE, null, possibilities,
-				"simple (easy)");
-		if ((s != null) && (s.length() > 0)) {
-			newGame(s.split(" ")[0]);
-		} else {
-			JOptionPane.showMessageDialog(this, "Please choose a correct AI",
-					"Wrong chose", JOptionPane.INFORMATION_MESSAGE);
-		}
+		Object[] possibilities = { "simple (easy)", "uct (hard)", "quit" };
+		int s = JOptionPane.showOptionDialog(this, "Choose AI:", "New game",
+				JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE, null, possibilities, possibilities[0]);
+		if (s == 2)
+			System.exit(0);
+		newGame(((String) possibilities[s]).split(" ")[0]);
 	}
 
 	public static void main(String[] args) {
