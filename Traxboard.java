@@ -208,9 +208,8 @@ public class Traxboard
 	System.out.println ("NOPLAYER");
 	break;
       default:
-	// This should never happen 
-	assert (false);
-	break;
+	// This should never happen
+        throw new AssertionError("This should never happen. (001)"); 
       }
     if (boardEmpty)
       System.out.println ("boardEmpty=true");
@@ -233,8 +232,7 @@ public class Traxboard
 	break;
       default:
 	// This should never happen 
-	assert (false);
-	break;
+        throw new AssertionError("This should never happen. (002)");
       }
     for (int i = 0; i < 17; i++)
       {
@@ -510,7 +508,7 @@ public class Traxboard
     // notation (used until 1986?) which is incompatibel with old notation
 
     boolean oldNotation;
-    int col, row, nabo;
+    int col, row, neighbor;
     char dir;
     int
       ohs_up = 0,
@@ -562,7 +560,7 @@ public class Traxboard
     if ((row < 0) || (row > 8))
       throw new IllegalMoveException ("Illegal row.");
     if (col == 0 && row == 0)
-      throw new IllegalMoveException ("no naboes.");
+      throw new IllegalMoveException ("no neighbors.");
 
     dir = move.charAt (2);
     switch (dir)
@@ -596,7 +594,7 @@ public class Traxboard
       }
 
     if (col == 0 && row == 0)
-      throw new IllegalMoveException ("no naboes.");
+      throw new IllegalMoveException ("no neighbors.");
     if ((row == 0) && (!canMoveDown ()))
       throw new IllegalMoveException ("illegal row.");
     if ((col == 0) && (!canMoveRight ()))
@@ -625,13 +623,13 @@ public class Traxboard
       ohs_right = 1;
     if (right == ES || right == NS || right == EN)
       eks_right = 1;
-    nabo = 1 * ohs_up + 2 * ohs_down + 4 * ohs_left + 8 * ohs_right +
+    neighbor = 1 * ohs_up + 2 * ohs_down + 4 * ohs_left + 8 * ohs_right +
       16 * eks_up + 32 * eks_down + 64 * eks_left + 128 * eks_right;
 
-    switch (nabo)
+    switch (neighbor)
       {
       case 0:
-	throw new IllegalMoveException ("no naboes.");
+	throw new IllegalMoveException ("no neighbors.");
       case 1:
 	switch (dir)
 	  {
@@ -653,8 +651,7 @@ public class Traxboard
 	    throw new IllegalMoveException ("illegal direction.");
 	  default:
 	    /* This should never happen */
-	    assert (false);
-	    break;
+	    throw new AssertionError("This should never happen. (003)"); 
 	  }
 	break;
       case 2:
@@ -678,7 +675,7 @@ public class Traxboard
 	    throw new IllegalMoveException ("illegal direction.");
 	  default:
 	    /* This should never happen */
-	    assert (false);
+	    throw new AssertionError("This should never happen. (026)"); 
 	  }
 	break;
       case 4:
@@ -702,8 +699,7 @@ public class Traxboard
 	    throw new IllegalMoveException ("illegal direction.");
 	  default:
 	    /* This should never happen */
-	    assert (false);
-	    break;
+	    throw new AssertionError("This should never happen. (004)"); 
 	  }
 	break;
       case 8:
@@ -727,8 +723,7 @@ public class Traxboard
 	    throw new IllegalMoveException ("illegal direction.");
 	  default:
 	    /* This should never happen */
-	    assert (false);
-	    break;
+	    throw new AssertionError("This should never happen. (005)"); 
 	  }
 	break;
       case 16:
@@ -752,8 +747,7 @@ public class Traxboard
 	    throw new IllegalMoveException ("illegal direction.");
 	  default:
 	    /* This should never happen */
-	    assert (false);
-	    break;
+	    throw new AssertionError("This should never happen. (006)"); 
 	  }
 	break;
       case 18:
@@ -775,8 +769,7 @@ public class Traxboard
 	    throw new IllegalMoveException ("illegal direction.");
 	  default:
 	    /* This should never happen */
-	    assert (false);
-	    break;
+	    throw new AssertionError("This should never happen. (007)"); 
 	  }
 	break;
       case 20:
@@ -798,8 +791,7 @@ public class Traxboard
 	    break;
 	  default:
 	    /* This should never happen */
-	    assert (false);
-	    break;
+	    throw new AssertionError("This should never happen. (008)"); 
 	  }
 	break;
       case 24:
@@ -821,8 +813,7 @@ public class Traxboard
 	    break;
 	  default:
 	    /* This should never happen */
-	    assert (false);
-	    break;
+	    throw new AssertionError("This should never happen. (010)"); 
 	  }
 	break;
       case 32:
@@ -846,8 +837,7 @@ public class Traxboard
 	    break;
 	  default:
 	    /* This should never happen */
-	    assert (false);
-	    break;
+	    throw new AssertionError("This should never happen. (011)"); 
 	  }
 	break;
       case 33:
@@ -869,8 +859,7 @@ public class Traxboard
 	    throw new IllegalMoveException ("illegal direction.");
 	  default:
 	    /* This should never happen */
-	    assert (false);
-	    break;
+	    throw new AssertionError("This should never happen. (012)"); 
 	  }
 	break;
       case 36:
@@ -1075,7 +1064,7 @@ public class Traxboard
 	break;
       default:
 	/* This should never happen */
-	assert (false);
+	  throw new AssertionError("This should never happen. (013)"); 
       }
     if (row == 0)
       row++;
@@ -1120,8 +1109,7 @@ public class Traxboard
 	break;
       default:
 	/* This should never happen */
-	assert (false);
-	break;
+	  throw new AssertionError("This should never happen. (014)"); 
       }
   }
 
@@ -1204,8 +1192,7 @@ public class Traxboard
 		break;
 	      default:
 		/* This should never happen */
-		assert (false);
-		break;
+		  throw new AssertionError("This should never happen. (015)"); 
 	      }
 	  }
       }
@@ -1239,7 +1226,7 @@ public class Traxboard
     String AMove;
     int i, j, k;
     int dl, dr, ur, ul, rr;
-    int[][] naboes = new int[10][10];	//which naboes. default all values 0
+    int[][] neighbors = new int[10][10];	//which neighbors - default all values 0
     boolean[][][]dirlist = new boolean[10][10][3];	//which directions for move
     // 0 /, 1 \, 2 +
     // true means already used
@@ -1284,8 +1271,7 @@ public class Traxboard
 	    break;
 	  default:
 	    /* This should never happen */
-	    assert (false);
-	    break;
+	      throw new AssertionError("This should never happen. (016)"); 
 	  }
 	Moves.trimToSize ();
 	return Moves;
@@ -1312,12 +1298,8 @@ public class Traxboard
       {
 	for (j = jBegin; j <= jEnd; j++)
 	  {
-	    if (!(isBlank (i, j)))
-	      {
-		naboes[i][j] = 0;
-	      }
-	    else
-	      {
+	    if (!(isBlank (i, j))) { neighbors[i][j] = 0; }
+	    else {
 		ohs_up = 0;
 		ohs_down = 0;
 		ohs_right = 0;
@@ -1361,7 +1343,7 @@ public class Traxboard
 
 		ohs = ohs_up + ohs_down + ohs_left + ohs_right;
 		eks = eks_up + eks_down + eks_left + eks_right;
-		naboes[i][j] =
+		neighbors[i][j] =
 		  1 * ohs_up + 2 * ohs_down + 4 * ohs_left + 8 * ohs_right +
 		  16 * eks_up + 32 * eks_down + 64 * eks_left +
 		  128 * eks_right;
@@ -1373,14 +1355,14 @@ public class Traxboard
       {
 	for (j = jBegin; j <= jEnd; j++)
 	  {
-	    if (naboes[i][j] != 0)
+	    if (neighbors[i][j] != 0)
 	      {
 		dl = getAt (i + 1, j - 1);
 		dr = getAt (i + 1, j + 1);
 		ur = getAt (i - 1, j + 1);
 		ul = getAt (i - 1, j - 1);
 		rr = getAt (i, j + 2);
-		switch (naboes[i][j])
+		switch (neighbors[i][j])
 		  {
 		  case 1:
 		    {
@@ -1521,8 +1503,8 @@ public class Traxboard
 		      break;
 		    }
 		  default:
-		    assert (false);
-		    break;
+		    // This should never happen
+		    throw new AssertionError("This should never happen(026)");
 		  }
 	      }
 	  }
@@ -1558,7 +1540,7 @@ public class Traxboard
 		  continue;
 		}
 	    }
-	  if (naboes[i][j] != 0)
+	  if (neighbors[i][j] != 0)
 	    {
 	      ohs_up = 0;
 	      ohs_down = 0;
@@ -1889,10 +1871,8 @@ public class Traxboard
 	return WHITE;
       default:
 	// This should never happen 
-	assert (false);
-	break;
+	  throw new AssertionError("This should never happen. (017)"); 
       }
-    return 0;			// To make the compiler happy
   }
 
 
@@ -1988,18 +1968,18 @@ public class Traxboard
     int right = getAt (brow, bcol + 1);
 
     //boolean result=true;
-    int naboes = 0;
+    int neighbors = 0;
 
     if (!blank (up))
-      naboes++;
+      neighbors++;
     if (!blank (down))
-      naboes++;
+      neighbors++;
     if (!blank (left))
-      naboes++;
+      neighbors++;
     if (!blank (right))
-      naboes++;
+      neighbors++;
 
-    if (naboes < 2)
+    if (neighbors < 2)
       return true;		// Less than two pieces bordering
 
     int white_up = 0, black_up = 0, white_down = 0, black_down = 0,
@@ -2133,8 +2113,7 @@ public class Traxboard
 	    break;
 	  default:
 	    // This should never happen 
-	    assert (false);
-	    break;
+	      throw new AssertionError("This should never happen. (018)"); 
 	  }
 	switch (getAt (row, col))
 	  {
@@ -2158,8 +2137,7 @@ public class Traxboard
 	    break;
 	  default:
 	    // This should never happen 
-	    assert (false);
-	    break;
+	      throw new AssertionError("This should never happen. (019)");
 	  }
 	switch (theNum)
 	  {
@@ -2301,8 +2279,7 @@ public class Traxboard
 	    break;
 	  default:
 	    /* This should never happen */
-	    assert (false);
-	    break;
+	      throw new AssertionError("This should never happen. (020)");
 	  }
       }
   }
@@ -2388,8 +2365,7 @@ public class Traxboard
 		break;
 	      default:
 		/* This should never happen */
-		assert (false);
-		break;
+		  throw new AssertionError("This should never happen. (021)");
 	      }
 	    if (getAt (i + 1, j - 1) != EMPTY)
 	      {
@@ -2450,8 +2426,7 @@ public class Traxboard
 		break;
 	      default:
 		/* This should never happen */
-		assert (false);
-		break;
+		  throw new AssertionError("This should never happen. (022)");
 	      }
 	    if (getAt (i - 1, j + 1) != EMPTY)
 	      {
@@ -2512,8 +2487,7 @@ public class Traxboard
 		break;
 	      default:
 		/* This should never happen */
-		assert (false);
-		break;
+		  throw new AssertionError("This should never happen. (023)");
 	      }
 	    if (getAt (i - 1, j - 1) != EMPTY)
 	      {
@@ -2576,8 +2550,7 @@ public class Traxboard
 		break;
 	      default:
 		/* This should never happen */
-		assert (false);
-		break;
+		  throw new AssertionError("This should never happen. (024)");
 	      }
 	    if (getAt (i + 1, j + 1) != EMPTY)
 	      {
@@ -2597,14 +2570,125 @@ public class Traxboard
 	    break;
 	  default:
 	    /* This should never happen */
-	    assert (false);
-	    break;
+	      throw new AssertionError("This should never happen. (025)");
 	  }
       }
   }
 
+  private int neighbor_value(int x, int y) {
+    int value = 0;
+    int up = getAt(x - 1, y), down = getAt(x + 1, y), left = getAt(x, y - 1), right = getAt(x, y + 1);
+    if (up == Traxboard.SN || up == Traxboard.SE || up == Traxboard.SW) { value += 1; } // ohs_up
+    if (up == Traxboard.EW || up == Traxboard.NW || up == Traxboard.NE) { value += 16; } // eks_up
+    if (down == Traxboard.NS || down == Traxboard.NE || down == Traxboard.NW) { value += 2; } // ohs_down
+    if (down == Traxboard.EW || down == Traxboard.SW || down == Traxboard.SE) { value += 32; } // eks_down
+    if (left == Traxboard.EN || left == Traxboard.ES || left == Traxboard.EW) { value += 4; } // ohs_left;
+    if (left == Traxboard.WS || left == Traxboard.WN || left == Traxboard.NS) { value += 64; } // eks_left;
+    if (right == Traxboard.WN || right == Traxboard.WE || right == Traxboard.WS) { value += 8; } // ohs.right
+    if (right == Traxboard.ES || right == Traxboard.NS || right == Traxboard.EN) { value += 128; } // eks.right
+    return value;
+  }
+
+  public ArrayList<Integer> getLegalTiles(int x, int y) {
+    ArrayList <Integer> result=new ArrayList <Integer> ();
+    switch (neighbor_value(x,y)) {
+      case 0: return result;
+      case 1:
+        result.add(new Integer(Traxboard.NW));
+        result.add(new Integer(Traxboard.NS));
+        result.add(new Integer(Traxboard.NE));
+        return result;
+      case 128:
+        result.add(new Integer(Traxboard.WS));
+        result.add(new Integer(Traxboard.NS));
+        result.add(new Integer(Traxboard.WN));
+        return result;
+      case 2:
+        result.add(new Integer(Traxboard.SW));
+        result.add(new Integer(Traxboard.SE));
+        result.add(new Integer(Traxboard.SN));
+        return result;
+      case 32:
+        result.add(new Integer(Traxboard.WE));
+        result.add(new Integer(Traxboard.WN));
+        result.add(new Integer(Traxboard.NE));
+        return result;
+      case 8:
+        result.add(new Integer(Traxboard.EW));
+        result.add(new Integer(Traxboard.ES));
+        result.add(new Integer(Traxboard.EN));
+        return result;
+      case 4:
+        result.add(new Integer(Traxboard.WE));
+        result.add(new Integer(Traxboard.WS));
+        result.add(new Integer(Traxboard.WN));
+        return result;
+      case 64:
+        result.add(new Integer(Traxboard.NS));
+        result.add(new Integer(Traxboard.NE));
+        result.add(new Integer(Traxboard.SE));
+        return result;
+      case 16:
+        result.add(new Integer(Traxboard.WE));
+        result.add(new Integer(Traxboard.WS));
+        result.add(new Integer(Traxboard.SE));
+        return result;
+      case 36:
+        result.add(new Integer(Traxboard.WN));
+        result.add(new Integer(Traxboard.WE));
+        return result;
+      case 66:
+        result.add(new Integer(Traxboard.SN));
+        result.add(new Integer(Traxboard.SE));
+        return result;
+      case 132:
+        result.add(new Integer(Traxboard.WN));
+        result.add(new Integer(Traxboard.WS));
+        return result;
+      case 72:
+        result.add(new Integer(Traxboard.EN));
+        result.add(new Integer(Traxboard.ES));
+        return result;
+      case 65:
+        result.add(new Integer(Traxboard.NS));
+        result.add(new Integer(Traxboard.NE));
+        return result;
+      case 20:
+        result.add(new Integer(Traxboard.WE));
+        result.add(new Integer(Traxboard.WS));
+        return result;
+      case 33:
+        result.add(new Integer(Traxboard.NW));
+        result.add(new Integer(Traxboard.NE));
+        return result;
+      case 18:
+        result.add(new Integer(Traxboard.SW));
+        result.add(new Integer(Traxboard.SE));
+        return result;
+      case 129:
+        result.add(new Integer(Traxboard.NW));
+        result.add(new Integer(Traxboard.NS));
+        return result;
+      case 24:
+        result.add(new Integer(Traxboard.EW));
+        result.add(new Integer(Traxboard.ES));
+        return result;
+      case 40:
+        result.add(new Integer(Traxboard.EW));
+        result.add(new Integer(Traxboard.EN));
+        return result;
+      case 130:
+        result.add(new Integer(Traxboard.SN));
+        result.add(new Integer(Traxboard.SW));
+        return result;
+      default:
+        // This should never happen
+        throw new AssertionError("This should never happen. (009)");
+    }
+  }
+
   // Unit test
-  public static void main (String[]args)
+  public static void main(String[] args)
   {
     Traxboard t;
     ArrayList < String > moves;
@@ -2862,5 +2946,6 @@ public class Traxboard
 	System.exit (0);
       }
   }
+
 
 }
