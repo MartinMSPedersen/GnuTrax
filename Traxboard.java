@@ -2591,6 +2591,11 @@ public class Traxboard
 
   public ArrayList<Integer> getLegalTiles(int x, int y) {
     ArrayList <Integer> result=new ArrayList <Integer> ();
+    if (this.boardEmpty) {
+	result.add(new Integer(Traxboard.NW));
+	result.add(new Integer(Traxboard.NS));
+        return result;
+    }
     switch (neighbor_value(x,y)) {
       case 0: return result;
       case 1:
@@ -2930,6 +2935,15 @@ public class Traxboard
 	{
 	  System.err.println ("Test 13: OK\n");
 	}
+	t=new Traxboard();
+	ArrayList<Integer> legalTiles=t.getLegalTiles(0,0);
+	if (legalTiles.size()!=2) {
+	  System.err.println("Test 14: FAILED\n");
+	  result=false;
+        }
+        else {
+          System.err.println("Test 14: OK\n");
+        }
     }
     catch (Exception e)
     {
