@@ -1,6 +1,6 @@
 /* 
 
-Date: 31th of December 2008
+Date: 4th of Januar 2014
 version 0.1
 All source under GPL version 2 
 (GNU General Public License - http://www.gnu.org/)
@@ -10,8 +10,7 @@ contact traxplayer@gmail.com for more information about this code
 
 import java.util.ArrayList;
 
-public class Traxboard
-{
+public class Traxboard {
   // Piece description...
   //
   //   0      1      2      3      4      5      6
@@ -40,36 +39,29 @@ public class Traxboard
 
   public static final int
     EMPTY = 0, INVALID = 7,
-	
     NS = 1, SN = 1, WE = 2, EW = 2, NW = 3, WN = 3,
     NE = 4, EN = 4, WS = 5, SW = 5, SE = 6, ES = 6;
+
   public static final int
     WHITE = 0, BLACK = 1, DRAW = 2, NOPLAYER = 3, NORESULT = 3;
 
   private static String[][] col_row_array;
-  static
-  {
+  static {
     StringBuffer str;
-      col_row_array = new String[9][9];
-    for (char i = '@'; i <= 'H'; i++)
-      {
-	for (char j = '0'; j <= '8'; j++)
-	  {
-	    str = new StringBuffer ();
-	    str.append (i);
-	    str.append (j);
-	    col_row_array[i - '@'][j - '0'] = new String (str);
-	  }
+    col_row_array = new String[9][9];
+    for (char i = '@'; i <= 'H'; i++) {
+      for (char j = '0'; j <= '8'; j++) {
+        str = new StringBuffer ();
+        str.append (i);
+        str.append (j);
+        col_row_array[i - '@'][j - '0'] = new String (str);
       }
+    }
   }
-
 
   public static final long serialVersionUID = 24362472L;
 
-  public boolean blank (int piece)
-  {
-    return (piece == EMPTY);
-  }
+  public boolean blank (int piece) { return (piece == EMPTY); }
 
 
 /**
@@ -78,14 +70,10 @@ public class Traxboard
  * end-phase of the game
  * @return      the number of used tiles
  */
-  public int getNumOfTiles ()
-  {
-    return num_of_tiles;
-  }
+  public int getNumOfTiles() { return num_of_tiles; }
 
 
-  private void saveState ()
-  {
+  private void saveState() {
     wtm_save = wtm;
     boardEmpty_save = boardEmpty;
     gameover_save = gameover;
@@ -94,18 +82,15 @@ public class Traxboard
     firstcol_save = firstcol;
     lastrow_save = lastrow;
     lastcol_save = lastcol;
-    for (int i = 0; i < 17; i++)
-      {
-	for (int j = 0; j < 17; j++)
-	  {
-	    board_save[i][j] = board[i][j];
-	  }
+    for (int i = 0; i < 17; i++) { 
+      for (int j = 0; j < 17; j++) {
+         board_save[i][j] = board[i][j];
       }
+    }
   }
 
 
-  private void restoreState ()
-  {
+  private void restoreState() {
     wtm = wtm_save;
     boardEmpty = boardEmpty_save;
     gameover = gameover_save;
@@ -114,18 +99,15 @@ public class Traxboard
     firstcol = firstcol_save;
     lastrow = lastrow_save;
     lastcol = lastcol_save;
-    for (int i = 0; i < 17; i++)
-      {
-	for (int j = 0; j < 17; j++)
-	  {
+    for (int i = 0; i < 17; i++) { 
+      for (int j = 0; j < 17; j++) {
 	    board[i][j] = board_save[i][j];
-	  }
       }
+    }
   }
 
 
-  public Traxboard ()
-  {
+  public Traxboard() {
     int i, j;
 
     wtm = WHITE;
@@ -137,12 +119,10 @@ public class Traxboard
       for (j = 0; j < 17; j++)
 	board[i][j] = EMPTY;
     boardEmpty = true;
-
   }
 
 
-  public Traxboard (Traxboard org)
-  {
+  public Traxboard (Traxboard org) {
     int i, j;
 
     wtm = org.wtm;
@@ -150,14 +130,12 @@ public class Traxboard
     num_of_tiles = org.num_of_tiles;
     board = new int[17][17];
     board_save = new int[17][17];
-    for (i = 0; i < 17; i++)
-      {
-	for (j = 0; j < 17; j++)
-	  {
-	    this.board[i][j] = org.board[i][j];
-	    this.board_save[i][j] = org.board_save[i][j];
-	  }
+    for (i = 0; i < 17; i++) {
+      for (j = 0; j < 17; j++) {
+        this.board[i][j] = org.board[i][j];
+        this.board_save[i][j] = org.board_save[i][j];
       }
+    }
     firstrow = org.firstrow;
     firstcol = org.firstcol;
     lastrow = org.lastrow;
@@ -170,31 +148,27 @@ public class Traxboard
   }
 
 
-  public int getRowSize ()
-  {
+  public int getRowSize() {
     if (getNumOfTiles () == 0)
       return 0;
     return 1 + (lastrow - firstrow);
   }
 
 
-  public int getColSize ()
-  {
-    if (getNumOfTiles () == 0)
+  public int getColSize() {
+    if (getNumOfTiles() == 0)
       return 0;
     return 1 + (lastcol - firstcol);
   }
 
 
-  public void dump ()
-  {
+  public void dump() {
     System.out.println (this);
     System.out.println ("num_of_tiles=" + getNumOfTiles ());
     System.out.println ("rowsize=" + getRowSize ());
     System.out.println ("colsize=" + getColSize ());
     System.out.print ("gameover=");
-    switch (gameover)
-      {
+    switch (gameover) {
       case WHITE:
 	System.out.println ("WHITE");
 	break;
@@ -216,8 +190,7 @@ public class Traxboard
     else
       System.out.println ("boardEmpty=false");
     System.out.print ("wtm=");
-    switch (wtm)
-      {
+    switch (wtm) {
       case WHITE:
 	System.out.println ("WHITE");
 	break;
@@ -234,15 +207,12 @@ public class Traxboard
 	// This should never happen 
         throw new AssertionError("This should never happen. (002)");
       }
-    for (int i = 0; i < 17; i++)
-      {
-	for (int j = 0; j < 17; j++)
-	  {
-	    System.out.print (board[i][j]);
-	  }
-	System.out.println ();
+    for (int i = 0; i < 17; i++) {
+      for (int j = 0; j < 17; j++) {
+        System.out.print (board[i][j]);
       }
-
+      System.out.println ();
+    }
   }
 
 
@@ -252,45 +222,35 @@ public class Traxboard
  * @param  col the column number 1-8
  * @return true if the place (row,col) is free or false otherwise
  */
-  public boolean isBlank (int row, int col)
-  {
-    return (getAt (row, col) == EMPTY);
+  public boolean isBlank(int row, int col) { 
+    return (getAt(row, col) == EMPTY); 
   }
 
 
-  @Override public String toString ()
-  {
+  @Override public String toString() {
     StringBuffer result = new StringBuffer (1000);
     int i, j, k;
     int leftpiece, uppiece, upleftpiece;
     String cols = "     A     B     C     D     E     F     G     H     ";
     String rows = "1 2 3 4 5 6 7 8 ";
 
-    if (boardEmpty)
-      return new String ();
+    if (boardEmpty) return new String ();
     result.append (cols.substring (0, 5 + 6 * getColSize ()));
     //result.append(cols,0,5+6*getColSize());
     result.append ('\n');
-    for (i = 1; i <= getRowSize (); i++)
-      {
-	for (k = 0; k < 4; k++)
-	  {
-	    if (k == 2)
-	      {
-		result.append (rows.substring (i * 2 - 2, i * 2));
+    for (i = 1; i <= getRowSize (); i++) {
+      for (k = 0; k < 4; k++) {
+        if (k == 2) {
+  	  result.append (rows.substring (i * 2 - 2, i * 2));
 		//result.append(rows,i*2-2,2);
-	      }
-	    else
-	      {
-		result.append ("  ");
-	      }
-	    for (j = 1; j <= getColSize (); j++)
-	      {
-		switch (getAt (i, j))
-		  {
+        }
+	else {
+	  result.append ("  ");
+	}
+	for (j = 1; j <= getColSize (); j++) {
+	  switch (getAt(i, j)) {
 		  case NS:
-		    switch (k)
-		      {
+		    switch (k) {
 		      case 0:
 			result.append ("+--o--");
 			break;
@@ -306,8 +266,7 @@ public class Traxboard
 		      }
 		    break;
 		  case WE:
-		    switch (k)
-		      {
+		    switch (k) {
 		      case 0:
 			result.append ("+--#--");
 			break;
@@ -323,8 +282,7 @@ public class Traxboard
 		      }
 		    break;
 		  case NW:
-		    switch (k)
-		      {
+		    switch (k) {
 		      case 0:
 			result.append ("+--o--");
 			break;
@@ -340,8 +298,7 @@ public class Traxboard
 		      }
 		    break;
 		  case NE:
-		    switch (k)
-		      {
+		    switch (k) {
 		      case 0:
 			result.append ("+--o--");
 			break;
@@ -357,8 +314,7 @@ public class Traxboard
 		      }
 		    break;
 		  case SW:
-		    switch (k)
-		      {
+		    switch (k) {
 		      case 0:
 			result.append ("+--#--");
 			break;
@@ -374,28 +330,26 @@ public class Traxboard
 		      }
 		    break;
 		  case SE:
-		    switch (k)
-		      {
+		    switch (k) {
 		      case 0:
-			result.append ("+--#--");
+			result.append("+--#--");
 			break;
 		      case 1:
-			result.append ("| #   ");
+			result.append("| #   ");
 			break;
 		      case 2:
-			result.append ("##   o");
+			result.append("##   o");
 			break;
 		      case 3:
-			result.append ("|   o ");
+			result.append("|   o ");
 			break;
 		      }
 		    break;
 		  case EMPTY:
-		    uppiece = getAt (i - 1, j);
-		    leftpiece = getAt (i, j - 1);
-		    upleftpiece = getAt (i - 1, j - 1);
-		    switch (k)
-		      {
+		    uppiece = getAt(i - 1, j);
+		    leftpiece = getAt(i, j - 1);
+		    upleftpiece = getAt(i - 1, j - 1);
+		    switch (k) {
 		      case 0:
 			if ((uppiece == SN) || (uppiece == SW)
 			    || (uppiece == SE))
@@ -443,10 +397,9 @@ public class Traxboard
 		  }		// switch (getAt(i,j));
 	      }			// for (j)
 
-	    upleftpiece = getAt (i - 1, j - 1);
-	    leftpiece = getAt (i, j - 1);
-	    switch (k)
-	      {
+	    upleftpiece = getAt(i - 1, j - 1);
+	    leftpiece = getAt(i, j - 1);
+	    switch (k) {
 	      case 0:
 		if ((upleftpiece != EMPTY) || (leftpiece != EMPTY))
 		  result.append ("+");
@@ -472,10 +425,9 @@ public class Traxboard
 	  }
       }
     result.append ("  ");
-    for (j = 1; j <= getColSize (); j++)
-      {
-	leftpiece = getAt (getRowSize (), j - 1);
-	uppiece = getAt (getRowSize (), j);
+    for (j = 1; j <= getColSize (); j++) {
+	leftpiece = getAt(getRowSize (), j - 1);
+	uppiece = getAt(getRowSize (), j);
 	if ((uppiece == EMPTY) && (leftpiece == EMPTY))
 	  result.append ("      ");
 	if ((uppiece == EMPTY) && (leftpiece != EMPTY))
@@ -485,7 +437,7 @@ public class Traxboard
 	if ((uppiece == WE) || (uppiece == WN) || (uppiece == NE))
 	  result.append ("+--#--");
       }
-    if (getAt (getRowSize (), getColSize ()) != EMPTY)
+    if (getAt(getRowSize (), getColSize ()) != EMPTY)
       result.append ("+");
     result.append ("\n");
     return result.toString ();
@@ -500,8 +452,7 @@ public class Traxboard
   * which is incompatibel with old notation
  * @param  move The move
  */
-  public void makeMove (String move) throws IllegalMoveException
-  {
+  public void makeMove (String move) throws IllegalMoveException {
     // updates the board etc. if it was a legal move
     // accepts upper-case & lower-case letters
     // and old&new notation but not the very old
@@ -517,21 +468,20 @@ public class Traxboard
       ohs_left = 0, eks_up = 0, eks_down = 0, eks_right = 0, eks_left = 0;
 
     if (gameover != NOPLAYER)
-      throw new IllegalMoveException ("Game is over.");
+      throw new IllegalMoveException("Game is over.");
     if (move.length () != 3)
-      throw new IllegalMoveException ("not a move.");
+      throw new IllegalMoveException("not a move.");
       move = move.toUpperCase ();
-    if (boardEmpty)
-      {
+    if (boardEmpty) {
 	if (move.equals ("A1C") || move.equals ("@0/"))
 	  {
-	    putAt (1, 1, NW);
+	    putAt(1, 1, NW);
 	    switchPlayer ();
 	    return;
 	  }
 	if (move.equals ("A1S") || move.equals ("@0+"))
 	  {
-	    putAt (1, 1, NS);
+	    putAt(1, 1, NS);
 	    switchPlayer ();
 	    return;
 	  }
@@ -541,30 +491,27 @@ public class Traxboard
       }
 
     // handle the old notation 1A special case (changing 1A -> A0)
-    if (move.startsWith ("1A"))
-      {
+    if (move.startsWith ("1A")) {
 	col = 1;
 	row = 0;
 	//col=(int)'A'-(int)'@'; 
 	//row=(int)'0'-'0';
-      }
-    else
-      {
+    }
+    else {
 	col = move.charAt (0) - '@';
 	row = move.charAt (1) - '0';
 	//col=(int)move[0]-(int)'@';
 	//row=(int)move[1]-(int)'0';
-      }
+    }
     if ((col < 0) || (col > 8))
-      throw new IllegalMoveException ("Illegal column.");
+      throw new IllegalMoveException("Illegal column.");
     if ((row < 0) || (row > 8))
-      throw new IllegalMoveException ("Illegal row.");
+      throw new IllegalMoveException("Illegal row.");
     if (col == 0 && row == 0)
-      throw new IllegalMoveException ("no neighbors.");
+      throw new IllegalMoveException("no neighbors.");
 
     dir = move.charAt (2);
-    switch (dir)
-      {
+    switch(dir) {
       case 'C':
       case 'S':
       case 'U':
@@ -579,13 +526,11 @@ public class Traxboard
 	oldNotation = false;
 	break;
       default:
-	throw new IllegalMoveException ("unknown direction.");
+	throw new IllegalMoveException("unknown direction.");
       }
 
-    if (oldNotation)
-      {
-	if (!isBlank (row, col))
-	  {
+    if (oldNotation) {
+	if (!isBlank (row, col)) {
 	    if (col == 1)
 	      col--;
 	    else if (row == 1)
@@ -594,18 +539,18 @@ public class Traxboard
       }
 
     if (col == 0 && row == 0)
-      throw new IllegalMoveException ("no neighbors.");
-    if ((row == 0) && (!canMoveDown ()))
-      throw new IllegalMoveException ("illegal row.");
-    if ((col == 0) && (!canMoveRight ()))
-      throw new IllegalMoveException ("illegal column.");
-    if (!isBlank (row, col))
-      throw new IllegalMoveException ("occupied." + move + " illegal");
+      throw new IllegalMoveException("no neighbors.");
+    if ((row == 0) && (!canMoveDown()))
+      throw new IllegalMoveException("illegal row.");
+    if ((col == 0) && (!canMoveRight()))
+      throw new IllegalMoveException("illegal column.");
+    if (!isBlank(row, col))
+      throw new IllegalMoveException("occupied." + move + " illegal");
 
-    saveState ();
-    int up = getAt (row - 1, col),
-      down = getAt (row + 1, col),
-      left = getAt (row, col - 1), right = getAt (row, col + 1);
+    saveState();
+    int up = getAt(row - 1, col),
+      down = getAt(row + 1, col),
+      left = getAt(row, col - 1), right = getAt(row, col + 1);
 
     if (up == SN || up == SE || up == SW)
       ohs_up = 1;
@@ -626,168 +571,160 @@ public class Traxboard
     neighbor = 1 * ohs_up + 2 * ohs_down + 4 * ohs_left + 8 * ohs_right +
       16 * eks_up + 32 * eks_down + 64 * eks_left + 128 * eks_right;
 
-    switch (neighbor)
-      {
+    switch (neighbor) {
       case 0:
-	throw new IllegalMoveException ("no neighbors.");
+	throw new IllegalMoveException("no neighbors.");
       case 1:
-	switch (dir)
-	  {
+	switch (dir) {
 	  case '/':
 	  case 'L':
-	    putAt (row, col, NW);
+	    putAt(row, col, NW);
 	    break;
 	  case '\\':
 	  case 'R':
-	    putAt (row, col, NE);
+	    putAt(row, col, NE);
 	    break;
 	  case '+':
 	  case 'S':
-	    putAt (row, col, NS);
+	    putAt(row, col, NS);
 	    break;
 	  case 'U':
 	  case 'C':
 	  case 'D':
-	    throw new IllegalMoveException ("illegal direction.");
+	    throw new IllegalMoveException("illegal direction.");
 	  default:
 	    /* This should never happen */
 	    throw new AssertionError("This should never happen. (003)"); 
 	  }
 	break;
       case 2:
-	switch (dir)
-	  {
+	switch (dir) {
 	  case '/':
 	  case 'R':
-	    putAt (row, col, SE);
+	    putAt(row, col, SE);
 	    break;
 	  case '\\':
 	  case 'L':
-	    putAt (row, col, SW);
+	    putAt(row, col, SW);
 	    break;
 	  case '+':
 	  case 'S':
-	    putAt (row, col, NS);
+	    putAt(row, col, NS);
 	    break;
 	  case 'C':
 	  case 'U':
 	  case 'D':
-	    throw new IllegalMoveException ("illegal direction.");
+	    throw new IllegalMoveException("illegal direction.");
 	  default:
 	    /* This should never happen */
 	    throw new AssertionError("This should never happen. (026)"); 
 	  }
 	break;
       case 4:
-	switch (dir)
-	  {
+	switch (dir) {
 	  case '/':
 	  case 'U':
-	    putAt (row, col, WN);
+	    putAt(row, col, WN);
 	    break;
 	  case '\\':
 	  case 'D':
-	    putAt (row, col, WS);
+	    putAt(row, col, WS);
 	    break;
 	  case '+':
 	  case 'S':
-	    putAt (row, col, WE);
+	    putAt(row, col, WE);
 	    break;
 	  case 'C':
 	  case 'R':
 	  case 'L':
-	    throw new IllegalMoveException ("illegal direction.");
+	    throw new IllegalMoveException("illegal direction.");
 	  default:
 	    /* This should never happen */
 	    throw new AssertionError("This should never happen. (004)"); 
 	  }
 	break;
       case 8:
-	switch (dir)
-	  {
+	switch (dir) {
 	  case '/':
 	  case 'D':
-	    putAt (row, col, ES);
+	    putAt(row, col, ES);
 	    break;
 	  case '\\':
 	  case 'U':
-	    putAt (row, col, EN);
+	    putAt(row, col, EN);
 	    break;
 	  case '+':
 	  case 'S':
-	    putAt (row, col, EW);
+	    putAt(row, col, EW);
 	    break;
 	  case 'C':
 	  case 'R':
 	  case 'L':
-	    throw new IllegalMoveException ("illegal direction.");
+	    throw new IllegalMoveException("illegal direction.");
 	  default:
 	    /* This should never happen */
 	    throw new AssertionError("This should never happen. (005)"); 
 	  }
 	break;
       case 16:
-	switch (dir)
-	  {
+	switch (dir) {
 	  case '/':
 	  case 'L':
-	    putAt (row, col, SE);
+	    putAt(row, col, SE);
 	    break;
 	  case '\\':
 	  case 'R':
-	    putAt (row, col, SW);
+	    putAt(row, col, SW);
 	    break;
 	  case '+':
 	  case 'S':
-	    putAt (row, col, WE);
+	    putAt(row, col, WE);
 	    break;
 	  case 'C':
 	  case 'U':
 	  case 'D':
-	    throw new IllegalMoveException ("illegal direction.");
+	    throw new IllegalMoveException("illegal direction.");
 	  default:
 	    /* This should never happen */
 	    throw new AssertionError("This should never happen. (006)"); 
 	  }
 	break;
       case 18:
-	switch (dir)
-	  {
+	switch (dir) {
 	  case '/':
 	  case 'R':
-	    putAt (row, col, SE);
+	    putAt(row, col, SE);
 	    break;
 	  case '\\':
 	  case 'L':
 	  case 'C':
-	    putAt (row, col, SW);
+	    putAt(row, col, SW);
 	    break;
 	  case '+':
 	  case 'S':
 	  case 'U':
 	  case 'D':
-	    throw new IllegalMoveException ("illegal direction.");
+	    throw new IllegalMoveException("illegal direction.");
 	  default:
 	    /* This should never happen */
 	    throw new AssertionError("This should never happen. (007)"); 
 	  }
 	break;
       case 20:
-	switch (dir)
-	  {
+	switch (dir) {
 	  case '/':
 	  case 'L':
 	  case 'U':
-	    throw new IllegalMoveException ("illegal direction.");
+	    throw new IllegalMoveException("illegal direction.");
 	  case '\\':
 	  case 'C':
 	  case 'R':
 	  case 'D':
-	    putAt (row, col, WS);
+	    putAt(row, col, WS);
 	    break;
 	  case '+':
 	  case 'S':
-	    putAt (row, col, WE);
+	    putAt(row, col, WE);
 	    break;
 	  default:
 	    /* This should never happen */
@@ -795,21 +732,20 @@ public class Traxboard
 	  }
 	break;
       case 24:
-	switch (dir)
-	  {
+	switch (dir) {
 	  case '/':
 	  case 'L':
 	  case 'C':
 	  case 'D':
-	    putAt (row, col, SE);
+	    putAt(row, col, SE);
 	    break;
 	  case 'U':
 	  case '\\':
 	  case 'R':
-	    throw new IllegalMoveException ("illegal direction.");
+	    throw new IllegalMoveException("illegal direction.");
 	  case 'S':
 	  case '+':
-	    putAt (row, col, WE);
+	    putAt(row, col, WE);
 	    break;
 	  default:
 	    /* This should never happen */
@@ -817,23 +753,22 @@ public class Traxboard
 	  }
 	break;
       case 32:
-	switch (dir)
-	  {
+	switch (dir) {
 	  case '/':
 	  case 'R':
-	    putAt (row, col, NW);
+	    putAt(row, col, NW);
 	    break;
 	  case 'D':
 	  case 'U':
 	  case 'C':
-	    throw new IllegalMoveException ("illegal direction.");
+	    throw new IllegalMoveException("illegal direction.");
 	  case '\\':
 	  case 'L':
-	    putAt (row, col, NE);
+	    putAt(row, col, NE);
 	    break;
 	  case 'S':
 	  case '+':
-	    putAt (row, col, WE);
+	    putAt(row, col, WE);
 	    break;
 	  default:
 	    /* This should never happen */
@@ -841,22 +776,21 @@ public class Traxboard
 	  }
 	break;
       case 33:
-	switch (dir)
-	  {
+	switch (dir) {
 	  case '/':
 	  case 'L':
-	    putAt (row, col, NW);
+	    putAt(row, col, NW);
 	    break;
 	  case 'R':
 	  case '\\':
-	    putAt (row, col, NE);
+	    putAt(row, col, NE);
 	    break;
 	  case 'C':
 	  case 'S':
 	  case '+':
 	  case 'D':
 	  case 'U':
-	    throw new IllegalMoveException ("illegal direction.");
+	    throw new IllegalMoveException("illegal direction.");
 	  default:
 	    /* This should never happen */
 	    throw new AssertionError("This should never happen. (012)"); 
@@ -864,203 +798,203 @@ public class Traxboard
 	break;
       case 36:
 	if (dir == '/')
-	  putAt (row, col, NW);
+	  putAt(row, col, NW);
 	if (dir == '\\')
-	  throw new IllegalMoveException ("illegal direction.");
+	  throw new IllegalMoveException("illegal direction.");
 	if (dir == '+')
-	  putAt (row, col, WE);
+	  putAt(row, col, WE);
 	if (dir == 'S')
-	  putAt (row, col, WE);
+	  putAt(row, col, WE);
 	if (dir == 'C')
-	  putAt (row, col, WN);
+	  putAt(row, col, WN);
 	if (dir == 'L')
-	  throw new IllegalMoveException (move + " illegal direction.");
+	  throw new IllegalMoveException(move + " illegal direction.");
 	if (dir == 'R')
-	  putAt (row, col, WN);
+	  putAt(row, col, WN);
 	if (dir == 'U')
-	  putAt (row, col, WN);
+	  putAt(row, col, WN);
 	if (dir == 'D')
-	  throw new IllegalMoveException ("illegal direction.");
+	  throw new IllegalMoveException("illegal direction.");
 	break;
       case 40:
 	if (dir == '/')
-	  throw new IllegalMoveException ("illegal direction.");
+	  throw new IllegalMoveException("illegal direction.");
 	if (dir == '\\')
-	  putAt (row, col, EN);
+	  putAt(row, col, EN);
 	if (dir == '+')
-	  putAt (row, col, EW);
+	  putAt(row, col, EW);
 	if (dir == 'S')
-	  putAt (row, col, WE);
+	  putAt(row, col, WE);
 	if (dir == 'C')
-	  putAt (row, col, NE);
+	  putAt(row, col, NE);
 	if (dir == 'L')
-	  putAt (row, col, NE);
+	  putAt(row, col, NE);
 	if (dir == 'R')
-	  throw new IllegalMoveException ("illegal direction.");
+	  throw new IllegalMoveException("illegal direction.");
 	if (dir == 'U')
-	  putAt (row, col, NE);
+	  putAt(row, col, NE);
 	if (dir == 'D')
-	  throw new IllegalMoveException ("illegal direction.");
+	  throw new IllegalMoveException("illegal direction.");
 	break;
       case 64:
 	if (dir == '/')
-	  putAt (row, col, ES);
+	  putAt(row, col, ES);
 	if (dir == '\\')
-	  putAt (row, col, EN);
+	  putAt(row, col, EN);
 	if (dir == '+')
-	  putAt (row, col, NS);
+	  putAt(row, col, NS);
 	if (dir == 'S')
-	  putAt (row, col, NS);
+	  putAt(row, col, NS);
 	if (dir == 'C')
-	  throw new IllegalMoveException ("illegal direction.");
+	  throw new IllegalMoveException("illegal direction.");
 	if (dir == 'L')
-	  throw new IllegalMoveException ("illegal direction.");
+	  throw new IllegalMoveException("illegal direction.");
 	if (dir == 'R')
-	  throw new IllegalMoveException ("illegal direction.");
+	  throw new IllegalMoveException("illegal direction.");
 	if (dir == 'U')
-	  putAt (row, col, SE);
+	  putAt(row, col, SE);
 	if (dir == 'D')
-	  putAt (row, col, NE);
+	  putAt(row, col, NE);
 	break;
       case 65:
 	if (dir == '/')
-	  throw new IllegalMoveException ("illegal direction.");
+	  throw new IllegalMoveException("illegal direction.");
 	if (dir == '\\')
-	  putAt (row, col, NE);
+	  putAt(row, col, NE);
 	if (dir == '+')
-	  putAt (row, col, NS);
+	  putAt(row, col, NS);
 	if (dir == 'S')
-	  putAt (row, col, NS);
+	  putAt(row, col, NS);
 	if (dir == 'C')
-	  putAt (row, col, NE);
+	  putAt(row, col, NE);
 	if (dir == 'L')
-	  throw new IllegalMoveException ("illegal direction.");
+	  throw new IllegalMoveException("illegal direction.");
 	if (dir == 'R')
-	  putAt (row, col, NE);
+	  putAt(row, col, NE);
 	if (dir == 'U')
-	  throw new IllegalMoveException ("illegal direction.");
+	  throw new IllegalMoveException("illegal direction.");
 	if (dir == 'D')
-	  putAt (row, col, NE);
+	  putAt(row, col, NE);
 	break;
       case 66:
 	if (dir == '/')
-	  putAt (row, col, SE);
+	  putAt(row, col, SE);
 	if (dir == '\\')
-	  throw new IllegalMoveException ("illegal direction.");
+	  throw new IllegalMoveException("illegal direction.");
 	if (dir == '+')
-	  putAt (row, col, SN);
+	  putAt(row, col, SN);
 	if (dir == 'S')
-	  putAt (row, col, SN);
+	  putAt(row, col, SN);
 	if (dir == 'C')
-	  putAt (row, col, SE);
+	  putAt(row, col, SE);
 	if (dir == 'L')
-	  throw new IllegalMoveException ("illegal direction.");
+	  throw new IllegalMoveException("illegal direction.");
 	if (dir == 'R')
-	  putAt (row, col, SE);
+	  putAt(row, col, SE);
 	if (dir == 'U')
-	  putAt (row, col, SE);
+	  putAt(row, col, SE);
 	if (dir == 'D')
-	  throw new IllegalMoveException ("illegal direction.");
+	  throw new IllegalMoveException("illegal direction.");
 	break;
       case 72:
 	if (dir == '/')
-	  putAt (row, col, ES);
+	  putAt(row, col, ES);
 	if (dir == '\\')
-	  putAt (row, col, EN);
+	  putAt(row, col, EN);
 	if (dir == '+')
-	  throw new IllegalMoveException ("illegal direction.");
+	  throw new IllegalMoveException("illegal direction.");
 	if (dir == 'S')
-	  throw new IllegalMoveException ("illegal direction.");
+	  throw new IllegalMoveException("illegal direction.");
 	if (dir == 'C')
-	  throw new IllegalMoveException ("illegal direction.");
+	  throw new IllegalMoveException("illegal direction.");
 	if (dir == 'L')
-	  throw new IllegalMoveException ("illegal direction.");
+	  throw new IllegalMoveException("illegal direction.");
 	if (dir == 'R')
-	  throw new IllegalMoveException ("illegal direction.");
+	  throw new IllegalMoveException("illegal direction.");
 	if (dir == 'U')
-	  putAt (row, col, NE);
+	  putAt(row, col, NE);
 	if (dir == 'D')
-	  putAt (row, col, SE);
+	  putAt(row, col, SE);
 	break;
       case 128:
 	if (dir == '/')
-	  putAt (row, col, WN);
+	  putAt(row, col, WN);
 	if (dir == '\\')
-	  putAt (row, col, WS);
+	  putAt(row, col, WS);
 	if (dir == '+')
-	  putAt (row, col, NS);
+	  putAt(row, col, NS);
 	if (dir == 'S')
-	  putAt (row, col, NS);
+	  putAt(row, col, NS);
 	if (dir == 'C')
-	  throw new IllegalMoveException ("illegal direction.");
+	  throw new IllegalMoveException("illegal direction.");
 	if (dir == 'L')
-	  throw new IllegalMoveException ("illegal direction.");
+	  throw new IllegalMoveException("illegal direction.");
 	if (dir == 'R')
-	  throw new IllegalMoveException ("illegal direction.");
+	  throw new IllegalMoveException("illegal direction.");
 	if (dir == 'U')
-	  putAt (row, col, WS);
+	  putAt(row, col, WS);
 	if (dir == 'D')
-	  putAt (row, col, WN);
+	  putAt(row, col, WN);
 	break;
       case 129:
 	if (dir == '/')
-	  putAt (row, col, NW);
+	  putAt(row, col, NW);
 	if (dir == '\\')
-	  throw new IllegalMoveException ("illegal direction.");
+	  throw new IllegalMoveException("illegal direction.");
 	if (dir == '+')
-	  putAt (row, col, NS);
+	  putAt(row, col, NS);
 	if (dir == 'S')
-	  putAt (row, col, NS);
+	  putAt(row, col, NS);
 	if (dir == 'C')
-	  putAt (row, col, NW);
+	  putAt(row, col, NW);
 	if (dir == 'L')
-	  putAt (row, col, NW);
+	  putAt(row, col, NW);
 	if (dir == 'R')
-	  throw new IllegalMoveException ("illegal direction.");
+	  throw new IllegalMoveException("illegal direction.");
 	if (dir == 'U')
-	  throw new IllegalMoveException ("illegal direction.");
+	  throw new IllegalMoveException("illegal direction.");
 	if (dir == 'D')
-	  putAt (row, col, NW);
+	  putAt(row, col, NW);
 	break;
       case 130:
 	if (dir == '/')
-	  throw new IllegalMoveException ("illegal direction.");
+	  throw new IllegalMoveException("illegal direction.");
 	if (dir == '\\')
-	  putAt (row, col, SW);
+	  putAt(row, col, SW);
 	if (dir == '+')
-	  putAt (row, col, SN);
+	  putAt(row, col, SN);
 	if (dir == 'S')
-	  putAt (row, col, SN);
+	  putAt(row, col, SN);
 	if (dir == 'C')
-	  putAt (row, col, SW);
+	  putAt(row, col, SW);
 	if (dir == 'L')
-	  putAt (row, col, SW);
+	  putAt(row, col, SW);
 	if (dir == 'R')
-	  throw new IllegalMoveException ("illegal direction.");
+	  throw new IllegalMoveException("illegal direction.");
 	if (dir == 'U')
-	  putAt (row, col, SW);
+	  putAt(row, col, SW);
 	if (dir == 'D')
-	  throw new IllegalMoveException ("illegal direction.");
+	  throw new IllegalMoveException("illegal direction.");
 	break;
       case 132:
 	if (dir == '/')
-	  putAt (row, col, WN);
+	  putAt(row, col, WN);
 	if (dir == '\\')
-	  putAt (row, col, WS);
+	  putAt(row, col, WS);
 	if (dir == '+')
-	  throw new IllegalMoveException ("illegal direction.");
+	  throw new IllegalMoveException("illegal direction.");
 	if (dir == 'S')
-	  throw new IllegalMoveException ("illegal direction.");
+	  throw new IllegalMoveException("illegal direction.");
 	if (dir == 'C')
-	  throw new IllegalMoveException ("illegal direction.");
+	  throw new IllegalMoveException("illegal direction.");
 	if (dir == 'L')
-	  throw new IllegalMoveException ("illegal direction.");
+	  throw new IllegalMoveException("illegal direction.");
 	if (dir == 'R')
-	  throw new IllegalMoveException ("illegal direction.");
+	  throw new IllegalMoveException("illegal direction.");
 	if (dir == 'U')
-	  putAt (row, col, WN);
+	  putAt(row, col, WN);
 	if (dir == 'D')
-	  putAt (row, col, WS);
+	  putAt(row, col, WS);
 	break;
       default:
 	/* This should never happen */
@@ -1070,25 +1004,25 @@ public class Traxboard
       row++;
     if (col == 0)
       col++;
-    if (!forcedMove (row - 1, col))
+    if (!forcedMove(row - 1, col))
       {
-	restoreState ();
-	throw new IllegalMoveException ("illegal filled cave.");
+	restoreState();
+	throw new IllegalMoveException("illegal filled cave.");
       }
-    if (!forcedMove (row + 1, col))
+    if (!forcedMove(row + 1, col))
       {
-	restoreState ();
-	throw new IllegalMoveException ("illegal filled cave.");
+	restoreState();
+	throw new IllegalMoveException("illegal filled cave.");
       }
-    if (!forcedMove (row, col - 1))
+    if (!forcedMove(row, col - 1))
       {
-	restoreState ();
-	throw new IllegalMoveException ("illegal filled cave.");
+	restoreState();
+	throw new IllegalMoveException("illegal filled cave.");
       }
-    if (!forcedMove (row, col + 1))
+    if (!forcedMove(row, col + 1))
       {
-	restoreState ();
-	throw new IllegalMoveException ("illegal filled cave.");
+	restoreState();
+	throw new IllegalMoveException("illegal filled cave.");
       }
     /* note that switchPlayer() _must_ come before isGameOver() */
     switchPlayer ();
@@ -1143,7 +1077,7 @@ public class Traxboard
 	    if (checkLine (row, 1, 'r', 'h'))
 	      {
 		// Line win
-		sp = getAt (row, 1);
+		sp = getAt(row, 1);
 		if (sp == NS || sp == NE || sp == ES)
 		  BlackWins = true;
 		else
@@ -1159,7 +1093,7 @@ public class Traxboard
 	    if (checkLine (1, col, 'd', 'v'))
 	      {
 		// Line win
-		sp = getAt (1, col);
+		sp = getAt(1, col);
 		if (sp == WE || sp == WS || sp == SE)
 		  BlackWins = true;
 		else
@@ -1174,7 +1108,7 @@ public class Traxboard
       {
 	for (int j = 1; j < 8; j++)
 	  {
-	    switch (getAt (i, j))
+	    switch (getAt(i, j))
 	      {
 	      case NW:
 		if (checkLine (i, j, 'u', 'l'))
@@ -1254,7 +1188,7 @@ public class Traxboard
       }
     if (getRowSize () * getColSize () == 1)
       {
-	switch (getAt (1, 1))
+	switch (getAt(1, 1))
 	  {
 	  case NW:
 	    Moves.add ("@1+");
@@ -1308,10 +1242,10 @@ public class Traxboard
 		eks_down = 0;
 		eks_right = 0;
 		eks_left = 0;
-		up = getAt (i - 1, j);
-		down = getAt (i + 1, j);
-		left = getAt (i, j - 1);
-		right = getAt (i, j + 1);
+		up = getAt(i - 1, j);
+		down = getAt(i + 1, j);
+		left = getAt(i, j - 1);
+		right = getAt(i, j + 1);
 
 		if (up == SN || up == SW || up == SE)
 		  {
@@ -1357,11 +1291,11 @@ public class Traxboard
 	  {
 	    if (neighbors[i][j] != 0)
 	      {
-		dl = getAt (i + 1, j - 1);
-		dr = getAt (i + 1, j + 1);
-		ur = getAt (i - 1, j + 1);
-		ul = getAt (i - 1, j - 1);
-		rr = getAt (i, j + 2);
+		dl = getAt(i + 1, j - 1);
+		dr = getAt(i + 1, j + 1);
+		ur = getAt(i - 1, j + 1);
+		ul = getAt(i - 1, j - 1);
+		rr = getAt(i, j + 2);
 		switch (neighbors[i][j])
 		  {
 		  case 1:
@@ -1550,10 +1484,10 @@ public class Traxboard
 	      eks_down = 0;
 	      eks_right = 0;
 	      eks_left = 0;
-	      up = getAt (i - 1, j);
-	      down = getAt (i + 1, j);
-	      left = getAt (i, j - 1);
-	      right = getAt (i, j + 1);
+	      up = getAt(i - 1, j);
+	      down = getAt(i + 1, j);
+	      left = getAt(i, j - 1);
+	      right = getAt(i, j + 1);
 
 	      if (up == SN || up == SW || up == SE)
 		ohs_up = 1;
@@ -1576,46 +1510,46 @@ public class Traxboard
 		{
 		  saveState ();
 		  if ((ohs_up + ohs_left > 0) || (eks_right + eks_down > 0))
-		    putAt (i, j, NW);
+		    putAt(i, j, NW);
 		  if ((eks_up + eks_left > 0) || (ohs_right + ohs_down > 0))
-		    putAt (i, j, SE);
-		  if (forcedMove (i - 1, j) &&
-		      forcedMove (i + 1, j) &&
-		      forcedMove (i, j - 1) && forcedMove (i, j + 1))
+		    putAt(i, j, SE);
+		  if (forcedMove(i - 1, j) &&
+		      forcedMove(i + 1, j) &&
+		      forcedMove(i, j - 1) && forcedMove (i, j + 1))
 		    {
 		      Moves.add (col_row_array[j][i] + "/");
 		    }
-		  restoreState ();
+		  restoreState();
 		}
 	      if (dirlist[i][j][1] == false)
 		{
 		  saveState ();
 		  if ((ohs_up + ohs_right > 0) || (eks_left + eks_down > 0))
-		    putAt (i, j, NE);
+		    putAt(i, j, NE);
 		  if ((eks_up + eks_right > 0) || (ohs_left + ohs_down > 0))
-		    putAt (i, j, SW);
-		  if (forcedMove (i - 1, j) &&
-		      forcedMove (i + 1, j) &&
-		      forcedMove (i, j - 1) && forcedMove (i, j + 1))
+		    putAt(i, j, SW);
+		  if (forcedMove(i - 1, j) &&
+		      forcedMove(i + 1, j) &&
+		      forcedMove(i, j - 1) && forcedMove (i, j + 1))
 		    {
 		      Moves.add (col_row_array[j][i] + "\\");
 		    }
-		  restoreState ();
+		  restoreState();
 		}
 	      if (dirlist[i][j][2] == false)
 		{
 		  saveState ();
 		  if ((ohs_up + ohs_down > 0) || (eks_left + eks_right > 0))
-		    putAt (i, j, NS);
+		    putAt(i, j, NS);
 		  if ((eks_up + eks_down > 0) || (ohs_left + ohs_right > 0))
-		    putAt (i, j, WE);
-		  if (forcedMove (i - 1, j) &&
-		      forcedMove (i + 1, j) &&
-		      forcedMove (i, j - 1) && forcedMove (i, j + 1))
+		    putAt(i, j, WE);
+		  if (forcedMove(i - 1, j) &&
+		      forcedMove(i + 1, j) &&
+		      forcedMove(i, j - 1) && forcedMove (i, j + 1))
 		    {
 		      Moves.add (col_row_array[j][i] + "+");
 		    }
-		  restoreState ();
+		  restoreState();
 		}
 	    }
 	}
@@ -1661,7 +1595,7 @@ public class Traxboard
 	    ix = 18;
 	    break;
 	  }
-	ix += getAt (row, col);
+	ix += getAt(row, col);
 	direction = newdir.charAt (ix);
 	switch (direction)
 	  {
@@ -1703,8 +1637,8 @@ public class Traxboard
 	j2 = getColSize ();
 	for (j = 1; j <= ((getColSize () + 1) / 2); j++)
 	  {
-	    piece = getAt (i, j);
-	    switch (getAt (i, j2))
+	    piece = getAt(i, j);
+	    switch (getAt(i, j2))
 	      {
 	      case NW:
 		if (piece != NE)
@@ -1757,8 +1691,8 @@ public class Traxboard
       {
 	for (j = 1; j <= getColSize (); j++)
 	  {
-	    piece = getAt (i, j);
-	    switch (getAt (i2, j))
+	    piece = getAt(i, j);
+	    switch (getAt(i2, j))
 	      {
 	      case NW:
 		if (piece != SW)
@@ -1813,8 +1747,8 @@ public class Traxboard
 	j2 = getColSize ();
 	for (j = 1; j <= getColSize (); j++)
 	  {
-	    piece = getAt (i, j);
-	    switch (getAt (i2, j2))
+	    piece = getAt(i, j);
+	    switch (getAt(i2, j2))
 	      {
 	      case NW:
 		if (piece != SE)
@@ -1876,7 +1810,7 @@ public class Traxboard
   }
 
 
-  public int getAt (int row, int col)
+  public int getAt(int row, int col)
   {
     if ((row < 1) || (row > 8))
       return EMPTY;
@@ -1886,7 +1820,7 @@ public class Traxboard
   }
 
 
-  public void putAt (int row, int col, int piece)
+  public void putAt(int row, int col, int piece)
   {
     assert (row + col > 0);
     if (piece == EMPTY)
@@ -1955,17 +1889,17 @@ public class Traxboard
     return (getColSize () < 8);
   }
 
-  public boolean forcedMove (int brow, int bcol)
+  public boolean forcedMove(int brow, int bcol)
   {
     if (!isBlank (brow, bcol))
       return true;
     if ((brow < 1) || (brow > 8) || (bcol < 1) || (bcol > 8))
       return true;
 
-    int up = getAt (brow - 1, bcol);
-    int down = getAt (brow + 1, bcol);
-    int left = getAt (brow, bcol - 1);
-    int right = getAt (brow, bcol + 1);
+    int up = getAt(brow - 1, bcol);
+    int down = getAt(brow + 1, bcol);
+    int left = getAt(brow, bcol - 1);
+    int right = getAt(brow, bcol + 1);
 
     //boolean result=true;
     int neighbors = 0;
@@ -2060,7 +1994,7 @@ public class Traxboard
 	    break;
 	  }
       }
-    putAt (brow, bcol, piece);
+    putAt(brow, bcol, piece);
     /*
        result&=(forcedMove(brow-1,bcol  ));
        result&=(forcedMove(brow+1,bcol  ));
@@ -2068,19 +2002,19 @@ public class Traxboard
        result&=(forcedMove(brow  ,bcol+1));
        return result;
      */
-    if (forcedMove (brow - 1, bcol) == false)
+    if (forcedMove(brow - 1, bcol) == false)
       {
 	return false;
       }
-    if (forcedMove (brow + 1, bcol) == false)
+    if (forcedMove(brow + 1, bcol) == false)
       {
 	return false;
       }
-    if (forcedMove (brow, bcol - 1) == false)
+    if (forcedMove(brow, bcol - 1) == false)
       {
 	return false;
       }
-    if (forcedMove (brow, bcol + 1) == false)
+    if (forcedMove(brow, bcol + 1) == false)
       {
 	return false;
       }
@@ -2088,17 +2022,14 @@ public class Traxboard
   }
 
 
-  private void updateLine (char colour, char entry, int row, int col)
-  {
+  private void updateLine(char colour, char entry, int row, int col) {
     int theNum;
 
-    while (true)
-      {
+    while (true) {
 	theNum = 0;
 	if (colour == 'w')
 	  theNum = 1024;
-	switch (entry)
-	  {
+	switch (entry) {
 	  case 'w':
 	    theNum += 512;
 	    break;
@@ -2115,8 +2046,7 @@ public class Traxboard
 	    // This should never happen 
 	      throw new AssertionError("This should never happen. (018)"); 
 	  }
-	switch (getAt (row, col))
-	  {
+	switch (getAt(row, col)) {
 	  case NS:
 	    theNum += 32;
 	    break;
@@ -2139,140 +2069,139 @@ public class Traxboard
 	    // This should never happen 
 	      throw new AssertionError("This should never happen. (019)");
 	  }
-	switch (theNum)
-	  {
+	switch (theNum) {
 	  case 1024 + 512 + 16:
-	    if (getAt (row, col + 1) == EMPTY)
+	    if (getAt(row, col + 1) == EMPTY)
 	      return;
 	    col++;
 	    break;
 	  case 1024 + 512 + 8:
-	    if (getAt (row - 1, col) == EMPTY)
+	    if (getAt(row - 1, col) == EMPTY)
 	      return;
 	    row--;
 	    entry = 's';
 	    break;
 	  case 1024 + 512 + 2:
-	    if (getAt (row + 1, col) == EMPTY)
+	    if (getAt(row + 1, col) == EMPTY)
 	      return;
 	    row++;
 	    entry = 'n';
 	    break;
 	  case 1024 + 256 + 16:
-	    if (getAt (row, col - 1) == EMPTY)
+	    if (getAt(row, col - 1) == EMPTY)
 	      return;
 	    col--;
 	    break;
 	  case 1024 + 256 + 4:
-	    if (getAt (row - 1, col) == EMPTY)
+	    if (getAt(row - 1, col) == EMPTY)
 	      return;
 	    row--;
 	    entry = 's';
 	    break;
 	  case 1024 + 256 + 1:
-	    if (getAt (row + 1, col) == EMPTY)
+	    if (getAt(row + 1, col) == EMPTY)
 	      return;
 	    row++;
 	    entry = 'n';
 	    break;
 	  case 1024 + 128 + 32:
-	    if (getAt (row - 1, col) == EMPTY)
+	    if (getAt(row - 1, col) == EMPTY)
 	      return;
 	    row--;
 	    break;
 	  case 1024 + 128 + 2:
-	    if (getAt (row, col - 1) == EMPTY)
+	    if (getAt(row, col - 1) == EMPTY)
 	      return;
 	    col--;
 	    entry = 'e';
 	    break;
 	  case 1024 + 128 + 1:
-	    if (getAt (row, col + 1) == EMPTY)
+	    if (getAt(row, col + 1) == EMPTY)
 	      return;
 	    col++;
 	    entry = 'w';
 	    break;
 	  case 1024 + 64 + 32:
-	    if (getAt (row + 1, col) == EMPTY)
+	    if (getAt(row + 1, col) == EMPTY)
 	      return;
 	    row++;
 	    break;
 	  case 1024 + 64 + 8:
-	    if (getAt (row, col - 1) == EMPTY)
+	    if (getAt(row, col - 1) == EMPTY)
 	      return;
 	    col--;
 	    entry = 'e';
 	    break;
 	  case 1024 + 64 + 4:
-	    if (getAt (row, col + 1) == EMPTY)
+	    if (getAt(row, col + 1) == EMPTY)
 	      return;
 	    col++;
 	    entry = 'w';
 	    break;
 	  case 512 + 32:
-	    if (getAt (row, col + 1) == EMPTY)
+	    if (getAt(row, col + 1) == EMPTY)
 	      return;
 	    col++;
 	    break;
 	  case 512 + 4:
-	    if (getAt (row + 1, col) == EMPTY)
+	    if (getAt(row + 1, col) == EMPTY)
 	      return;
 	    row++;
 	    entry = 'n';
 	    break;
 	  case 512 + 1:
-	    if (getAt (row - 1, col) == EMPTY)
+	    if (getAt(row - 1, col) == EMPTY)
 	      return;
 	    row--;
 	    entry = 's';
 	    break;
 	  case 256 + 32:
-	    if (getAt (row - 1, col) == EMPTY)
+	    if (getAt(row - 1, col) == EMPTY)
 	      return;
 	    row--;
 	    break;
 	  case 256 + 8:
-	    if (getAt (row, col + 1) == EMPTY)
+	    if (getAt(row, col + 1) == EMPTY)
 	      return;
 	    row++;
 	    entry = 'n';
 	    break;
 	  case 256 + 2:
-	    if (getAt (row - 1, col) == EMPTY)
+	    if (getAt(row - 1, col) == EMPTY)
 	      return;
 	    row--;
 	    entry = 's';
 	    break;
 	  case 128 + 16:
-	    if (getAt (row - 1, col) == EMPTY)
+	    if (getAt(row - 1, col) == EMPTY)
 	      return;
 	    row--;
 	    break;
 	  case 128 + 8:
-	    if (getAt (row, col + 1) == EMPTY)
+	    if (getAt(row, col + 1) == EMPTY)
 	      return;
 	    col++;
 	    entry = 'w';
 	    break;
 	  case 128 + 4:
-	    if (getAt (row, col - 1) == EMPTY)
+	    if (getAt(row, col - 1) == EMPTY)
 	      return;
 	    col--;
 	    entry = 'e';
 	    break;
 	  case 64 + 16:
-	    if (getAt (row + 1, col) == EMPTY)
+	    if (getAt(row + 1, col) == EMPTY)
 	      return;
 	    row++;
 	    break;
 	  case 64 + 2:
-	    if (getAt (row, col + 1) == EMPTY)
+	    if (getAt(row, col + 1) == EMPTY)
 	      return;
 	    col++;
 	    entry = 'w';
 	    break;
 	  case 64 + 1:
-	    if (getAt (row, col - 1) == EMPTY)
+	    if (getAt(row, col - 1) == EMPTY)
 	      return;
 	    col--;
 	    entry = 'e';
@@ -2285,8 +2214,7 @@ public class Traxboard
   }
 
 
-  public String getBorder (boolean needNumbers)
-  {
+  public String getBorder(boolean needNumbers) {
     String result = new String ();
     char[] dummy = new char[4];
     int i, j, k, starti, startj, icopy, jcopy;
@@ -2311,19 +2239,16 @@ public class Traxboard
       }
     starti = 1;
     startj = 1;
-    while (getAt (starti, startj) == EMPTY)
+    while (getAt(starti, startj) == EMPTY)
       starti++;
 
     direction = 'd';
     i = starti;
     j = startj;
-    while (true)
-      {
-	switch (direction)
-	  {
+    while (true) {
+	switch (direction) {
 	  case 'd':
-	    switch (getAt (i, j))
-	      {
+	    switch (getAt(i, j)) {
 	      case NW:
 	      case SW:
 	      case WE:
@@ -2367,16 +2292,14 @@ public class Traxboard
 		/* This should never happen */
 		  throw new AssertionError("This should never happen. (021)");
 	      }
-	    if (getAt (i + 1, j - 1) != EMPTY)
-	      {
+	    if (getAt(i + 1, j - 1) != EMPTY) {
 		direction = 'l';
 		result += '+';
 		i++;
 		j--;
 		break;
 	      }
-	    if (getAt (i + 1, j) == EMPTY)
-	      {
+	    if (getAt(i + 1, j) == EMPTY) {
 		direction = 'r';
 		result += '-';
 		break;
@@ -2384,8 +2307,7 @@ public class Traxboard
 	    i++;
 	    break;
 	  case 'u':
-	    switch (getAt (i, j))
-	      {
+	    switch (getAt(i, j)) {
 	      case EW:
 	      case NE:
 	      case ES:
@@ -2428,16 +2350,14 @@ public class Traxboard
 		/* This should never happen */
 		  throw new AssertionError("This should never happen. (022)");
 	      }
-	    if (getAt (i - 1, j + 1) != EMPTY)
-	      {
+	    if (getAt(i - 1, j + 1) != EMPTY) {
 		direction = 'r';
 		result += '+';
 		i--;
 		j++;
 		break;
 	      }
-	    if (getAt (i - 1, j) == EMPTY)
-	      {
+	    if (getAt(i - 1, j) == EMPTY) {
 		direction = 'l';
 		result += '-';
 		break;
@@ -2445,8 +2365,7 @@ public class Traxboard
 	    i--;
 	    break;
 	  case 'l':
-	    switch (getAt (i, j))
-	      {
+	    switch (getAt(i, j)) {
 	      case NW:
 	      case SN:
 	      case NE:
@@ -2489,16 +2408,14 @@ public class Traxboard
 		/* This should never happen */
 		  throw new AssertionError("This should never happen. (023)");
 	      }
-	    if (getAt (i - 1, j - 1) != EMPTY)
-	      {
+	    if (getAt(i - 1, j - 1) != EMPTY) {
 		direction = 'u';
 		result += '+';
 		i--;
 		j--;
 		break;
 	      }
-	    if (getAt (i, j - 1) == EMPTY)
-	      {
+	    if (getAt(i, j - 1) == EMPTY) {
 		if ((i == starti) && (j == startj))
 		  return result;
 		direction = 'd';
@@ -2508,8 +2425,7 @@ public class Traxboard
 	    j--;
 	    break;
 	  case 'r':
-	    switch (getAt (i, j))
-	      {
+	    switch (getAt(i, j)) {
 	      case NS:
 	      case SE:
 	      case SW:
@@ -2552,15 +2468,14 @@ public class Traxboard
 		/* This should never happen */
 		  throw new AssertionError("This should never happen. (024)");
 	      }
-	    if (getAt (i + 1, j + 1) != EMPTY)
-	      {
+	    if (getAt(i + 1, j + 1) != EMPTY) {
 		direction = 'd';
 		result += '+';
 		i++;
 		j++;
 		break;
 	      }
-	    if (getAt (i, j + 1) == EMPTY)
+	    if (getAt(i, j + 1) == EMPTY)
 	      {
 		direction = 'u';
 		result += '-';
@@ -2577,7 +2492,10 @@ public class Traxboard
 
   private int neighbor_value(int x, int y) {
     int value = 0;
-    int up = getAt(x - 1, y), down = getAt(x + 1, y), left = getAt(x, y - 1), right = getAt(x, y + 1);
+    int up = getAt(x - 1, y);
+    int down = getAt(x + 1, y);
+    int left = getAt(x, y - 1);
+    int right = getAt(x, y + 1);
     if (up == Traxboard.SN || up == Traxboard.SE || up == Traxboard.SW) { value += 1; } // ohs_up
     if (up == Traxboard.EW || up == Traxboard.NW || up == Traxboard.NE) { value += 16; } // eks_up
     if (down == Traxboard.NS || down == Traxboard.NE || down == Traxboard.NW) { value += 2; } // ohs_down
@@ -2702,19 +2620,16 @@ public class Traxboard
 
     result = true;
 
-    try
-    {
+    try {
       t = new Traxboard ();
       t.makeMove ("a1c");
       t.makeMove ("b1s");
       moves = t.uniqueMoves ();
-      if (moves.size () != 17)
-	{
+      if (moves.size () != 17) {
 	  result = false;
 	  System.err.println ("Test 1: FAILED\n");
 	}
-      else
-	{
+      else {
 	  System.err.println ("Test 1: OK\n");
 	}
 
@@ -2722,13 +2637,11 @@ public class Traxboard
       t.makeMove ("a1s");
       t.makeMove ("b1s");
       t.makeMove ("a0/");
-      if (t.getNumOfTiles () != 4)
-	{
+      if (t.getNumOfTiles () != 4) {
 	  result = false;
 	  System.err.println ("Test 2: FAILED\n");
 	}
-      else
-	{
+      else {
 	  System.err.println ("Test 2: OK\n");
 	}
 
@@ -2748,13 +2661,11 @@ public class Traxboard
       t.makeMove ("E0+");
       t.makeMove ("B8\\");
       moves = t.uniqueMoves ();
-      if (moves.size () != 43)
-	{
+      if (moves.size () != 43) {
 	  System.err.println ("Test 3: FAILED\n");
 	  result = false;
 	}
-      else
-	{
+      else {
 	  System.err.println ("Test 3: OK\n");
 	}
 
@@ -2776,13 +2687,11 @@ public class Traxboard
       t.makeMove ("e2d");
       t.makeMove ("f2\\");
       t.makeMove ("e4s");
-      if (t.isGameOver () != WHITE)
-	{
+      if (t.isGameOver () != WHITE) {
 	  System.err.println ("Test 4: FAILED\n");
 	  result = false;
 	}
-      else
-	{
+      else {
 	  System.err.println ("Test 4: OK\n");
 	}
 
@@ -2794,8 +2703,7 @@ public class Traxboard
       t.makeMove ("a1s");
       t.makeMove ("c2s");
       moves = t.uniqueMoves ();
-      if (moves.size () != 15)
-	{
+      if (moves.size () != 15) {
 	  System.err.println ("Test 5: FAILED\n");
 	  result = false;
 	}
@@ -2810,13 +2718,11 @@ public class Traxboard
       t.makeMove ("a1d");
       t.makeMove ("1ar");
       moves = t.uniqueMoves ();
-      if (moves.size () != 11)
-	{
+      if (moves.size () != 11) {
 	  System.err.println ("Test 6: FAILED\n");
 	  result = false;
 	}
-      else
-	{
+      else {
 	  System.err.println ("Test 6: OK\n");
 	}
 
@@ -2824,15 +2730,13 @@ public class Traxboard
       t.makeMove ("a1c");
       t.makeMove ("a1d");
       moves = t.uniqueMoves ();
-      if (moves.size () != 9)
-	{
+      if (moves.size () != 9) {
 	  System.err.println ("Test 7: FAILED\n");
 	  result = false;
-	}
-      else
-	{
+      }
+      else {
 	  System.err.println ("Test 7: OK\n");
-	}
+      }
 
       t = new Traxboard ();
       t.makeMove ("a1s");
@@ -2842,13 +2746,11 @@ public class Traxboard
       t.makeMove ("c2d");
       System.out.println(t+t.getBorder(false));
       moves = t.uniqueMoves ();
-      if (moves.size () != 12)
-	{
+      if (moves.size () != 12) {
 	  System.err.println ("Test 8: FAILED\n");
 	  result = false;
 	}
-      else
-	{
+      else {
 	  System.err.println ("Test 8: OK\n");
 	}
 
@@ -2858,13 +2760,11 @@ public class Traxboard
       t.makeMove ("b2u");
       t.makeMove ("b3l");
       moves = t.uniqueMoves ();
-      if (moves.size () != 11)
-	{
+      if (moves.size () != 11) {
 	  System.err.println ("Test 9: FAILED\n");
 	  result = false;
 	}
-      else
-	{
+      else {
 	  System.err.println ("Test 9: OK\n");
 	}
 
@@ -2876,13 +2776,11 @@ public class Traxboard
       t.makeMove ("c3u");
       t.makeMove ("c4l");
       moves = t.uniqueMoves ();
-      if (moves.size () != 13)
-	{
+      if (moves.size () != 13) {
 	  System.err.println ("Test 10: FAILED\n");
 	  result = false;
 	}
-      else
-	{
+      else {
 	  System.err.println ("Test 10: OK\n");
 	}
 
@@ -2893,13 +2791,11 @@ public class Traxboard
       t.makeMove ("b3s");
       t.makeMove ("@1+");
       moves = t.uniqueMoves ();
-      if (moves.size () != 12)
-	{
+      if (moves.size () != 12) {
 	  System.err.println ("Test 11: FAILED\n");
 	  result = false;
 	}
-      else
-	{
+      else {
 	  System.err.println ("Test 11: OK\n");
 	}
 
@@ -2910,13 +2806,11 @@ public class Traxboard
       t.makeMove ("1as");
       t.makeMove ("1as");
       moves = t.uniqueMoves ();
-      if (moves.size () != 9)
-	{
+      if (moves.size () != 9) {
 	  System.err.println ("Test 12: FAILED\n");
 	  result = false;
 	}
-      else
-	{
+      else {
 	  System.err.println ("Test 12: OK\n");
 	}
 
@@ -2926,13 +2820,11 @@ public class Traxboard
       t.makeMove ("1as");
       t.makeMove ("1as");
       moves = t.uniqueMoves ();
-      if (moves.size () != 7)
-	{
+      if (moves.size () != 7) {
 	  System.err.println ("Test 13: FAILED\n");
 	  result = false;
 	}
-      else
-	{
+      else {
 	  System.err.println ("Test 13: OK\n");
 	}
 	t=new Traxboard();
@@ -2945,21 +2837,15 @@ public class Traxboard
           System.err.println("Test 14: OK\n");
         }
     }
-    catch (Exception e)
-    {
+    catch (Exception e) {
       e.printStackTrace ();
       result = false;
     }
-    if (result == false)
-      {
-	System.exit (-1);
-      }
-    else
-      {
+    if (result == false) { System.exit (-1); }
+    else {
 	System.out.println("All tests went OK.");
 	System.exit (0);
-      }
+    }
   }
-
 
 }
