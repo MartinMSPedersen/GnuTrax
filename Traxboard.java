@@ -2508,7 +2508,7 @@ public class Traxboard {
   }
 
   public ArrayList<Integer> getLegalTiles(int x, int y) {
-    ArrayList <Integer> result=new ArrayList <Integer> ();
+    ArrayList <Integer> result=new ArrayList <Integer>();
     if (this.boardEmpty) {
 	result.add(new Integer(Traxboard.NW));
 	result.add(new Integer(Traxboard.NS));
@@ -2835,6 +2835,17 @@ public class Traxboard {
         }
         else {
           System.err.println("Test 14: OK\n");
+        }
+	t=new Traxboard();
+	t.makeMove("@0/");
+	t.makeMove("b1/");
+	legalTiles=t.getLegalTiles(1,3);
+        if (legalTiles.size()!=3) {
+          System.err.println("Test 15: FAILED\n");
+          result=false;
+        }
+        else {
+          System.err.println("Test 15: OK\n");
         }
     }
     catch (Exception e) {
