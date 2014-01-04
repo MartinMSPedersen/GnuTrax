@@ -516,8 +516,8 @@ public class GnuTrax {
 		 */
 	}
 
-	public List<String> getPossibleMoves() {
-		return tb.uniqueMoves();
+	public List<Integer> getPossibleMoves(int x, int y) {
+		return tb.getLegalTiles(y, x);
 	}
 
 	private void userNoise(ArrayList<String> command) {

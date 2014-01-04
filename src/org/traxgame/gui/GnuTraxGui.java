@@ -217,30 +217,14 @@ public class GnuTraxGui extends JFrame {
 	// colors
 	public java.util.List<Tile> getPossibleTilesForPosition(int x, int y) {
 		java.util.List<Tile> possibleMoves = new ArrayList<Tile>();
-		java.util.List<String> theMoves = this.gnuTraxGame.getPossibleMoves();
-		for (String s : theMoves) {
-			String[] data = s.split("");
-			String pos = getRowColForPos(x, y);
-			if (true || s.startsWith(pos)) {
-				switch (data[3]) {
-				case "+":
-					possibleMoves.add(tiles[Traxboard.SN]);
-					possibleMoves.add(tiles[Traxboard.WE]);
-					break;
-				case "/":
-					possibleMoves.add(tiles[Traxboard.ES]);
-					possibleMoves.add(tiles[Traxboard.NW]);
-					break;
-				case "\\":
-					possibleMoves.add(tiles[Traxboard.EN]);
-					possibleMoves.add(tiles[Traxboard.WS]);
-					break;
-				}
-			}
+		java.util.List<Integer> theMoves = this.gnuTraxGame.getPossibleMoves(x, y);
+		for (Integer move: theMoves) {
+			possibleMoves.add(tiles[move.intValue()]);
 		}
-		HashSet hs = new HashSet<Tile>();
-		hs.addAll(possibleMoves);
-		return new ArrayList<Tile>(hs);
+		//HashSet hs = new HashSet<Tile>();
+		//hs.addAll(possibleMoves);
+		//return new ArrayList<Tile>(hs);
+		return possibleMoves;
 	}
 
 	private void newGameBoard() {
