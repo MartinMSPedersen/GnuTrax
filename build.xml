@@ -49,7 +49,7 @@
 				<path location="bin2" />
 			</classpath>
 			<batchtest>
-				<fileset dir="bin2/org/traxgame/test" includes="**/*Test*" />
+				<fileset dir="bin2" includes="**/*Test*" />
 			</batchtest>
 			<formatter type="brief" usefile="false"/>
 		</junit>
