@@ -2,27 +2,43 @@
 <project default="create_run_jar" name="Create Runnable Jar for Project GnuTraxOrig">
 
 	<target name="init">
-        <mkdir dir="bin2" />
+		<mkdir dir="bin2" />
 	</target>
 
 	<path id="classpath">
-		<fileset dir="libs" includes="*.jar"/>
+		<fileset dir="libs" includes="*.jar" />
 	</path>
 
-	
-    <target name="compile" depends="init">
-        <javac srcdir="src" destdir="bin2" classpathref="classpath" />
-    </target>
-    
-    <target name="create_run_jar">
-        <jar destfile="gnutraxgui.jar" filesetmanifest="mergewithoutmain">
-            <manifest>
-                <attribute name="Main-Class" value="org.traxgame.gui.GnuTraxGui"/>
-                <attribute name="Class-Path" value="."/>
-            </manifest>
-            <fileset dir="bin2"/>
-        	<fileset dir="libs"/>
-        	<fileset dir="src" />
-        </jar>
-    </target>
+	<target name="compile" depends="init">
+		<javac srcdir="src" destdir="bin2" classpathref="classpath" />
+		<copy todir="bin2/images">
+			<fileset dir="src/images" />
+		</copy>
+	</target>
+
+	<target name="run" depends="compile">
+		<java fork="true" classname="org.traxgame.gui.GnuTraxGui">
+			<classpath>
+				<path refid="classpath" />
+				<path location="bin2" />
+			</classpath>
+		</java>
+	</target>
+
+	<target name="create_run_jar">
+		<jar destfile="gnutraxgui.jar" filesetmanifest="mergewithoutmain">
+			<manifest>
+				<attribute name="Main-Class" value="org.traxgame.gui.GnuTraxGui" />
+				<attribute name="Class-Path" value="." />
+			</manifest>
+			<fileset dir="bin2" />
+			<fileset dir="libs" />
+			<fileset dir="src" />
+		</jar>
+	</target>
+
+	<target name="clean" description="clean up">
+		<delete dir="bin2" />
+		<delete file="gnutraxgui.jar" />
+	</target>
 </project>
