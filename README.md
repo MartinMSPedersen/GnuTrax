@@ -1,6 +1,24 @@
 GnuTrax
 =======
 
+Run: 
+```
+ant run
+```
+
+Create jar:
+```
+ant
+```
+
+Compile:
+```
+ant compile
+```
+
+OLD STUFF
+=========
+
 The goal is a trax playing program which can beat the commerciel
 closed sourced program called "Doby".
 

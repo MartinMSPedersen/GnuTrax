@@ -41,4 +41,17 @@
 		<delete dir="bin2" />
 		<delete file="gnutraxgui.jar" />
 	</target>
+
+	<target name="test" depends="compile" description="Run the unit tests">
+		<junit fork="yes">
+			<classpath>
+				<path refid="classpath" />
+				<path location="bin2" />
+			</classpath>
+			<batchtest>
+				<fileset dir="bin2/org/traxgame/test" includes="**/*Test*" />
+			</batchtest>
+			<formatter type="brief" usefile="false"/>
+		</junit>
+	</target>
 </project>
