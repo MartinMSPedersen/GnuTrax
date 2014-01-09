@@ -130,7 +130,6 @@ public class GnuTraxGui extends JFrame {
 						tiles[this.gnuTraxGame.getTileAt(i, j)].getImage());
 			}
 		}
-		System.out.println(this.gnuTraxGame.getTheBoard());
 		this.pack();
 		this.setVisible(true);
 	}
@@ -226,9 +225,6 @@ public class GnuTraxGui extends JFrame {
 		java.util.List<Tile> possibleMoves = new ArrayList<Tile>();
 		java.util.List<Integer> theMoves = this.gnuTraxGame.getPossibleMoves(x,
 				y);
-		System.out.println("POS "+x+","+y+": "+getRowColForPos(x, y));
-		System.out.println(theMoves);
-		System.out.println("NS: 1, WE: 2, NW: 3, NE: 4, WS: 5, SE: 6");
 		for (Integer move : theMoves) {
 			possibleMoves.add(tiles[move.intValue()]);
 		}
