@@ -114,10 +114,8 @@ public class GnuTraxGui extends JFrame {
 		for (int i = 0; i < noOfRowsToDraw; i++) {
 			for (int j = 0; j < noOfColsToDraw; j++) {
 				// TODO Why is it needed to swap i and j here??
-				//When the limit is hit (8 cols or 8 rows) can it not the the correct
-				//j or i. 
 				innerPanel = new ImagePanel(tiles[Traxboard.EMPTY].getImage(),
-						this, j+rowDiff, i+colDiff);
+						this, j-colDiff, i-rowDiff);
 				innerPanel.setSize(new Dimension(80, 80));
 				outerPanel.add(innerPanel);
 				board.add(innerPanel);
