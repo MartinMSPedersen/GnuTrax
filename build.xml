@@ -25,7 +25,7 @@
 		</java>
 	</target>
 
-	<target name="create_run_jar">
+	<target name="create_run_jar" depends="compile">
 		<jar destfile="gnutraxgui.jar" filesetmanifest="mergewithoutmain">
 			<manifest>
 				<attribute name="Main-Class" value="org.traxgame.gui.GnuTraxGui" />
@@ -39,6 +39,7 @@
 
 	<target name="clean" description="clean up">
 		<delete dir="bin2" />
+		<delete dir="bin" />
 		<delete file="gnutraxgui.jar" />
 	</target>
 
