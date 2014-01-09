@@ -24,18 +24,30 @@ public class TraxboardTest {
 	}
 
 	@Test
-	public void testGetNumOfTiles() {
-		fail("Not yet implemented");
+	public void testGetNumOfTiles() throws IllegalMoveException {
+		assertEquals("0 tiles", 0, traxboard.getNumOfTiles());
+		traxboard.makeMove("@0/");
+		traxboard.makeMove("B1\\");
+		traxboard.makeMove("B2/");
+		assertEquals("4 tiles", 4, traxboard.getNumOfTiles());
 	}
 
 	@Test
-	public void testGetRowSize() {
-		fail("Not yet implemented");
+	public void testGetRowSize() throws IllegalMoveException {
+		assertEquals("0 rows", 0, traxboard.getRowSize());
+		traxboard.makeMove("@0/");
+		traxboard.makeMove("B1\\");
+		traxboard.makeMove("B2/");
+		assertEquals("2 rows", 2, traxboard.getRowSize());
 	}
 
 	@Test
-	public void testGetColSize() {
-		fail("Not yet implemented");
+	public void testGetColSize() throws IllegalMoveException {
+		assertEquals("0 cols", 0, traxboard.getColSize());
+		traxboard.makeMove("@0/");
+		traxboard.makeMove("B1\\");
+		traxboard.makeMove("B2/");
+		assertEquals("2 cols", 2, traxboard.getColSize());
 	}
 
 	@Test
