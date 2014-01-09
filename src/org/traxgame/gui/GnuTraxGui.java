@@ -106,8 +106,8 @@ public class GnuTraxGui extends JFrame {
 
 		for (int i = 0; i < noOfRowsToDraw; i++) {
 			for (int j = 0; j < noOfColsToDraw; j++) {
-				innerPanel = new ImagePanel(tiles[Traxboard.EMPTY].getImage(),
-						this, j, i);
+				//TODO Why is it needed to swap i and j here??
+				innerPanel = new ImagePanel(tiles[Traxboard.EMPTY].getImage(), this, j, i);
 				innerPanel.setSize(new Dimension(80, 80));
 				outerPanel.add(innerPanel);
 				board.add(innerPanel);
@@ -116,6 +116,21 @@ public class GnuTraxGui extends JFrame {
 		this.getContentPane().remove(0);
 		this.getContentPane().add(outerPanel);
 
+		//Fails when board hits the 8 thingie.
+		//If row == 8 => exeception
+		//If col == 8 => it wraps arounds and draw the H column in front. Like a line break
+		//@abcdefg
+		//h
+		//instead of:
+		//@abcdefgh
+		/*
+		 * i = 3, j = 8
+		 * 3*8+8 = 32
+		 */
+		//The issue might be something with that we need to draw in position 0 and we can never 
+		//select 0 in the board list.
+		//TODO Need to figure out some other data structure for the board
+		//Maybe hash, with getColRowForPos as key??
 		for (int i = 1; i <= this.gnuTraxGame.getBoardRows(); i++) {
 			for (int j = 1; j <= this.gnuTraxGame.getBoardCols(); j++) {
 				board.get(i * noOfColsToDraw + j).setImage(
@@ -213,17 +228,12 @@ public class GnuTraxGui extends JFrame {
 		// System.out.println(this.gnuTraxGame.getTheBoard());
 	}
 
-	// TODO Make the moves s.t. only the real moves is shown, with correct
-	// colors
 	public java.util.List<Tile> getPossibleTilesForPosition(int x, int y) {
 		java.util.List<Tile> possibleMoves = new ArrayList<Tile>();
 		java.util.List<Integer> theMoves = this.gnuTraxGame.getPossibleMoves(x, y);
 		for (Integer move: theMoves) {
 			possibleMoves.add(tiles[move.intValue()]);
 		}
-		//HashSet hs = new HashSet<Tile>();
-		//hs.addAll(possibleMoves);
-		//return new ArrayList<Tile>(hs);
 		return possibleMoves;
 	}
 
