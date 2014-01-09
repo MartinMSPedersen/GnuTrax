@@ -1,0 +1,21 @@
+<project>
+		<property name="compile.exclude" value="org/traxgame/gui/**" />
+    
+		<!-- The following do not work as intended
+    	<target name="-pre-compile">
+		<path id="source.absolute.dir">
+			<pathelement path="src/org/traxgame/main/**" />
+			<pathelement path="src/org/traxgame/droid/**" />
+		</path>
+		<echo level="info">To be compiled: ${toString:project.all.jars.path}
+		</echo>
+	</target> -->
+	<target name="-post-compile">
+		<path id="project.all.jars.path">
+			<!-- un-comment below line if you want it -->
+			<pathelement path="libs/android-support-v4.jar" />
+		</path>
+		<echo level="info">To be packaged jar: ${toString:project.all.jars.path}
+		</echo>
+	</target>
+</project>

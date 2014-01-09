@@ -16,6 +16,20 @@ Compile:
 ant compile
 ```
 
+
+ANDROID
+=======
+
+To get the android to compile do you need to edit C:\adt-bundle-windows\sdk\tools\ant\build.xml and insert 				
+<exclude name="${compile.exclude}"/>
+at line 737 in the -compile target.
+
+Create a file in the root of the repos called local.properties containing something like this:
+
+sdk.dir=C:\\adt-bundle-windows\\sdk
+
+where the part after sdk.dir= is the path to your android sdk install
+
 OLD STUFF
 =========
 
