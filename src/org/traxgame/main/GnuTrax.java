@@ -14,6 +14,8 @@ import java.util.List;
 
 public class GnuTrax {
 
+	private String newestBoard;
+	
 	public GnuTrax(String computer_algorithme) {
 		noise = 100;
 		autodisplay = true;
@@ -1007,22 +1009,18 @@ public class GnuTrax {
 		;
 	}
 
-	private static void welcome() {
-		System.out
-				.print("GnuTrax is copyright 2009 Martin M. Pedersen - email: traxplayer@gmail.com\n");
-		System.out
-				.print("GnuTrax comes with ABSOLUTELY NO WARRANTY; for details type \"show warranty\".\n");
-		System.out
-				.print("This is free software, and you are welcome to redistribute it\n");
-		System.out
-				.print("under certain conditions; type \"show conditions\" for details.\n");
-		System.out.print("\n");
-		System.out
-				.print("type \"help\" to get a list of the commands you can use in this program.\n");
-		System.out.print("\n");
-		System.out
-				.print("    ---===###   GNUTRAX version: 0.1 welcomes you.   ###===---\n");
-		System.out.println();
+	public static String welcome() {
+		StringBuilder sb = new StringBuilder();
+		sb.append("GnuTrax is copyright 2009 Martin M. Pedersen - email: traxplayer@gmail.com\n");
+		sb.append("GnuTrax comes with ABSOLUTELY NO WARRANTY; for details type \"show warranty\".\n");
+		sb.append("This is free software, and you are welcome to redistribute it\n");
+		sb.append("under certain conditions; type \"show conditions\" for details.\n");
+		sb.append("\n");
+		sb.append("type \"help\" to get a list of the commands you can use in this program.\n");
+		sb.append("\n");
+		sb.append("    ---===###   GNUTRAX version: 0.1 welcomes you.   ###===---\n");
+		sb.append("");
+		return sb.toString();
 	}
 
 	private void goodbye() {
@@ -1057,8 +1055,13 @@ public class GnuTrax {
 		}
 	}
 
+	public String getLatestBoard() {
+		return newestBoard;
+	}
+	
 	public void gotAMove(String theMove) throws IllegalMoveException {
 		tb.makeMove(theMove);
+		newestBoard = tb.toString();
 		// System.out.println(tb);
 		/* (*moveHistory).push_back(theMove); */
 		// checkForWin();
@@ -1109,7 +1112,7 @@ public class GnuTrax {
 			}
 		}
 
-		welcome();
+		System.out.println(welcome());
 		gnutrax.run();
 	}
 
