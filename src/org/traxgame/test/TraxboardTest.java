@@ -7,8 +7,8 @@ import java.util.List;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import org.traxgame.IllegalMoveException;
-import org.traxgame.Traxboard;
+import org.traxgame.main.IllegalMoveException;
+import org.traxgame.main.Traxboard;
 
 public class TraxboardTest {
 

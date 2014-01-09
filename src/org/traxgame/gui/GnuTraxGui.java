@@ -9,7 +9,7 @@ import java.util.Arrays;
 import java.util.HashSet;
 
 import javax.imageio.*;
-import org.traxgame.*;
+import org.traxgame.main.*;
 
 public class GnuTraxGui extends JFrame {
 
