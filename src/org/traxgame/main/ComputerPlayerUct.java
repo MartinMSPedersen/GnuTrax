@@ -1,4 +1,4 @@
-package org.traxgame;
+package org.traxgame.main;
 
 /* 
  Date: 19th of October 2009
