@@ -96,6 +96,7 @@ public class GnuTraxGui extends JFrame {
 	}
 
 	private void drawBoard() {
+		int colDiff = 0, rowDiff = 0;
 		this.setVisible(false);
 		outerPanel = new JPanel();
 		board.clear();
@@ -103,11 +104,20 @@ public class GnuTraxGui extends JFrame {
 		int noOfColsToDraw = noToDraw(this.gnuTraxGame.getBoardCols());
 		outerPanel.setLayout(new GridLayout(noOfRowsToDraw, noOfColsToDraw));
 		ImagePanel innerPanel;
+		
+		if (noOfColsToDraw == 8 && this.gnuTraxGame.getBoardCols() == 8) {
+			colDiff = -1;
+		} else if (noOfRowsToDraw == 8 && this.gnuTraxGame.getBoardRows() == 8) {
+			rowDiff = -1;
+		}
 
 		for (int i = 0; i < noOfRowsToDraw; i++) {
 			for (int j = 0; j < noOfColsToDraw; j++) {
-				//TODO Why is it needed to swap i and j here??
-				innerPanel = new ImagePanel(tiles[Traxboard.EMPTY].getImage(), this, j, i);
+				// TODO Why is it needed to swap i and j here??
+				//When the limit is hit (8 cols or 8 rows) can it not the the correct
+				//j or i. 
+				innerPanel = new ImagePanel(tiles[Traxboard.EMPTY].getImage(),
+						this, j+rowDiff, i+colDiff);
 				innerPanel.setSize(new Dimension(80, 80));
 				outerPanel.add(innerPanel);
 				board.add(innerPanel);
@@ -116,27 +126,13 @@ public class GnuTraxGui extends JFrame {
 		this.getContentPane().remove(0);
 		this.getContentPane().add(outerPanel);
 
-		//Fails when board hits the 8 thingie.
-		//If row == 8 => exeception
-		//If col == 8 => it wraps arounds and draw the H column in front. Like a line break
-		//@abcdefg
-		//h
-		//instead of:
-		//@abcdefgh
-		/*
-		 * i = 3, j = 8
-		 * 3*8+8 = 32
-		 */
-		//The issue might be something with that we need to draw in position 0 and we can never 
-		//select 0 in the board list.
-		//TODO Need to figure out some other data structure for the board
-		//Maybe hash, with getColRowForPos as key??
 		for (int i = 1; i <= this.gnuTraxGame.getBoardRows(); i++) {
 			for (int j = 1; j <= this.gnuTraxGame.getBoardCols(); j++) {
-				board.get(i * noOfColsToDraw + j).setImage(
+				board.get((i+rowDiff) * noOfColsToDraw + (j+colDiff)).setImage(
 						tiles[this.gnuTraxGame.getTileAt(i, j)].getImage());
 			}
 		}
+		System.out.println(this.gnuTraxGame.getTheBoard());
 		this.pack();
 		this.setVisible(true);
 	}
@@ -230,8 +226,12 @@ public class GnuTraxGui extends JFrame {
 
 	public java.util.List<Tile> getPossibleTilesForPosition(int x, int y) {
 		java.util.List<Tile> possibleMoves = new ArrayList<Tile>();
-		java.util.List<Integer> theMoves = this.gnuTraxGame.getPossibleMoves(x, y);
-		for (Integer move: theMoves) {
+		java.util.List<Integer> theMoves = this.gnuTraxGame.getPossibleMoves(x,
+				y);
+		System.out.println("POS "+x+","+y+": "+getRowColForPos(x, y));
+		System.out.println(theMoves);
+		System.out.println("NS: 1, WE: 2, NW: 3, NE: 4, WS: 5, SE: 6");
+		for (Integer move : theMoves) {
 			possibleMoves.add(tiles[move.intValue()]);
 		}
 		return possibleMoves;
@@ -322,7 +322,8 @@ public class GnuTraxGui extends JFrame {
 	private void showAndChooseAi() {
 		Object[] possibilities = { "simple (easy)", "uct (hard)", "quit" };
 		int s = JOptionPane.showOptionDialog(this, "Choose AI:", "New game",
-				JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE, null, possibilities, possibilities[0]);
+				JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE,
+				null, possibilities, possibilities[0]);
 		if (s == 2)
 			System.exit(0);
 		newGame(((String) possibilities[s]).split(" ")[0]);
