@@ -126,6 +126,7 @@
 			</manifest>
 			<fileset dir="bin2" />
 			<fileset dir="libs" />
+			<fileset dir="res" />
 			<fileset dir="src" />
 		</jar>
 	</target>
