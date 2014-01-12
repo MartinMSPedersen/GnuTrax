@@ -34,4 +34,5 @@
         <item>\\</item>
         <item>+</item>
         </string-array>
+<string name="move">Move</string>
 </resources>

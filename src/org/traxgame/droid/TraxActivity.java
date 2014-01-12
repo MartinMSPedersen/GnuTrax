@@ -15,6 +15,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class TraxActivity extends Activity {
 
@@ -78,6 +79,8 @@ public class TraxActivity extends Activity {
 		// Run check for win.
 		// command.setOnEditorActionListener(new
 		// TextView.OnEditorActionListener() {
+		
+		final Context context = this;
 		exeButton.setOnClickListener(new View.OnClickListener() {
 
 			@Override
@@ -94,6 +97,7 @@ public class TraxActivity extends Activity {
 					try {
 						gnuTrax.gotAMove(move);
 					} catch (Exception e) {
+						Toast.makeText(context, "Wrong move"+e.getMessage(), Toast.LENGTH_LONG).show();
 					}
 					String newBoard = gnuTrax.getLatestBoard();
 					if (newBoard.startsWith("Wrong")) {
@@ -110,6 +114,7 @@ public class TraxActivity extends Activity {
 						boardPlace.append("\n\nComputer is thinking");
 						final DoMoveTask doMoveTask = new DoMoveTask(
 								TraxActivity.this);
+						Toast.makeText(context, "Computer is thinking...", Toast.LENGTH_LONG).show();
 						doMoveTask.execute(move);
 					}
 
@@ -158,8 +163,7 @@ public class TraxActivity extends Activity {
 			try {
 				gnuTrax.gotAMove(line);
 			} catch (IllegalMoveException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				Toast.makeText(context, "Wrong AI move "+e.getMessage(), Toast.LENGTH_LONG).show();
 			}
 			newBoard = gnuTrax.getLatestBoard();
 			boardPlace.setText(newBoard);
