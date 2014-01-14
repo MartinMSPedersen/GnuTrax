@@ -1,3 +1,3 @@
 #!/bin/sh
 
-java -server GnuTrax --uct
+java -server -jar gnutrax.jar --uct
