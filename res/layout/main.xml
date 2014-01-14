@@ -8,13 +8,20 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context=".TraxActivity" >
 
-    <TextView
-        android:id="@+id/boardplace"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:textSize="9sp"
-        android:typeface="monospace" />
+    <!-- should equal 80px the size of the images -->
+
+        <GridView
+            android:id="@+id/boardplace"
+            android:layout_width="740px"
+            android:layout_height="wrap_content"
+            android:background="#0000FF"
+            android:columnWidth="80px"
+            android:gravity="left"
+            android:horizontalSpacing="1.5dp"
+            android:numColumns="9"
+            android:stretchMode="none"
+            android:verticalSpacing="1.5dp" 
+            />
 
     <RelativeLayout
         android:layout_width="wrap_content"

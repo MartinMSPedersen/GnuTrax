@@ -7,6 +7,7 @@
     <string name="col_prompt">Column</string>
     <string name="row_prompt">Row</string>
     <string name="block_prompt">Block</string>
+    <string name="chooseTileTitle">Choose tile</string>
 <string-array name="letters">
         <item>\@</item>
         <item>A</item>
