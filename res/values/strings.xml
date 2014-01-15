@@ -35,5 +35,6 @@
         <item>\\</item>
         <item>+</item>
         </string-array>
-<string name="move">Move</string>
+<string name="newgame">New game</string>
+<string name="welcome">Please play in the left top most corner</string>
 </resources>

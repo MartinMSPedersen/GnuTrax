@@ -28,10 +28,9 @@ public class BoardAdapter extends BaseAdapter {
 		this.tileToDrawable[Traxboard.SE] = R.drawable.se;
 		this.tileToDrawable[Traxboard.INVALID] = R.drawable.invalid;
 		for (int i = 0; i < 81; i++) {
-			DroidTile tile = new DroidTile(context, i/9, i%9, Traxboard.EMPTY, false);
+			DroidTile tile = new DroidTile(context, i%9, i/9, Traxboard.EMPTY, false);
 			boardData.add(tile);
 		}
-		this.tileToDrawable[Traxboard.SE] = R.drawable.se;		
 	}
 	
 	@Override

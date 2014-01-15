@@ -27,9 +27,8 @@ import android.widget.Toast;
 public class TraxActivity extends Activity {
 
 	//TODO Handle like the swing way of doing the board with extend.
-	//TODO The EN and SW tiles seem to be switched in the gui. Or is it some other tiles???
-	//TODO Better game logic s.t. redudant code is reduced
-	
+	//TODO Update to use AsyncTask to improve UI
+
 	private GnuTrax gnuTrax;
 	private int[] tileToDrawable;
 
@@ -42,10 +41,10 @@ public class TraxActivity extends Activity {
 	private AlertDialog dialog;
 	private Point latestPoint;
 	
+	private TextView textMessages;
+	
 	private boolean userCanMove;
 	
-	// TODO: Update to use AsyncTask to improve UI
-
 	private void showNewGameDialog(String winner) {
 		AlertDialog.Builder dlgAlert = new AlertDialog.Builder(this);
 		dlgAlert.setMessage("Good game. The winner was: " + winner);
@@ -53,17 +52,45 @@ public class TraxActivity extends Activity {
 		dlgAlert.setCancelable(true);
 		dlgAlert.setPositiveButton("OK", new DialogInterface.OnClickListener() {
 			public void onClick(DialogInterface dialog, int whichButton) {
-				gnuTrax.userNew();
-				userCanMove = true;
+				newGame();
 			}
 		});
 		dlgAlert.create().show();
 	}
 
+	private void newGame() {
+		this.gnuTrax = new GnuTrax("simple");
+		AlertDialog.Builder b = new AlertDialog.Builder(this);
+	    b.setTitle("Choose AI");
+	    String[] types = {"Easy (fast player)", "Hard (slow player)"};
+	    b.setItems(types, new DialogInterface.OnClickListener() {
+
+	        @Override
+	        public void onClick(DialogInterface dialog, int which) {
+
+	            dialog.dismiss();
+	            switch(which){
+	            case 0:
+	                gnuTrax = new GnuTrax("simple");
+	                break;
+	            case 1:
+	                gnuTrax = new GnuTrax("uct");
+	                break;
+	            }
+	        }
+
+	    });
+	    b.show();
+		gnuTrax.userNew();
+		updateBoard();
+		userCanMove = true;
+		textMessages.setText(getString(R.string.welcome));
+	}
+	
 	private void updateBoard() {
 		for (int i = 0; i <= 8; i++) {
 			for (int j = 0; j <= 8; j++) {
-				boardAdapter.getTileAt(i, j).setTileType(this.gnuTrax.getTileAt(i, j));
+				boardAdapter.getTileAt(i, j).setTileType(this.gnuTrax.getTileAt(j, i));
 			}
 		}
 		boardAdapter.notifyDataSetChanged();
@@ -72,18 +99,18 @@ public class TraxActivity extends Activity {
 	public void userChoseMove(int userMove) {
 		//Toast.makeText(this, "You chose "+userMove, Toast.LENGTH_LONG).show();
 		DroidTile move = userMoves.get(userMove);
+		if (this.gnuTrax.getBoard().getNumOfTiles() == 0) {
+			latestPoint = new Point(0,0);
+			textMessages.setText("Good luck.");
+		}
 		String theMove = latestPoint.getPositionWithMove(move.getTileType());
 		try {
 			this.gnuTrax.gotAMove(theMove);
 			if (!checkForWinner()) {
-				Toast.makeText(this, "The AI is thinking", Toast.LENGTH_LONG).show();
-				Toast.makeText(this, "Computer is thinking...",
-						Toast.LENGTH_LONG).show();
 				final DoMoveTask doMoveTask = new DoMoveTask(this);
 				userCanMove = false;
+				textMessages.setText("The AI is thinking....");
 				doMoveTask.execute("");
-			} else {
-				showNewGameDialog("White");
 			}
 		} catch (IllegalMoveException e) {
 			// TODO Auto-generated catch block
@@ -114,6 +141,12 @@ public class TraxActivity extends Activity {
 			return;
 		}
 		latestPoint = new Point(x, y);
+		//If the move is the first move, then 
+		//make the position always
+		if (this.gnuTrax.getBoard().getNumOfTiles() == 0) {
+			latestPoint = new Point(0,0);
+			textMessages.setText("Good luck.");
+		}
 		AlertDialog.Builder builder = new AlertDialog.Builder(this);
 		builder.setTitle(R.string.chooseTileTitle);
 		dialog = builder.create();
@@ -131,12 +164,6 @@ public class TraxActivity extends Activity {
 		dialog.show();
 	}
 
-	protected void fillArrayWithTiles() {
-		tiles = new int[8];
-		tiles[Traxboard.EMPTY] = R.drawable.blank;
-		tiles[Traxboard.NS] = R.drawable.ns;
-	}
-	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -161,6 +188,17 @@ public class TraxActivity extends Activity {
 		if (gnuTrax == null)
 			gnuTrax = new GnuTrax("simple"); //When done change this to uct
 
+		Button newgame = (Button)findViewById(R.id.newgame);
+		newgame.setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View arg0) {
+				newGame();
+			}
+		});
+		
+		textMessages = (TextView)findViewById(R.id.textmessage);
+		newGame();
 	}
 
 	private boolean checkForWinner() {
@@ -207,10 +245,10 @@ public class TraxActivity extends Activity {
 			}
 			updateBoard();
 			if (checkForWinner()) {
-				showNewGameDialog("Black");
 				return;
 			}
 			userCanMove = true;
+			textMessages.setText("Your turn to play.");
 		}
 
 		@Override

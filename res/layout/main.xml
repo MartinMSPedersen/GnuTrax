@@ -28,36 +28,21 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true" >
 
-        <Spinner
-            android:id="@+id/column"
+
+        <TextView 
+            android:id="@+id/textmessage"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:entries="@array/letters"
-            android:prompt="@string/col_prompt" />
-
-        <Spinner
-            android:id="@+id/row"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_toRightOf="@id/column"
-            android:entries="@array/numbers"
-            android:prompt="@string/row_prompt" />
-
-        <Spinner
-            android:id="@+id/block"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_toRightOf="@id/row"
-            android:entries="@array/block"
-            android:prompt="@string/block_prompt" />
-
+            android:text="@string/welcome"
+            />
+        
         <Button
-            android:id="@+id/execute"
+            android:id="@+id/newgame"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
-            android:layout_toRightOf="@id/block"
-            android:text="@string/move" />
+            android:layout_toRightOf="@id/textmessage"
+            android:text="@string/newgame" />
     </RelativeLayout>
 
 </RelativeLayout>

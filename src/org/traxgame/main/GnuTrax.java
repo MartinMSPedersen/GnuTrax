@@ -51,6 +51,10 @@ public class GnuTrax {
 		;
 	}
 
+	public Traxboard getBoard() {
+		return tb;
+	}
+	
 	public int getBoardCols() {
 		return tb.getColSize();
 	}
