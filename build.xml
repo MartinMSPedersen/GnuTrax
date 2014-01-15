@@ -95,7 +95,7 @@
 	</target>
 
 	<path id="classpath">
-		<fileset dir="libs" includes="*.jar" />
+		<fileset dir="testlibs" includes="*.jar" />
 	</path>
 
 	<target name="compile" depends="init">
