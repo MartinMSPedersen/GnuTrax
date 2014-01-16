@@ -1,0 +1,901 @@
+# NUMBER 0
+#WB1B-B+WWB1
+#?
+#?
+#@2/
+
+# NUMBER 1.
+W1-BW1BB+WB-BW
+2
+-1 +1
+A2+
+
+WB-BWBB+WB-BW
+2
+-1 +1
+A3+
+
+W-WBB+WB-BW
+2
+-1 +1
+A2/
+
+
+# NUMBER 2.
+W1B-W1+BW1B-W1
+2
+-1 +1
+A5+
+
+W1B-W1+BW1-BW
+2
+-1 +1
+A5+
+
+W1B-W1+BW-W
+2 
+-1 +1
+A4/
+
+W-W+BW1B-W1
+2
+-1 +1
+A4+
+
+W-W+BWB-BW
+2
+-1 +1
+A4+
+
+W-W+BW-W
+2
+-1 +1
+A3/
+
+W1B-W1+BWBW1B-W1
+2
+-1 +1
+A7+
+
+W1B-W1+BWBWB-BW
+2 
+-1 +1
+A7+
+
+W1B-W1+BWBW-W
+2
+-1 +1
+A6/
+
+W-W+BBW1B-W1
+2
+-1 +1
+A5+
+
+W-W+BWBW1B-W1
+2
+-1 +1
+A6+
+
+W-W+BBWBW1B-W1
+2
+-1 +1
+A7+
+
+W-W+BBWB-BW
+2
+-1 +1
+A5+
+
+W-W+BWBWB-BW
+2
+-1 +1
+A6+
+
+W-W+BBWBWB-BW
+2
+-1 +1
+A7+
+
+W-W+BWBW-W
+2
+-1 +1
+A5/
+
+W-W+BWBWBW-W
+2
+-1 +1
+A7/
+
+W-W+BBWBW-W
+2
+-1 +1
+A6/
+
+
+# NUMBER 4.
+W1-BW1+BB+W-W
+2
+-1 0
+A4\
+
+W1-BW1+BBB+W-W
+3
+-2 0
+A5\
+
+W1-BW1+BBBB+W-W
+5
+-3 0
+A6\
+
+
+# NUMBER 8.
+WWW-BW-B-B+WW
+MULTI
+? ?
+@3/
+
+
+# NUMBER 9.
+WW+B-BB-BWB-WB-B+WW
+3
+-2 1
+C4\
+
+
+# NUMBER 10.
+W1-BW1BB-B+WW-B-WW
+4
+-1 -1,3
+A2+
+
+WB-BWBB-B+WW-B-WW
+4
+-1 -1,3
+A3+
+
+W-WBB-B+WW-B-WW
+4
+-1 -1,3
+A2/
+
+
+# NUMBER 11.
+W-W+B-B+WW-B-WW
+3
+-1,1 0
+@1/
+
+
+# NUMBER 12.
+W-WB+W1W-WB-W1B+W-W
+3
+-1,1 1
+A2/,E3\
+
+W1B-W1B+W2W-WB-W2B+W-W
+3
+-1,1 1
+A3/,E4\
+
+WB-BWB+W1W-WB-W1B+W-W
+3
+-1,1 1
+A3+,F4\
+
+
+# NUMBER 13.
+BW1BBW1
+3
+-3 -1,1
+@3+
+
+
+# NUMBER 14.
+W-WBBW-BBWB-B+W-W
+MULTI
+? ?
+A2/
+
+W1-BW1BBW-BBWB-B+W-W
+MULTI
+? ?
+A2+
+
+WB-BWBBW-BBWB-B+W-W
+MULTI
+? ?
+A3+
+
+
+# NUMBER 15.
+W-W+B-BW1BB1-W1B1+W-W
+MULTI
+? ?
+F2\
+
+
+# NUMBER 16.
+W-W+B-BW1BBW1
+3
+-1 2
+D3+
+
+W1B-W1+B-BW2BBW2
+3
+-1 2
+D4+
+
+
+# NUMBER 19.
+W-W+B-BWBB1W-B1W
+4
+-1,1 2
+F3\
+
+W1B-W1+B-BWBB1W2B1W2
+4
+-1,1 2
+F4\
+
+W-W+B-BWBBW-W
+4
+-1,1 2
+F3\
+
+W1B-W1+B-BWBBW-W
+4
+-1,1 2
+F4\
+
+
+# NUMBER 20.
+W1-BW1+BBW-W
+2
+-1 1
+B4/
+
+W1-BW1+BBW2B-W2
+2
+-1 1
+B5+
+
+W1-BW1+BBWB-BW
+2
+-1 1
+B5+
+
+W1-BW1+BBWBW-W
+2
+-1 1
+B6/
+
+
+# NUMBER 21.
+W-W+B-BW1-BW1
+3
+-1,1 2
+C3\
+
+W1B-W1+B-BW2-BW2
+3
+-1,1 2
+C4\
+
+
+# NUMBER 22.
+W-WBB-BW1B-W1
+4
+-1,2 -1,2
+A4/,D1+
+
+W-WBBB-BW1B-W1
+4
+-1,2 -1,2
+A4/,E1+
+
+W1-BW1BB-BW2B-W2
+4
+-1,2 -1,2
+A4/,E1+
+
+WB-BWBB-BW1B-W1
+4
+-1,2 -1,2
+A4/,E1+
+
+W1B-W1BB-BW2B-W2
+4
+-1,2 -1,2
+A4/,D1+
+
+W1B-W1BBB-BW2B-W2
+4
+-1,2 -1,2
+A4/,E1+
+
+WB-BWBBB-B-W2B-W2
+4
+-1,2 -1,2
+A4/,F1+
+
+W1-BW1BBB-BW2B-W2
+4
+-1,2 -1,2
+A4/,F1+
+
+
+# NUMBER 24.
+WB-BW+B-BB+WB-BW
+4
+-1 1
+@2+,D5+
+
+
+# NUMBER 25A.
+W1+B-W1BBB+WB-BW
+3
+-1 0
+A5+
+
+W1+B-W1BBB+W2B-W2
+3
+-1 0
+A5+
+
+
+# NUMBER 25B.
+W1-BW1BBB+WB-BW
+3
+-1 1
+E3+,A2+
+
+W1-BW1BBB+W2B-W2
+3
+-1 1
+E3+,A2+
+
+W-WBBB+W1B-W1
+3
+-1 1
+D3+,A2/
+
+W-WBBB+WB-BW
+3
+-1 1
+D3+,A2/
+
+WB-BWBBB+WB-BW
+3
+-1 1
+E4+,A3+
+
+WB-BWBBB+W1B-W1
+3
+-1 1
+E4+,A3+
+
+
+# NUMBER 26.
+W1W2B-BB-W2W1+B-W
+5
+-2,2 2
+@1/
+
+
+# NUMBER 27.
+W-WBB-W1+B-W1
+4
+-1,1 3
+A3/
+
+W-WBB-W1+B-W1
+4
+-1,2 2
+E1\
+
+W1-BW1BB-W2+B-W2
+4
+-1,1 3
+A3+
+
+W1-BW1BB-W2+B-W2
+4
+-1,2 2
+F1\
+
+W1B-W1BB-W2+B-W2
+4
+-1,1 3
+A3/
+
+W1B-W1BB-W2+B-W2
+4
+-1,2 2
+F1\
+
+WB-BWBB-W1+B-W1
+4
+-1,1 3
+A3+
+
+WB-BWBB-W1+B-W1
+4 
+-1,2 2
+F1\
+
+W-WBBB-W1+B-W1
+6
+-1,1 4
+A3/
+
+W-WBBB-W1+B-W1
+4
+-1,2 2
+E1\
+
+W1-BW1BBB-W2+B-W2
+6
+-1,1 4
+A3+
+
+W1-BW1BBB-W2+B-W2
+4
+-1,2 2
+F1\
+
+W1B-W1BBB-W2+B-W2
+6
+-1,1 4
+A3/
+
+W1B-W1BBB-W2+B-W2
+4
+-1,2 2
+F1\
+
+WB-BWBBB-W1+B-W1
+6
+-1,1 4
+A3+
+
+WB-BWBBB-W1+B-W1
+4 
+-1,2 2
+F1\
+
+
+# NUMBER 28.
+W1-BW1W+BWB-B+W-W
+3
+-1 1
+A2+
+
+W-WW+BWB-B+W-W
+3
+-2 1
+A2/
+
+WB-BWW+BWB-B+W-W
+3
+-1 1
+A3+
+
+
+# NUMBER 29.
+WB-BWW+BWB-BBW-W
+4
+-1,1 2
+A3+,F6\
+
+W-WW+BWB-BBW-W
+4
+-2,1 2
+A2/,E5\
+
+W1-BW1W+BWB-BBW-W
+4
+-1,1 2
+A2+,F5\
+
+W1B-W1W+BWB-BBW-W
+4
+-2,1 2
+A3/,E6\
+
+W-WW+BWBWB-BBW-W
+4
+-2,1 2
+A2/,E7\
+
+W1-BW1W+BWBWB-BBW-W
+4
+-1,1 2
+A2+,F7\
+
+
+# NUMBER 30.
+W-WBB-W-B+WB+WB
+5
+-1 1
+A5/
+
+W1-BW1BB-W-B+WB+WB
+5
+-1 1
+A5+
+
+W1B-W1BB-W-B+WB+WB
+5
+-1 1
+A5/
+
+
+# NUMBER 31.
+W-W+B-W1-B+W1B+WB
+4
+-1 1
+@1/
+
+
+# NUMBER 32.
+W1+B1-W1W2-B1+W2B+WB
+3
+-1
+@2\
+
+
+# NUMBER 33.
+BW-BW1-B+W1-B
+2
+0 -1
+B1+
+
+
+# NUMBER 34.
+W1-BW1W2-B+W2B+WB
+3
+-1 1
+A2+
+
+W-WW1-B+W1B+WB
+3
+-1 1
+A2/
+
+W1B-W1W2-B+W2B+WB
+3
+-1 1
+A3/
+
+WB-BWW1-B+W1B+WB
+3
+-1 1
+A3+
+
+
+# NUMBER 35.
+W-WB+W-B-WBWB+W-W
+3
+-1,1 1
+A2/
+
+W1-BW1B+W-B-WBWB+W-W
+3
+-1,1 1 
+A2+
+
+W1B-W1B+W-B-WBWB+W-W
+3
+-1,1 1
+A3/
+
+WB-BWB+W-B-WBWB+W-W
+3
+-1,1 1
+A3+
+
+W-WB+W-B-WBBB+W-W
+4
+-1,2 1
+A2/
+
+W1-BW1B+W-B-WBBB+W-W
+4
+-1,2 1 
+A2+
+
+W1B-W1B+W-B-WBBB+W-W
+4
+-1,2 1
+A3/
+
+WB-BWB+W-B-WBBB+W-W
+4
+-1,2 1
+A3+
+
+W-WB+W-B-WBWBWB+W-W
+3
+-1,1 1
+A2/
+
+W1-BW1B+W-B-WBWBWB+W-W
+3
+-1,1 
+A2+
+
+W1B-W1B+W-B-WBWBWB+W-W
+3
+-1,1 1
+A3/
+
+WB-BWB+W-B-WBWBWB+W-W
+3
+-1,1 1
+A3+
+
+W-WB+W-B-WBBBB+W-W
+MULTI
+-1,? 1
+A2/
+
+W1-BW1B+W-B-WBBBB+W-W
+MULTI
+-1,? 1 
+A2+
+
+W1B-W1B+W-B-WBBBB+W-W
+MULTI
+-1,? 1
+A3/
+
+WB-BWB+W-B-WBBBB+W-W
+MULTI
+-1,? 1
+A3+
+
+W-WB+W-B-WBBBBB+W-W
+MULTI
+-1,? 1
+A2/
+
+W1-BW1B+W-B-WBBBBB+W-W
+MULTI
+-1,? 1 
+A2+
+
+W1B-W1B+W-B-WBBBBB+W-W
+MULTI
+-1,? 1
+A3/
+
+WB-BWB+W-B-WBBBBB+W-W
+MULTI
+-1,? 1
+A3+
+
+
+# NUMBER 36.
+WB-BW+B-BW1-BW1
+4
+-2,1 2
+@2+,D4\
+
+
+# NUMBER 37
+W1-BW1BB+WW+B-W-W
+3
+-1 1
+A2+
+
+WB-BWBB+WW+B-W-W
+3
+-1 1
+A3+
+
+W1-BW1BWBB+WW+B-W-W
+3
+-1 1
+A2+
+
+W1-BW1BB+WW+B-W-BW
+3
+-1 1
+A2+
+
+WB-BWBB+WW+B-W-BW
+3
+-1 1
+A3+
+
+W1-BW1BWBB+WW+B-W-BW
+3
+-1 1
+A2+
+
+
+# NUMBER 38.
+WB-BW+BB-BBW-W
+4
+-1,1 2
+A3+,E5\
+
+WB-BW+BB-BBW1B-W
+4
+-1,1 2
+A3+,F5+
+
+WB-BW+BB-BBWB-BW
+4
+-1,1 2
+A3,F5+
+
+WB-BW+BB-BBW1-BW1
+4
+-1,1 2
+A3+,E5\
+
+WB-BW+BB-BBBW-W
+4
+-1,1 2
+A3+,F5\
+
+W1-BW1+BB-BBW-W
+4
+-1,1 2
+A2+,E4\
+
+W1-BW1+BB-BBW1B-W
+4
+-1,1 2
+A2+,F4+
+
+W1-BW1+BB-BBWB-BW
+4
+-1,1 2
+A2,F4+
+
+W1-BW1+BB-BBW2-BW2
+4
+-1,1 2
+A2+,E4\
+
+W1-BW1+BB-BBBW-W
+4
+-1,1 2
+A2+,F4\
+
+
+# NUMBER 39.
+WB-BW+BB-B+W-W
+3
+-1 1
+A3+,D6/
+
+
+# NUMBER 40.
+WB-BW+BB1W1-B1+W1
+2
+-1 0
+B5/
+
+WB-BW+BB1W1-B1W1
+2
+-1 1
+B5/
+
+
+# NUMBER 41.
+W-WB+W1W-WB-W1B+W-W
+3
+-1,1 1
+A2/,E3\
+
+W1-BW1B+W2W-WB-W2B+W-W
+3
+-1,1 1
+A2+,F3\
+
+WB-BWB+W1W-WB-W1B+W-W
+3
+-1,1 1
+A3+,F4\
+
+W1B-WB+W2W-WB-W2B+W-W
+3
+-1,1 1
+A3/,E4\
+
+## EL. XXX ... W1BBB+W-W
+
+
+# NUMBER 42.
+W1+B-BW1BBW-W
+3
+-2 1
+@6/,@2+
+
+W1+B-BW1BBW2B-W2
+3
+-2 1
+@7+,@2+
+
+W1+B-BW1BB1W-B1W
+3
+-2 1
+@6/,@2+
+
+W1+B-BW1BBWB-BW
+3
+-2 1
+@7+,@2+
+
+
+# NUMBER 43.
+W-WB+WB-W-BB+W-W
+5
+-1,1 3
+B3+
+
+
+# NUMBER 44.
+W-WB+BWW-B+W1B-W1-BB+W-W
+5
+-1,1 3
+B6+
+
+
+# NUMBER 45.
+W-W+BBW1-B-B+W1-BB+W-W
+4
+-1,1 3
+A4/
+
+
+# NUMBER 46.
+W1B-B+W1-BB+W-W
+2
+-1 1
+@2+
+
+W1B-B+W1-B+W-W
+2
+-1 1
+@2+
+
+W1B-B+W1-B+W2-BW2
+2
+-1 1
+@2+
+
+
+# NUMBER 47.
+W1WB-BB-W+B-BW1B+W-W
+5
+-2,1 2
+D2+
+
+W1WB-BB-W+B-BW1BB+W-W
+5
+-2,1 2
+D2+
+
+W1WB-BB-W+B-BW1B+W2-BW2
+5
+-2,1 2
+D2+
+
+
+# NUMBER 48.
+W1WB-BB-W+B1W1-B1
+5
+-2,1 2
+@1/
+
+
+
+
+
+

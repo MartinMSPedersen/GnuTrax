@@ -128,6 +128,7 @@
 			<fileset dir="res" />
 			<fileset dir="src" />
 		</jar>
+		<copy file="gnutraxgui.jar" todir="homepage/code" />
 	</target>
 
 	<target name="clean" description="clean up">

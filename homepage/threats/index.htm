@@ -1,0 +1,59 @@
+
+<!-- saved from url=(0037)http://gnutrax.com/threats/index.html -->
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1"><title>Trax threat database</title>
+<style type="text/css"></style></head><body>
+<a href="http://gnutrax.com/threats/threats.txt">View the list of threats here.</a>
+<hr>
+<p>
+Here comes a explanation of threat-format. The format could be more compact, but
+I want it simple so it is easier to write a program that can search
+a board for these threats. All threats in the list are white threats. Any
+line that starts with a <b>#</b> is a comment line in the threat list.
+</p>
+<p>
+One threat could be written as:
+<code>
+</code></p><pre><code>W-W+B-BW1-BW1
+3
+-1,1 +2
+C3\
+  </code></pre><code>
+</code>
+<p></p>
+<ol>
+<li>
+<b>W-W+B-BW1-BW1</b> is a description how the threat looks 
+on the edge of the board. Start by going down and draw to the right like this:
+<p>
+<img src="./Trax threat database_files/threat.gif" width="212" height="209">
+</p>
+<b>W</b> means a white end and <b>B</b> a black end of a line.
+<b>-</b> is a left turn and <b>+</b> is a right turn.
+The <b>1</b> after two of the <b>W's</b> means that these two 
+white line-ends must be connected in some way.
+</li>
+<li>
+<b>3</b> tells that the threat is a 3 stage
+threat.
+</li>
+<li>
+<b>-1,1 +2</b> says this threat will expand 1 row to the left, 1 row to the right and
+2 row down. This is important that know if there
+is a line-threat from the other player or if it is a 8x8Trax.
+</li>
+<li>
+<b>C3\</b> is the move that activates the threat.
+</li></ol>
+<p>
+</p><hr>
+Please email me about any errors etc.
+You can reach me by email: 
+<script language="javascript">
+ <!--
+          document.write("<a href=\"mailto:traxplayer@gm" + "ail.com\">traxplayer@gma" + "il.comn</a>")
+     //-->
+</script><a href="mailto:traxplayer@gmail.com">traxplayer@gmail.comn</a>
+
+
+
+</body></html>
