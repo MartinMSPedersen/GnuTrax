@@ -15,15 +15,13 @@ PACKAGE_DIR = org/traxgame/main/
 
 all:	gnutrax 
 
-#gnutrax: $(MAIN_OBJECTS)
-#	$(JAVAC) $(JAVAC_FLAGS) $(MAIN_OBJECTS) && cd ../../.. && jar cfe gnutrax.jar $(PACKAGE).GnuTrax $(PACKAGE_DIR)*.class $(PACKAGE_DIR)*.java $(PACKAGE_DIR)Makefile $(PACKAGE_DIR)LICENSE $(PACKAGE_DIR)GnuTrax.sh && mv gnutrax.jar $(PACKAGE_DIR)
 gnutrax: 
 	ant
 	
 .PHONY:	clean tar
 
 tar:
-	make clean && tar cvf ../gnutrax.tar . && gzip -9 ../gnutrax.tar && mv ../gnutrax.tar .
+	ant package
 
 clean:
 	ant clean

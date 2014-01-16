@@ -148,4 +148,12 @@
 			<formatter type="brief" usefile="false" />
 		</junit>
 	</target>
+	
+	<target name="package" description="Make a tar ball of the project">
+		<tar destfile="gnutrax.tar.gz" compression="gzip">
+			<tarfileset dir=".">
+				<include name="*" />
+			</tarfileset>
+		</tar>
+	</target>
 </project>
