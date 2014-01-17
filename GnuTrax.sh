@@ -1,3 +1,3 @@
 #!/bin/sh
 
-java -server -jar gnutraxgui.jar --uct
+java -server -cp gnutraxgui.jar org.traxgame.cli.GnuTraxCli --uct
