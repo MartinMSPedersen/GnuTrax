@@ -6,6 +6,7 @@ All source under GPL version 2
 (GNU General Public License - http://www.gnu.org/)
 contact traxplayer@gmail.com for more information about this code
 */
+package org.traxgame.main;
 
 import java.io.BufferedReader;
 import java.io.File;

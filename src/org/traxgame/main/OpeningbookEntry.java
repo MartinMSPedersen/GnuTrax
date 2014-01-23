@@ -7,6 +7,8 @@ All source under GPL version 2
 contact traxplayer@gmail.com for more information about this code
 */
 
+package org.traxgame.main;
+
 public class OpeningbookEntry
 {
 	private int wtm;
