@@ -5,7 +5,7 @@
 # contact traxplayer@gmail.com for more information about this code
 
 PATH_TO_JAVAC=
-MAIN_OBJECTS = GnuTrax.java Traxboard.java IllegalMoveException.java TraxUtil.java benchmark.java ComputerPlayerSimple.java ComputerPlayer.java UctNode.java ComputerPlayerUct.java ComputerPlayerAlphaBeta.java
+MAIN_OBJECTS = GnuTrax.java Traxboard.java IllegalMoveException.java TraxUtil.java benchmark.java ComputerPlayerSimple.java ComputerPlayer.java UctNode.java ComputerPlayerUct.java ComputerPlayerAlphaBeta.java Openingbook.java
 
 
 JAVAC = ${PATH_TO_JAVAC}javac
