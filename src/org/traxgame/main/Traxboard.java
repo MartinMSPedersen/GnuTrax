@@ -1,12 +1,13 @@
 /* 
 
-Date: 31th of December 2008
-version 0.1
+Date: 28th of Januar 2014
+version 0.2
 All source under GPL version 2 
 (GNU General Public License - http://www.gnu.org/)
 contact traxplayer@gmail.com for more information about this code
 
 */
+package org.traxgame.main;
 
 import java.util.ArrayList;
 
