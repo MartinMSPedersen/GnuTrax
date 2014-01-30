@@ -1,6 +1,6 @@
 /* 
 
-Date: Januar 25 - 2014
+Date: Januar 29 - 2014
 version 0.1
 All source under GPL version 2 
 (GNU General Public License - http://www.gnu.org/)
@@ -8,6 +8,7 @@ contact traxplayer@gmail.com for more information about this code
 */
 
 package org.traxgame.main;
+
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -45,7 +46,6 @@ public class Openingbook
       try {
           for (String move : s.split("\\s")) { tb.makeMove(move); } 
       } catch (IllegalMoveException e) { useless=true; }
-      System.out.println(tb);
       if (!useless && tb.isGameOver()!=Traxboard.NOPLAYER) {
         int gameOverValue=tb.isGameOver();
         tb=new Traxboard();
@@ -72,10 +72,12 @@ public class Openingbook
         }
       }
     }
-    Map<bookKey, bookValue> map = new HashMap<bookKey, bookValue>();
-    for (Map.Entry<bookKey, bookValue> entry : map.entrySet()) {
-      System.out.println("Key = " + entry.getKey() + ", Value = " + entry.getValue() );
+    for (Map.Entry<bookKey, bookValue> entry : theBook.entrySet()) {
+      if (entry.getValue().white+entry.getValue().black+entry.getValue().draw>2) {
+        writer.write(entry.getKey()+" "+entry.getValue()+"\n");
+      }
     }
+    writer.close();
   }
 
   public bookValue search(String border, int wtm) {
@@ -93,7 +95,8 @@ public class Openingbook
   }
 
   public static void main(String[] args) {
-    Openingbook o=new Openingbook("doby3_games.txt");
+    //Openingbook o=new Openingbook("doby3_games.txt");
+    Openingbook o=new Openingbook("t");
     try {
       o.generateBook();
     }
@@ -107,11 +110,18 @@ public class Openingbook
       if (alwaysPlay) return 1000;
       return 0;
     }
+    public String toString() {
+      return (alwaysPlay?"true":"false"+" "+black+" "+white+" "+draw);
+    }
   }
 
   private class bookKey {
     public int wtm;
     public String border;
+
+    public String toString() {
+      return wtm+" "+border;
+    }
 
     public bookKey(String border, int wtm) {
       this.wtm=wtm;
