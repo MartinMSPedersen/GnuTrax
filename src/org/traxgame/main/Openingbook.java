@@ -1,6 +1,6 @@
 /* 
 
-Date: Februar 1 - 2014
+Date: Januar 25 - 2014
 version 0.1
 All source under GPL version 2 
 (GNU General Public License - http://www.gnu.org/)
@@ -9,15 +9,8 @@ contact traxplayer@gmail.com for more information about this code
 
 package org.traxgame.main;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileWriter;
-import java.io.FileReader;
-import java.io.IOException;
-import java.util.StringTokenizer;
-import java.util.HashMap;
-import java.util.Map;
+import java.io.*;
+import java.util.*;
 
 public class Openingbook
 {
@@ -27,6 +20,8 @@ public class Openingbook
   public Openingbook() { 
     theBook=new HashMap<bookKey,bookValue>();
   }
+
+  public int size() { return theBook.size(); }
 
   public void setInputfile(String inputfile) {
     this.inputfile=inputfile;
@@ -44,37 +39,49 @@ public class Openingbook
 	    while ( (s=reader.readLine()) != null) {
 		    tb=new Traxboard();
 		    boolean useless=false;
+		    boolean resign=false;
 		    try {
-			    for (String move : s.split("\\s")) { tb.makeMove(move); } 
+			    for (String move : s.split("\\s")) { 
+				if (move.equals("RESIGN")) break;
+				tb.makeMove(move); 
+                            } 
 		    } catch (IllegalMoveException e) { useless=true; }
-		    if (!useless && tb.isGameOver()!=Traxboard.NOPLAYER) {
-			    int gameOverValue=tb.isGameOver();
-			    tb=new Traxboard();
-			    for (String move : s.split("\\s")) {
-				    try {
-					    tb.makeMove(move);
-				    }
-				    catch (IllegalMoveException e) { 
-					    // This should never happen
-					    throw new RuntimeException(e);
-				    }
-				    bookKey bk=new bookKey(tb.getBorder(),tb.whoToMove());
-				    bookValue bv=search(bk);
-				    if (bv==null) { bv=new bookValue(); }
-				    switch (gameOverValue) {
-					    case Traxboard.DRAW:  bv.draw++; break;
-					    case Traxboard.WHITE: bv.white++; break;
-					    case Traxboard.BLACK: bv.black++; break;
-					    default:
-								  // This should never happen
-								  throw new RuntimeException("\n"+tb+"tb.isGameOver()="+tb.isGameOver());
-				    }
-				    theBook.put(bk,bv);
+		    if (!resign && tb.isGameOver()==Traxboard.NOPLAYER) {
+                      useless=true;
+                    }
+                    if (useless) continue;
+                    int gameOverValue;
+                    if (resign) { 
+                      gameOverValue=tb.whoDidLastMove();
+                    } else {
+		      gameOverValue=tb.isGameOver();
+                    }
+		    tb=new Traxboard();
+		    for (String move : s.split("\\s")) {
+			    try {
+				    if (move.equals("RESIGN")) break; 
+				    tb.makeMove(move);
 			    }
+			    catch (IllegalMoveException e) { 
+			    // This should never happen
+			    throw new RuntimeException(e);
 		    }
+		    bookKey bk=new bookKey(tb.getBorder(),tb.whoToMove());
+		    bookValue bv=search(bk);
+		    if (bv==null) { bv=new bookValue(); }
+		    switch (gameOverValue) {
+			    case Traxboard.DRAW:  bv.draw++; break;
+			    case Traxboard.WHITE: bv.white++; break;
+			    case Traxboard.BLACK: bv.black++; break;
+			    default:
+				  // This should never happen
+				  throw new RuntimeException("\n"+tb+"tb.isGameOver()="+tb.isGameOver());
+		    }
+		    theBook.put(bk,bv);
 	    }
-	}	
-	else {
+	  }
+        }
+      else {
 	   while ( (s=reader.readLine()) != null) {
 		    tb=new Traxboard();
 		    try {
@@ -90,8 +97,33 @@ public class Openingbook
        }
     }
 
+  public void loadBook() throws IOException {
+    loadBook("url");
+  } 
+
+  public void loadBook(String from) throws IOException {
+    String s;
+    BufferedReader reader;
+
+    if (from.equals("url")) {
+      reader=new BufferedReader(new InputStreamReader(getClass().getClassLoader().getResource("games/book.bin").openStream()));
+    }
+    else {
+      reader=new BufferedReader(new FileReader(new File("games/book.bin")));
+    }
+    theBook=new HashMap<bookKey,bookValue>();
+    while ((s=reader.readLine())!=null) {
+      String[] elems=s.split("\\s");
+      if (elems.length==6) {
+        bookKey bk=new bookKey(elems[1],elems[0]);
+        bookValue bv=new bookValue(elems[2],elems[3],elems[4],elems[5]);
+        theBook.put(bk,bv);
+      }
+    }
+  }
+
   private void saveBook() throws IOException {
-    BufferedWriter writer=new BufferedWriter(new FileWriter(new File("./book.bin")));
+    BufferedWriter writer=new BufferedWriter(new FileWriter(new File("games/book.bin")));
     for (Map.Entry<bookKey, bookValue> entry : theBook.entrySet()) {
       if ((entry.getValue().alwaysPlay) || (entry.getValue().white+entry.getValue().black+entry.getValue().draw>2)) {
         writer.write(entry.getKey()+" "+entry.getValue()+"\n");
@@ -99,6 +131,15 @@ public class Openingbook
     }
     writer.close();
   }
+
+  public String toString() {
+    StringBuffer result=new StringBuffer();
+    for (Map.Entry<bookKey, bookValue> entry : theBook.entrySet()) {
+      result.append(entry.getKey()+" "+entry.getValue()+"\n");
+    }
+    return result.toString();
+  }
+    
 
   public bookValue search(String border, int wtm) {
           return this.search(new bookKey(border,wtm));
@@ -117,13 +158,19 @@ public class Openingbook
   public static void main(String[] args) {
     Openingbook o=new Openingbook();
     try {
-      o.setInputfile("alwaysplay.trx");
+      o.setInputfile("games/alwaysplay.trx");
       o.generateBook(true);
-      o.setInputfile("t");
+      o.setInputfile("games/Trax.trx");
       o.generateBook();
       o.saveBook();
     }
     catch (Exception e) { System.err.println(e); }
+    try {
+      o.loadBook("disk");
+    }
+    catch (Exception e) { throw new RuntimeException(e); }
+    System.out.println("size of book: "+o.size());
+    System.out.println(o);
   }
 
   private class bookValue {
@@ -135,11 +182,26 @@ public class Openingbook
     }
     
     public bookValue() { this(false); }
+  
+    public bookValue(boolean alwaysPlay, int black, int white, int draw) {
+      this.alwaysPlay=alwaysPlay; 
+      this.black=black;
+      this.white=0;
+      this.draw=0;
+    } 
 
-    public bookValue(boolean alwaysPlay) { 
-	this.alwaysPlay=alwaysPlay; 
-        black=0; white=0; draw=0;
+    public bookValue(String alwaysPlay, String black, String white, String draw) { 
+      this(alwaysPlay,Integer.parseInt(black),Integer.parseInt(white),Integer.parseInt(draw));
     }
+
+    public bookValue(String alwaysPlay, int black, int white, int draw) {
+      this.alwaysPlay=(alwaysPlay.equals("false")?false:true);
+      this.black=black;
+      this.white=white;
+      this.draw=draw;
+    }
+	
+    public bookValue(boolean alwaysPlay) { this(alwaysPlay,0,0,0); }
      
     public String toString() {
       return ((alwaysPlay?"true":"false")+" "+black+" "+white+" "+draw);
@@ -157,6 +219,10 @@ public class Openingbook
     public bookKey(String border, int wtm) {
       this.wtm=wtm;
       this.border=border;
+    }
+
+    public bookKey(String border, String wtm) {
+      this(border,Integer.parseInt(wtm));
     }
 
     public bookKey(Traxboard tb) {
