@@ -1,6 +1,6 @@
 /* 
 
-Date: 28th of Januar 2014
+Date: 2nd of Februar 2014
 version 0.2
 All source under GPL version 2 
 (GNU General Public License - http://www.gnu.org/)
@@ -210,7 +210,7 @@ public class Traxboard
 	break;
       default:
 	// This should never happen
-        throw new AssertionError("This should never happen. (001)"); 
+        throw new RuntimeException("This should never happen. (001)"); 
       }
     if (boardEmpty)
       System.out.println ("boardEmpty=true");
@@ -233,7 +233,7 @@ public class Traxboard
 	break;
       default:
 	// This should never happen 
-        throw new AssertionError("This should never happen. (002)");
+        throw new RuntimeException("This should never happen. (002)");
       }
     for (int i = 0; i < 17; i++)
       {
@@ -652,7 +652,7 @@ public class Traxboard
 	    throw new IllegalMoveException ("illegal direction.");
 	  default:
 	    /* This should never happen */
-	    throw new AssertionError("This should never happen. (003)"); 
+	    throw new RuntimeException("This should never happen. (003)"); 
 	  }
 	break;
       case 2:
@@ -676,7 +676,7 @@ public class Traxboard
 	    throw new IllegalMoveException ("illegal direction.");
 	  default:
 	    /* This should never happen */
-	    throw new AssertionError("This should never happen. (026)"); 
+	    throw new RuntimeException("This should never happen. (026)"); 
 	  }
 	break;
       case 4:
@@ -700,7 +700,7 @@ public class Traxboard
 	    throw new IllegalMoveException ("illegal direction.");
 	  default:
 	    /* This should never happen */
-	    throw new AssertionError("This should never happen. (004)"); 
+	    throw new RuntimeException("This should never happen. (004)"); 
 	  }
 	break;
       case 8:
@@ -724,7 +724,7 @@ public class Traxboard
 	    throw new IllegalMoveException ("illegal direction.");
 	  default:
 	    /* This should never happen */
-	    throw new AssertionError("This should never happen. (005)"); 
+	    throw new RuntimeException("This should never happen. (005)"); 
 	  }
 	break;
       case 16:
@@ -748,7 +748,7 @@ public class Traxboard
 	    throw new IllegalMoveException ("illegal direction.");
 	  default:
 	    /* This should never happen */
-	    throw new AssertionError("This should never happen. (006)"); 
+	    throw new RuntimeException("This should never happen. (006)"); 
 	  }
 	break;
       case 18:
@@ -770,7 +770,7 @@ public class Traxboard
 	    throw new IllegalMoveException ("illegal direction.");
 	  default:
 	    /* This should never happen */
-	    throw new AssertionError("This should never happen. (007)"); 
+	    throw new RuntimeException("This should never happen. (007)"); 
 	  }
 	break;
       case 20:
@@ -792,7 +792,7 @@ public class Traxboard
 	    break;
 	  default:
 	    /* This should never happen */
-	    throw new AssertionError("This should never happen. (008)"); 
+	    throw new RuntimeException("This should never happen. (008)"); 
 	  }
 	break;
       case 24:
@@ -814,7 +814,7 @@ public class Traxboard
 	    break;
 	  default:
 	    /* This should never happen */
-	    throw new AssertionError("This should never happen. (010)"); 
+	    throw new RuntimeException("This should never happen. (010)"); 
 	  }
 	break;
       case 32:
@@ -838,7 +838,7 @@ public class Traxboard
 	    break;
 	  default:
 	    /* This should never happen */
-	    throw new AssertionError("This should never happen. (011)"); 
+	    throw new RuntimeException("This should never happen. (011)"); 
 	  }
 	break;
       case 33:
@@ -860,7 +860,7 @@ public class Traxboard
 	    throw new IllegalMoveException ("illegal direction.");
 	  default:
 	    /* This should never happen */
-	    throw new AssertionError("This should never happen. (012)"); 
+	    throw new RuntimeException("This should never happen. (012)"); 
 	  }
 	break;
       case 36:
@@ -1065,7 +1065,7 @@ public class Traxboard
 	break;
       default:
 	/* This should never happen */
-	  throw new AssertionError("This should never happen. (013)"); 
+	  throw new RuntimeException("This should never happen. (013)"); 
       }
     if (row == 0)
       row++;
@@ -1110,7 +1110,7 @@ public class Traxboard
 	break;
       default:
 	/* This should never happen */
-	  throw new AssertionError("This should never happen. (014)"); 
+	  throw new RuntimeException("This should never happen. (014)"); 
       }
   }
 
@@ -1193,7 +1193,7 @@ public class Traxboard
 		break;
 	      default:
 		/* This should never happen */
-		  throw new AssertionError("This should never happen. (015)"); 
+		  throw new RuntimeException("This should never happen. (015)"); 
 	      }
 	  }
       }
@@ -1272,7 +1272,7 @@ public class Traxboard
 	    break;
 	  default:
 	    /* This should never happen */
-	      throw new AssertionError("This should never happen. (016)"); 
+	      throw new RuntimeException("This should never happen. (016)"); 
 	  }
 	Moves.trimToSize ();
 	return Moves;
@@ -1505,7 +1505,7 @@ public class Traxboard
 		    }
 		  default:
 		    // This should never happen
-		    throw new AssertionError("This should never happen(026)");
+		    throw new RuntimeException("This should never happen(029)");
 		  }
 	      }
 	  }
@@ -1872,7 +1872,7 @@ public class Traxboard
 	return WHITE;
       default:
 	// This should never happen 
-	  throw new AssertionError("This should never happen. (017)"); 
+	  throw new RuntimeException("This should never happen. (017)"); 
       }
   }
 
@@ -2114,7 +2114,7 @@ public class Traxboard
 	    break;
 	  default:
 	    // This should never happen 
-	      throw new AssertionError("This should never happen. (018)"); 
+	      throw new RuntimeException("This should never happen. (018)"); 
 	  }
 	switch (getAt (row, col))
 	  {
@@ -2138,7 +2138,7 @@ public class Traxboard
 	    break;
 	  default:
 	    // This should never happen 
-	      throw new AssertionError("This should never happen. (019)");
+	      throw new RuntimeException("This should never happen. (019)");
 	  }
 	switch (theNum)
 	  {
@@ -2280,7 +2280,7 @@ public class Traxboard
 	    break;
 	  default:
 	    /* This should never happen */
-	      throw new AssertionError("This should never happen. (020)");
+	      throw new RuntimeException("This should never happen. (020)");
 	  }
       }
   }
@@ -2313,19 +2313,15 @@ public class Traxboard
       }
     starti = 1;
     startj = 1;
-    while (getAt (starti, startj) == EMPTY)
-      starti++;
+    while (getAt (starti, startj) == EMPTY) starti++;
 
     direction = 'd';
     i = starti;
     j = startj;
-    while (true)
-      {
-	switch (direction)
-	  {
+    while (true) {
+	switch (direction) {
 	  case 'd':
-	    switch (getAt (i, j))
-	      {
+	    switch (getAt (i, j)) {
 	      case NW:
 	      case SW:
 	      case WE:
@@ -2367,7 +2363,7 @@ public class Traxboard
 		break;
 	      default:
 		/* This should never happen */
-		  throw new AssertionError("This should never happen. (021)");
+		  throw new RuntimeException("This should never happen. (021)");
 	      }
 	    if (getAt (i + 1, j - 1) != EMPTY)
 	      {
@@ -2428,7 +2424,7 @@ public class Traxboard
 		break;
 	      default:
 		/* This should never happen */
-		  throw new AssertionError("This should never happen. (022)");
+		  throw new RuntimeException("This should never happen. (022)");
 	      }
 	    if (getAt (i - 1, j + 1) != EMPTY)
 	      {
@@ -2489,7 +2485,7 @@ public class Traxboard
 		break;
 	      default:
 		/* This should never happen */
-		  throw new AssertionError("This should never happen. (023)");
+		  throw new RuntimeException("This should never happen. (023)");
 	      }
 	    if (getAt (i - 1, j - 1) != EMPTY)
 	      {
@@ -2501,10 +2497,9 @@ public class Traxboard
 	      }
 	    if (getAt (i, j - 1) == EMPTY)
 	      {
-		if ((i == starti) && (j == startj))
-		  return result;
+		if ((i == starti) && (j == startj)) return result;
+                result += '-';
 		direction = 'd';
-		result += '-';
 		break;
 	      }
 	    j--;
@@ -2552,7 +2547,7 @@ public class Traxboard
 		break;
 	      default:
 		/* This should never happen */
-		  throw new AssertionError("This should never happen. (024)");
+		  throw new RuntimeException("This should never happen. (024)");
 	      }
 	    if (getAt (i + 1, j + 1) != EMPTY)
 	      {
@@ -2572,7 +2567,7 @@ public class Traxboard
 	    break;
 	  default:
 	    /* This should never happen */
-	      throw new AssertionError("This should never happen. (025)");
+	      throw new RuntimeException("This should never happen. (025)");
 	  }
       }
   }
@@ -2685,7 +2680,7 @@ public class Traxboard
         return result;
       default:
         // This should never happen
-        throw new AssertionError("This should never happen. (009)");
+        throw new RuntimeException("This should never happen. (009)");
     }
   }
 
@@ -2932,6 +2927,14 @@ public class Traxboard
 	{
 	  System.err.println ("Test 13: OK\n");
 	}
+	t=new Traxboard();
+	t.makeMove("a1s");
+	t.makeMove("b1s");
+	t.makeMove("1as");
+	if (!t.getBorder().equals("BB-WW-B-W+B-W")) {
+          System.err.println("Test 14: FAILED\n");
+	  result=false;
+        } else System.err.println("Test 14: OK\n");
     }
     catch (Exception e)
     {
