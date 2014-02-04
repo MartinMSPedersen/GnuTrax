@@ -1,6 +1,6 @@
 /* 
-   Date: 5th of Februar 2014
-   version 0.1
+   Date: 6th of Februar 2014
+   version 0.2
    All source under GPL version 2
    (GNU General Public License - http://www.gnu.org/)
    contact traxplayer@gmail.com for more information about this code
@@ -82,6 +82,7 @@ public class ComputerPlayerUct extends ComputerPlayer
       String bestMove=null;
 
       if (book==null) {
+	  //System.out.println("book is null");
 	  return null; 
       }
       if (tb.whoToMove()==Traxboard.BLACK) { factor=-1; }
@@ -101,6 +102,10 @@ public class ComputerPlayerUct extends ComputerPlayer
 	   }
 	 }
       }
+      if (bestScore*factor<0) {
+        //System.out.println("Reject move:"+bestMove+", score="+bestScore);
+	return null;
+      }
       if (bestMove!=null) return bestMove;
       return null;
     }
@@ -109,9 +114,15 @@ public class ComputerPlayerUct extends ComputerPlayer
         String simple=null;
 
  	simple=simpleMove(tb);
-	if (simple!=null) { return simple; }
+	if (simple!=null) { 
+	    //System.out.println("Simple move found"); 
+	    return simple; 
+	}
         simple=openingMove(tb);
-	if (simple!=null) { return simple; }
+	if (simple!=null) { 
+	    //System.out.println("Move found in opening book."); 
+	    return simple; 
+	}
 
 	UctNode root = new UctNode(tb);
 	int maxSimulations;
