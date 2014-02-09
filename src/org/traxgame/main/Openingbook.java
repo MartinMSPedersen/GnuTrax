@@ -78,8 +78,14 @@ public class Openingbook {
                     bookKey bk = new bookKey(tb.getBorder(), tb.whoToMove());
                     bookValue bv = search(bk);
                     if (bv == null) {
-                        bv = new bookValue();
-                    }
+			bk=bk.reverse();
+			switch (gameOverValue) {
+			    case Traxboard.WHITE: gameOverValue=Traxboard.BLACK; break;
+			    case Traxboard.BLACK: gameOverValue=Traxboard.WHITE; break;
+			}
+			bv=search(bk);
+	                if (bv==null) bv = new bookValue();
+		    }
                     switch (gameOverValue) {
                         case Traxboard.DRAW:
                             bv.draw++;
@@ -136,6 +142,9 @@ public class Openingbook {
                 bookKey bk = new bookKey(elems[1], elems[0]);
                 bookValue bv = new bookValue(elems[2], elems[3], elems[4], elems[5]);
                 theBook.put(bk, bv);
+		// System.out.println("elems: ");
+		// for (String e : elems) System.out.print(e+" ");
+		// System.out.println(", key: "+bk+", value:"+bv);
             }
         }
     }
@@ -163,7 +172,9 @@ public class Openingbook {
     }
 
     public bookValue search(bookKey bk) {
-        return theBook.get(bk);
+	bookValue result=theBook.get(bk);
+	if (bk!=null) return result;
+        return theBook.get(bk.reverse());
     }
 
     public bookValue search(Traxboard tb) {
@@ -201,9 +212,11 @@ public class Openingbook {
         public int black, white, draw;
         public boolean alwaysPlay;
 
-        public int score() {
-            if (alwaysPlay) { return Integer.MAX_VALUE; }
-	    return (black/(black+white+draw+1));
+        public int score(int wtm) {
+	    //System.out.println("SCORE: "+white+" "+black+" "+draw);
+            if (alwaysPlay) return Integer.MAX_VALUE; 
+	    if (wtm==Traxboard.WHITE) return (TraxUtil.getRandom(50)+1000*black/(black+white+draw+1));
+	    return (TraxUtil.getRandom(50)+1000*white/(black+white+draw+1));
 	}
 
         public bookValue() { this(false); }
@@ -211,8 +224,8 @@ public class Openingbook {
         public bookValue(boolean alwaysPlay, int black, int white, int draw) {
             this.alwaysPlay = alwaysPlay;
             this.black = black;
-            this.white = 0;
-            this.draw = 0;
+            this.white = white;
+            this.draw = draw;
         }
 
         public bookValue(String alwaysPlay, String black, String white, String draw) {
@@ -243,6 +256,10 @@ public class Openingbook {
         public String toString() {
             return wtm + " " + border;
         }
+
+	public bookKey reverse() {
+	    return new bookKey(TraxUtil.reverseBorder(border),wtm==Traxboard.WHITE?Traxboard.BLACK:Traxboard.WHITE);
+	}
 
         public bookKey(String border, int wtm) {
             this.wtm = wtm;
