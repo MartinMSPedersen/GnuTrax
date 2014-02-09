@@ -106,6 +106,9 @@
 		<copy todir="bin2/images">
 			<fileset dir="src/images" />
 		</copy>
+		<copy todir="bin2/games">
+			<fileset dir="src/games" />
+		</copy>
 	</target>
 
 	<target name="run" depends="compile">
