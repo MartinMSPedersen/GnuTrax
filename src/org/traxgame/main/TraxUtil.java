@@ -1,6 +1,6 @@
 /* 
    
-   Date: 9th of Februar 2014
+   Date: 3th of Januar 2009
    version 0.1
    All source under GPL version 2 
    (GNU General Public License - http://www.gnu.org/)

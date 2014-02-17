@@ -1,17 +1,19 @@
 /* 
 
-Date: 2nd of Februar 2014
+Date: 14th of Februar 2014
 version 0.2
 All source under GPL version 2 
 (GNU General Public License - http://www.gnu.org/)
 contact traxplayer@gmail.com for more information about this code
 
- */
+*/
+
 package org.traxgame.main;
 
 import java.util.ArrayList;
 
-public class Traxboard {
+public class Traxboard 
+{
 	// Piece description...
 	//
 	// 0 1 2 3 4 5 6
@@ -39,14 +41,14 @@ public class Traxboard {
 	public boolean debug = false;
 
 	public static final int EMPTY = 0, INVALID = 7,
-
-	NS = 1, SN = 1, WE = 2, EW = 2, NW = 3, WN = 3, NE = 4, EN = 4, WS = 5,
+			NS = 1, SN = 1, WE = 2, EW = 2, NW = 3, WN = 3, NE = 4, EN = 4, WS = 5,
 			SW = 5, SE = 6, ES = 6;
-	public static final int WHITE = 0, BLACK = 1, DRAW = 2, NOPLAYER = 3,
-			NORESULT = 3;
+	public static final int WHITE = 0, BLACK = 1, DRAW = 2, NOPLAYER = 3, NORESULT = 3;
 
 	private static String[][] col_row_array;
-	static {
+	
+	static 
+	{
 		StringBuffer str;
 		col_row_array = new String[9][9];
 		for (char i = '@'; i <= 'H'; i++) {
@@ -61,9 +63,7 @@ public class Traxboard {
 
 	public static final long serialVersionUID = 24362472L;
 
-	public boolean blank(int piece) {
-		return (piece == EMPTY);
-	}
+	public boolean blank(int piece) { return (piece == EMPTY); }
 
 	/**
 	 * Returns the numbers of used tiles. Can be used to determine if we are in
@@ -71,11 +71,63 @@ public class Traxboard {
 	 * 
 	 * @return the number of used tiles
 	 */
-	public int getNumOfTiles() {
-		return num_of_tiles;
+	public int getNumOfTiles() { return num_of_tiles; }
+
+	public Traxboard rotate() 
+	{
+		Traxboard result=new Traxboard(this);
+		for (int i=0; i<17; i++) {
+			for (int j=0; j<17; j++) {
+				switch (board[16-j][i]) {
+				case NS:
+					result.board[i][j]=WE;
+					break;
+				case WE:
+					result.board[i][j]=NS;
+					break;
+				case EMPTY:
+					result.board[i][j]=EMPTY;
+					break;
+				case NW:
+					result.board[i][j]=NE;
+					break;
+				case NE:
+					result.board[i][j]=SE;
+					break;
+				case SE:
+					result.board[i][j]=SW;
+					break;
+				case SW:
+					result.board[i][j]=NW;
+					break;
+				default:
+					// This should never happen
+					throw new RuntimeException("This should never happen. (044)");
+				}
+			}
+		}
+		result.setCorners();
+		return result;
 	}
 
-	private void saveState() {
+	private void setCorners() 
+	{
+		firstrow=-1;
+		firstcol=-1;
+		lastcol=-1;
+		lastrow=-1;
+		for (int i=0; i<17; i++) {
+			for (int j=0; j<17; j++) {
+				if ((firstrow<0) && (board[i][j]!=EMPTY)) firstrow=i;
+				if ((lastrow<0) && (board[16-i][j]!=EMPTY)) lastrow=16-i;
+				if ((firstcol<0) && (board[j][i]!=EMPTY)) firstcol=i;
+				if ((lastcol<0) && (board[j][16-i]!=EMPTY)) lastcol=16-i;
+			}
+		}
+	}
+
+	private void saveState() 
+	{
 		wtm_save = wtm;
 		boardEmpty_save = boardEmpty;
 		gameover_save = gameover;
@@ -91,7 +143,8 @@ public class Traxboard {
 		}
 	}
 
-	private void restoreState() {
+	private void restoreState() 
+	{
 		wtm = wtm_save;
 		boardEmpty = boardEmpty_save;
 		gameover = gameover_save;
@@ -107,7 +160,8 @@ public class Traxboard {
 		}
 	}
 
-	public Traxboard() {
+	public Traxboard() 
+	{
 		int i, j;
 
 		wtm = WHITE;
@@ -122,7 +176,8 @@ public class Traxboard {
 
 	}
 
-	public Traxboard(Traxboard org) {
+	public Traxboard(Traxboard org) 
+	{
 		int i, j;
 
 		wtm = org.wtm;
@@ -147,23 +202,19 @@ public class Traxboard {
 		boardEmpty = org.boardEmpty;
 	}
 
-	public int getRowSize() {
-		if (getNumOfTiles() == 0)
-			return 0;
-		return 1 + (lastrow - firstrow);
-	}
+	public int getRowSize() { return ((getNumOfTiles() == 0)?0:1+(lastrow-firstrow)); }
+	public int getColSize() { return ((getNumOfTiles() == 0)?0:1+(lastcol-firstcol)); }
 
-	public int getColSize() {
-		if (getNumOfTiles() == 0)
-			return 0;
-		return 1 + (lastcol - firstcol);
-	}
-
-	public void dump() {
+	public void dump() 
+	{
 		System.out.println(this);
 		System.out.println("num_of_tiles=" + getNumOfTiles());
 		System.out.println("rowsize=" + getRowSize());
 		System.out.println("colsize=" + getColSize());
+		System.out.println("firstrow=" + firstrow);
+		System.out.println("firstcol=" + firstcol);
+		System.out.println("lastrow=" + lastrow);
+		System.out.println("lastcol=" + lastcol);
 		System.out.print("gameover=");
 		switch (gameover) {
 		case WHITE:
@@ -204,7 +255,14 @@ public class Traxboard {
 			// This should never happen
 			throw new RuntimeException("This should never happen. (002)");
 		}
+		System.out.println("   0123456789ABCDEFG");
 		for (int i = 0; i < 17; i++) {
+			if (i>9) {
+				System.out.print(i+":");
+			}
+			else {
+				System.out.print("0"+i+":");
+			}
 			for (int j = 0; j < 17; j++) {
 				System.out.print(board[i][j]);
 			}
@@ -223,12 +281,11 @@ public class Traxboard {
 	 *            the column number 1-8
 	 * @return true if the place (row,col) is free or false otherwise
 	 */
-	public boolean isBlank(int row, int col) {
-		return (getAt(row, col) == EMPTY);
-	}
+	public boolean isBlank(int row, int col) { return (getAt(row, col) == EMPTY); }
 
 	@Override
-	public String toString() {
+	public String toString() 
+	{
 		StringBuffer result = new StringBuffer(1000);
 		int i, j, k;
 		int leftpiece, uppiece, upleftpiece;
@@ -450,7 +507,8 @@ public class Traxboard {
 	 * @param move
 	 *            The move
 	 */
-	public void makeMove(String move) throws IllegalMoveException {
+	public void makeMove(String move) throws IllegalMoveException 
+	{
 		// updates the board etc. if it was a legal move
 		// accepts upper-case & lower-case letters
 		// and old&new notation but not the very old
@@ -1016,7 +1074,8 @@ public class Traxboard {
 
 	}
 
-	public void switchPlayer() {
+	public void switchPlayer() 
+	{
 		switch (wtm) {
 		case WHITE:
 			wtm = BLACK;
@@ -1118,19 +1177,19 @@ public class Traxboard {
 		return NOPLAYER;
 	}
 
-	public ArrayList<String> uniqueMoves() {
+	public ArrayList<String> uniqueMoves() 
+	{
 		// complex throw away a lot of equal moves
 		// and symmetries (hopefully)
 
-		ArrayList<String> Moves = new ArrayList<String>(100); // 50 might be
-																// enough
+		ArrayList<String> Moves = new ArrayList<String>(100); // 50 might be enough
 		String AMove;
 		int i, j, k;
 		int dl, dr, ur, ul, rr;
 		int[][] neighbors = new int[10][10]; // which neighbors - default all
-												// values 0
+		// values 0
 		boolean[][][] dirlist = new boolean[10][10][3]; // which directions for
-														// move
+		// move
 		// 0 /, 1 \, 2 +
 		// true means already used
 		// default all values false
@@ -1484,7 +1543,8 @@ public class Traxboard {
 		return Moves;
 	}
 
-	private boolean checkLine(int row, int col, char direction, char type) {
+	private boolean checkLine(int row, int col, char direction, char type) 
+	{
 		// type can be _h_orizontal , _v_ertical, _l_oop
 
 		int start_row = row;
@@ -1548,7 +1608,8 @@ public class Traxboard {
 		}
 	}
 
-	public boolean isLeftRightMirror() {
+	public boolean isLeftRightMirror() 
+	{
 		int piece, i, j, j2;
 
 		for (i = 1; i <= getRowSize(); i++) {
@@ -1591,11 +1652,10 @@ public class Traxboard {
 		return true;
 	}
 
-	public boolean isRightLeftMirror() {
-		return isLeftRightMirror();
-	}
+	public boolean isRightLeftMirror() { return isLeftRightMirror(); }
 
-	public boolean isUpDownMirror() {
+	public boolean isUpDownMirror() 
+	{
 		int piece, i, j, i2;
 
 		i2 = getRowSize();
@@ -1638,12 +1698,11 @@ public class Traxboard {
 		return true;
 	}
 
-	public boolean isDownUpMirror() {
-		return isDownUpMirror();
-	}
+	public boolean isDownUpMirror() { return isDownUpMirror(); }
 
 	// 90 degree rotation
-	public boolean isRotateMirror() {
+	public boolean isRotateMirror() 
+	{
 		int i, j, piece, i2, j2;
 
 		i2 = getRowSize();
@@ -1688,9 +1747,7 @@ public class Traxboard {
 		return true;
 	}
 
-	public int whoToMove() {
-		return wtm;
-	}
+	public int whoToMove() { return wtm; }
 
 	public int whoDidLastMove() {
 		if (boardEmpty)
@@ -1720,10 +1777,12 @@ public class Traxboard {
 			if (board[firstrow + row - 1][firstcol + col - 1] != EMPTY)
 				num_of_tiles--;
 			board[firstrow + row - 1][firstcol + col - 1] = piece;
-			if ((row == getRowSize()) || (col == getColSize()) || (row == 1)
+			/*
+			 if ((row == getRowSize()) || (col == getColSize()) || (row == 1)
 					|| (col == 1)) {
 				recalcSize();
 			}
+			 */
 			return;
 		} else {
 			if (boardEmpty) {
@@ -1757,19 +1816,12 @@ public class Traxboard {
 		board[firstrow + row - 1][firstcol + col - 1] = piece;
 	}
 
-	private void recalcSize() {
-		;
-	}
+	private boolean canMoveDown() { return (getRowSize() < 8); }
 
-	private boolean canMoveDown() {
-		return (getRowSize() < 8);
-	}
+	private boolean canMoveRight() { return (getColSize() < 8); }
 
-	private boolean canMoveRight() {
-		return (getColSize() < 8);
-	}
-
-	public boolean forcedMove(int brow, int bcol) {
+	public boolean forcedMove(int brow, int bcol)
+	{
 		if (!isBlank(brow, bcol))
 			return true;
 		if ((brow < 1) || (brow > 8) || (bcol < 1) || (bcol > 8))
@@ -1827,46 +1879,46 @@ public class Traxboard {
 		if (white == 2) {
 			switch (white_up + 2 * white_down + 4 * white_left + 8
 					* white_right) {
-			case 3:
-				piece = NS;
-				break;
-			case 12:
-				piece = WE;
-				break;
-			case 5:
-				piece = NW;
-				break;
-			case 9:
-				piece = NE;
-				break;
-			case 6:
-				piece = WS;
-				break;
-			case 10:
-				piece = SE;
-				break;
+					case 3:
+						piece = NS;
+						break;
+					case 12:
+						piece = WE;
+						break;
+					case 5:
+						piece = NW;
+						break;
+					case 9:
+						piece = NE;
+						break;
+					case 6:
+						piece = WS;
+						break;
+					case 10:
+						piece = SE;
+						break;
 			}
 		} else { // right==2
 			switch (black_up + 2 * black_down + 4 * black_left + 8
 					* black_right) {
-			case 12:
-				piece = NS;
-				break;
-			case 3:
-				piece = WE;
-				break;
-			case 10:
-				piece = NW;
-				break;
-			case 6:
-				piece = NE;
-				break;
-			case 9:
-				piece = WS;
-				break;
-			case 5:
-				piece = SE;
-				break;
+					case 12:
+						piece = NS;
+						break;
+					case 3:
+						piece = WE;
+						break;
+					case 10:
+						piece = NW;
+						break;
+					case 6:
+						piece = NE;
+						break;
+					case 9:
+						piece = WS;
+						break;
+					case 5:
+						piece = SE;
+						break;
 			}
 		}
 		putAt(brow, bcol, piece);
@@ -1890,7 +1942,8 @@ public class Traxboard {
 		return true;
 	}
 
-	private void updateLine(char colour, char entry, int row, int col) {
+	private void updateLine(char colour, char entry, int row, int col) 
+	{
 		int theNum;
 
 		while (true) {
@@ -1941,139 +1994,139 @@ public class Traxboard {
 			case 1024 + 512 + 16:
 				if (getAt(row, col + 1) == EMPTY)
 					return;
-				col++;
-				break;
+			col++;
+			break;
 			case 1024 + 512 + 8:
 				if (getAt(row - 1, col) == EMPTY)
 					return;
-				row--;
-				entry = 's';
-				break;
+			row--;
+			entry = 's';
+			break;
 			case 1024 + 512 + 2:
 				if (getAt(row + 1, col) == EMPTY)
 					return;
-				row++;
-				entry = 'n';
-				break;
+			row++;
+			entry = 'n';
+			break;
 			case 1024 + 256 + 16:
 				if (getAt(row, col - 1) == EMPTY)
 					return;
-				col--;
-				break;
+			col--;
+			break;
 			case 1024 + 256 + 4:
 				if (getAt(row - 1, col) == EMPTY)
 					return;
-				row--;
-				entry = 's';
-				break;
+			row--;
+			entry = 's';
+			break;
 			case 1024 + 256 + 1:
 				if (getAt(row + 1, col) == EMPTY)
 					return;
-				row++;
-				entry = 'n';
-				break;
+			row++;
+			entry = 'n';
+			break;
 			case 1024 + 128 + 32:
 				if (getAt(row - 1, col) == EMPTY)
 					return;
-				row--;
-				break;
+			row--;
+			break;
 			case 1024 + 128 + 2:
 				if (getAt(row, col - 1) == EMPTY)
 					return;
-				col--;
-				entry = 'e';
-				break;
+			col--;
+			entry = 'e';
+			break;
 			case 1024 + 128 + 1:
 				if (getAt(row, col + 1) == EMPTY)
 					return;
-				col++;
-				entry = 'w';
-				break;
+			col++;
+			entry = 'w';
+			break;
 			case 1024 + 64 + 32:
 				if (getAt(row + 1, col) == EMPTY)
 					return;
-				row++;
-				break;
+			row++;
+			break;
 			case 1024 + 64 + 8:
 				if (getAt(row, col - 1) == EMPTY)
 					return;
-				col--;
-				entry = 'e';
-				break;
+			col--;
+			entry = 'e';
+			break;
 			case 1024 + 64 + 4:
 				if (getAt(row, col + 1) == EMPTY)
 					return;
-				col++;
-				entry = 'w';
-				break;
+			col++;
+			entry = 'w';
+			break;
 			case 512 + 32:
 				if (getAt(row, col + 1) == EMPTY)
 					return;
-				col++;
-				break;
+			col++;
+			break;
 			case 512 + 4:
 				if (getAt(row + 1, col) == EMPTY)
 					return;
-				row++;
-				entry = 'n';
-				break;
+			row++;
+			entry = 'n';
+			break;
 			case 512 + 1:
 				if (getAt(row - 1, col) == EMPTY)
 					return;
-				row--;
-				entry = 's';
-				break;
+			row--;
+			entry = 's';
+			break;
 			case 256 + 32:
 				if (getAt(row - 1, col) == EMPTY)
 					return;
-				row--;
-				break;
+			row--;
+			break;
 			case 256 + 8:
 				if (getAt(row, col + 1) == EMPTY)
 					return;
-				row++;
-				entry = 'n';
-				break;
+			row++;
+			entry = 'n';
+			break;
 			case 256 + 2:
 				if (getAt(row - 1, col) == EMPTY)
 					return;
-				row--;
-				entry = 's';
-				break;
+			row--;
+			entry = 's';
+			break;
 			case 128 + 16:
 				if (getAt(row - 1, col) == EMPTY)
 					return;
-				row--;
-				break;
+			row--;
+			break;
 			case 128 + 8:
 				if (getAt(row, col + 1) == EMPTY)
 					return;
-				col++;
-				entry = 'w';
-				break;
+			col++;
+			entry = 'w';
+			break;
 			case 128 + 4:
 				if (getAt(row, col - 1) == EMPTY)
 					return;
-				col--;
-				entry = 'e';
-				break;
+			col--;
+			entry = 'e';
+			break;
 			case 64 + 16:
 				if (getAt(row + 1, col) == EMPTY)
 					return;
-				row++;
-				break;
+			row++;
+			break;
 			case 64 + 2:
 				if (getAt(row, col + 1) == EMPTY)
 					return;
-				col++;
-				entry = 'w';
-				break;
+			col++;
+			entry = 'w';
+			break;
 			case 64 + 1:
 				if (getAt(row, col - 1) == EMPTY)
 					return;
-				col--;
-				entry = 'e';
-				break;
+			col--;
+			entry = 'e';
+			break;
 			default:
 				/* This should never happen */
 				throw new RuntimeException("This should never happen. (020)");
@@ -2081,11 +2134,10 @@ public class Traxboard {
 		}
 	}
 
-	public String getBorder() {
-		return this.getBorder(false);
-	}
+	public String getBorder() { return this.getBorder(false); }
 
-	public String getBorder(boolean needNumbers) {
+	public String getBorder(boolean needNumbers) 
+	{
 		String result = new String();
 		char[] dummy = new char[4];
 		int i, j, k, starti, startj, icopy, jcopy;
@@ -2297,7 +2349,8 @@ public class Traxboard {
 		}
 	}
 
-	private int neighbor_value(int x, int y) {
+	private int neighbor_value(int x, int y) 
+	{
 		int value = 0;
 		int up = getAt(x - 1, y), down = getAt(x + 1, y), left = getAt(x, y - 1), right = getAt(
 				x, y + 1);
@@ -2334,7 +2387,8 @@ public class Traxboard {
 		return value;
 	}
 
-	public ArrayList<Integer> getLegalTiles(int x, int y) {
+	public ArrayList<Integer> getLegalTiles(int x, int y) 
+	{
 		ArrayList<Integer> result = new ArrayList<Integer>();
 		if (this.boardEmpty) {
 			result.add(Traxboard.NW);
@@ -2438,7 +2492,8 @@ public class Traxboard {
 	}
 
 	// Unit test
-	public static void main(String[] args) {
+	public static void main(String[] args) 
+	{
 		Traxboard t;
 		ArrayList<String> moves;
 		ArrayList<String> aMove;
@@ -2646,8 +2701,20 @@ public class Traxboard {
 			if (!t.getBorder().equals("BB-WW-B-W+B-W")) {
 				System.err.println("Test 14: FAILED\n");
 				result = false;
-			} else
+			} else {
 				System.err.println("Test 14: OK\n");
+			}
+			t = new Traxboard();
+			t.makeMove("a1c");
+			t.makeMove("b1d");
+			t.makeMove("a2l");
+			t.makeMove("a3l");
+			t=t.rotate();
+			System.out.println(t);
+			t=t.rotate();
+			System.out.println(t);
+			t=t.rotate();
+			System.out.println(t);
 		} catch (Exception e) {
 			e.printStackTrace();
 			result = false;

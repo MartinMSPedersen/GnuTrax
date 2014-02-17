@@ -1,6 +1,6 @@
 /* 
-   Date: 6th of Februar 2014
-   version 0.2
+   Date: 5th of Februar 2014
+   version 0.1
    All source under GPL version 2
    (GNU General Public License - http://www.gnu.org/)
    contact traxplayer@gmail.com for more information about this code
@@ -19,7 +19,7 @@ public class ComputerPlayerUct extends ComputerPlayer
     public ComputerPlayerUct ()
     {
 	//maxSimulations = 10000;
-	this(100000);
+	this(200000);
     }
     
     public ComputerPlayerUct (int maxSimulations)
@@ -77,15 +77,13 @@ public class ComputerPlayerUct extends ComputerPlayer
     }
 
     private String openingMove(Traxboard tb) {
-      int bestScore=Integer.MIN_VALUE;
-      int factor=1;
       String bestMove=null;
 
       if (book==null) {
 	  //System.out.println("book is null");
 	  return null; 
       }
-      if (tb.whoToMove()==Traxboard.BLACK) { factor=-1; }
+      int bestScore=Integer.MIN_VALUE;
 
       for (String move : tb.uniqueMoves()) {
 	 Traxboard t_copy=new Traxboard(tb);
@@ -93,18 +91,16 @@ public class ComputerPlayerUct extends ComputerPlayer
 	 catch (IllegalMoveException e) {
 	     throw new RuntimeException("This should never happen. (027)");
 	 }
-	 Openingbook.bookValue bv=book.search(t_copy);
+	 Openingbook.BookValue bv=book.search(t_copy);
 	 if (bv!=null) {
+	   //System.out.println(move+": "+bv.alwaysPlay+bv.score(t_copy.whoToMove()));
 	   if (bv.alwaysPlay) return move;
-	   if (bv.score()>bestScore*factor) {
+	   int score=bv.score(t_copy.whoToMove())+TraxUtil.getRandom(50);
+	   if ((score==bestScore && (TraxUtil.getRandom(10)%2==0)) || score>bestScore) {
 	     bestMove=move;
-	     bestScore=bv.score()*factor;
+	     bestScore=score;
 	   }
 	 }
-      }
-      if (bestScore*factor<0) {
-        //System.out.println("Reject move:"+bestMove+", score="+bestScore);
-	return null;
       }
       if (bestMove!=null) return bestMove;
       return null;
