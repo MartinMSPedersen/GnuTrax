@@ -19,7 +19,7 @@ public class ComputerPlayerUct extends ComputerPlayer
     public ComputerPlayerUct ()
     {
 	//maxSimulations = 10000;
-	this(200000);
+	this(20000);
     }
     
     public ComputerPlayerUct (int maxSimulations)

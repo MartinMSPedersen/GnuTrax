@@ -23,15 +23,15 @@ public class Openingbook {
 
 	public void setInputfile(String inputfile) { this.inputfile = inputfile; }
 
-	public void generateBook() throws IOException { this.generateBook(false); }
+	public void generateBook() throws IOException { this.generateBook(false,false); }
 
-	public void generateBook(boolean winning) throws IOException 
+	public void generateBook(boolean always, boolean never) throws IOException 
 	{
 		String s;
 		Traxboard tb;
 		//int lineno=0;
 		BufferedReader reader = new BufferedReader(new FileReader(new File(inputfile)));
-		if (winning == false) {
+		if ((always == false) && (never == false)) {
 			while ((s = reader.readLine()) != null) {
 			    	//lineno++;
 				tb = new Traxboard();
@@ -72,24 +72,11 @@ public class Openingbook {
 					BookKey bk = new BookKey(tb.getBorder(), tb.whoToMove());
 					BookValue bv = search(tb);
 					if (bv == null) { bv=new BookValue(); }
-					switch (gameOverValue) {
-					  case Traxboard.DRAW:
-						bv.draw++;
-						break;
-					  case Traxboard.WHITE:
-						bv.white++;
-						break;
-					  case Traxboard.BLACK:
-						bv.black++;
-						break;
-					  default:
-						// This should never happen
-						throw new RuntimeException("This should never happen (040)");
-					}
-					updateBook(tb,bv);
+					updateBook(tb,bv,gameOverValue);
 				}
 			}
-		} else {
+		} 
+		if ((always == true) || (never == true)) {
 			while ((s = reader.readLine()) != null) {
 				tb = new Traxboard();
 				try {
@@ -100,7 +87,8 @@ public class Openingbook {
 
 					theBook.remove(bk);
 					BookValue bv = new BookValue();
-					bv.alwaysPlay = true;
+					bv.alwaysPlay = always;
+					bv.neverPlay = never;
 					theBook.put(bk, bv);
 				} catch (IllegalMoveException e) { ; } 
 			}
@@ -108,16 +96,41 @@ public class Openingbook {
 		reader.close();
 	}
 
-	private void updateBook(Traxboard tb, BookValue bv) 
+	private void updateBook(Traxboard tb, BookValue bv, int gameOverValue) 
 	{ 
 	    /* Need to find the right bookKey if any exist */
-	    /* TODO - Doesn't handle reverse colours */
-            BookKey bk;
+            BookKey bk1;
+	    BookKey bk2;
 	    
-	    for (int i=1; i<=3; i++) {
-		bk=new BookKey(tb.getBorder(), tb.whoToMove());
-	        if (theBook.get(bk)!=null) {
-		  theBook.put(bk,bv);
+	    for (int i=1; i<=4; i++) {
+		bk1=new BookKey(tb.getBorder(), tb.whoToMove());
+	        if (theBook.get(bk1)!=null) {
+		  switch (gameOverValue) {
+		      case Traxboard.WHITE: bv.white++; break;
+		      case Traxboard.BLACK: bv.black++; break;
+		      case Traxboard.DRAW: bv.draw++; break;
+		      default: /* This should never happen */
+		        throw new RuntimeException("This should never happen (055)");
+		  }
+		  theBook.put(bk1,bv);
+		  return;
+		}
+		tb=tb.rotate();
+	    }
+            String newBorder=TraxUtil.reverseBorder(tb.getBorder());
+	    // How to handle tb.whoToMove()==Traxboard.NOPLAYER ? Is that a problem ?
+  	    int newWTM=(tb.whoToMove()==Traxboard.WHITE)?Traxboard.BLACK:Traxboard.WHITE; 
+	    for (int i=1; i<=4; i++) {
+		bk2=new BookKey(newBorder, newWTM);
+	        if (theBook.get(bk2)!=null) {
+		  switch (gameOverValue) {
+		      case Traxboard.WHITE: bv.black++; break;
+		      case Traxboard.BLACK: bv.white++; break;
+		      case Traxboard.DRAW: bv.draw++; break;
+		      default: // This should never happen 
+		        throw new RuntimeException("This should never happen (056)");
+		  }
+		  theBook.put(bk2,bv);
 		  return;
 		}
 		tb=tb.rotate();
@@ -140,9 +153,9 @@ public class Openingbook {
 		theBook = new HashMap<BookKey, BookValue>();
 		while ((s = reader.readLine()) != null) {
 			String[] elems = s.split("\\s");
-			if (elems.length == 6) {
+			if (elems.length == 7) {
 				BookKey bk = new BookKey(elems[1], elems[0]);
-				BookValue bv = new BookValue(elems[2], elems[3], elems[4], elems[5]);
+				BookValue bv = new BookValue(elems[2], elems[3], elems[4], elems[5], elems[6]);
 				theBook.put(bk, bv);
 			}
 		}
@@ -153,7 +166,7 @@ public class Openingbook {
 	{
 		BufferedWriter writer = new BufferedWriter(new FileWriter(new File("games/book.bin")));
 		for (Map.Entry<BookKey, BookValue> entry : theBook.entrySet()) {
-			if ((entry.getValue().alwaysPlay) || (entry.getValue().white + entry.getValue().black + entry.getValue().draw > 2)) writer.write(entry.getKey() + " " + entry.getValue() + "\n");
+			if ((entry.getValue().neverPlay) || (entry.getValue().alwaysPlay) || (entry.getValue().white + entry.getValue().black + entry.getValue().draw > 2)) writer.write(entry.getKey() + " " + entry.getValue() + "\n");
 			//writer.write(entry.getKey() + " " + entry.getValue() + "\n");
 		}
 		writer.close();
@@ -165,20 +178,32 @@ public class Openingbook {
 		for (Map.Entry<BookKey, BookValue> entry : theBook.entrySet()) {
 			result.append(entry.getKey() + " " + entry.getValue() + "\n");
 		}
-		return result.toString();
+		return result.toString(); 
 	}
 
 	public BookValue search(Traxboard tb) { 
 	    BookValue result;
 	    
-	    for (int i=1; i<=3; i++) {
+	    for (int i=1; i<=4; i++) {
 	      result=theBook.get(new BookKey(tb.getBorder(),tb.whoToMove()));
 	      if (result!=null) { 
 		  return result;
 	      }
 	      tb=tb.rotate();
 	    }
-	    return theBook.get(new BookKey(tb.getBorder(), tb.whoToMove())); 
+	    String newBorder;
+	    // How to handle tb.whoToMove()==Traxboard.NOPLAYER ? Is that a problem ?
+  	    int newWTM=(tb.whoToMove()==Traxboard.WHITE)?Traxboard.BLACK:Traxboard.WHITE; 
+	    for (int i=1; i<=3; i++) {
+	      newBorder=TraxUtil.reverseBorder(tb.getBorder());
+	      result=theBook.get(new BookKey(newBorder,newWTM));
+	      if (result!=null) {
+		  return result;
+	      }
+	      tb=tb.rotate();
+	    }
+	    newBorder=TraxUtil.reverseBorder(tb.getBorder());
+	    return theBook.get(new BookKey(newBorder, newWTM)); 
 	}
 
 	public static void main(String[] args) 
@@ -186,7 +211,9 @@ public class Openingbook {
 		Openingbook o = new Openingbook();
 		try {
 			o.setInputfile("games/alwaysplay.trx");
-			o.generateBook(true);
+			o.generateBook(true,false);
+			o.setInputfile("games/neverplay.trx");
+			o.generateBook(false,true);
 			o.setInputfile("games/Trax.trx");
 			o.generateBook();
 			o.saveBook();
@@ -205,42 +232,47 @@ public class Openingbook {
 	{
 		public int black, white, draw;
 		public boolean alwaysPlay;
+		public boolean neverPlay;
 
 		public int score(int wtm) 
 		{
+			//System.out.println("SCORE: "+white+" "+black+" "+draw);
 			if (alwaysPlay) return Integer.MAX_VALUE; 
+			if (neverPlay) return Integer.MIN_VALUE;
 			if (wtm==Traxboard.WHITE) return (TraxUtil.getRandom(50)+1000*black/(black+white+draw+1));
 			return (TraxUtil.getRandom(50)+1000*white/(black+white+draw+1));
 		}
 
-		public BookValue() { this(false); }
+		public BookValue() { this(false,false); }
 
-		public BookValue(boolean alwaysPlay, int black, int white, int draw) 
+		public BookValue(boolean alwaysPlay, boolean neverPlay, int black, int white, int draw) 
 		{
 			this.alwaysPlay = alwaysPlay;
+			this.neverPlay = neverPlay;
 			this.black = black;
 			this.white = white;
 			this.draw = draw;
 		}
 
-		public BookValue(String alwaysPlay, String black, String white, String draw) 
+		public BookValue(String alwaysPlay, String neverPlay, String black, String white, String draw) 
 		{
-			this(alwaysPlay, Integer.parseInt(black), Integer.parseInt(white), Integer.parseInt(draw));
+			this(alwaysPlay, neverPlay, Integer.parseInt(black), Integer.parseInt(white), Integer.parseInt(draw));
 		}
 
-		public BookValue(String alwaysPlay, int black, int white, int draw) 
+		public BookValue(String alwaysPlay, String neverPlay, int black, int white, int draw) 
 		{
 			this.alwaysPlay = (alwaysPlay.equals("false") ? false : true);
+			this.neverPlay = (neverPlay.equals("false") ? false : true);
 			this.black = black;
 			this.white = white;
 			this.draw = draw;
 		}
 
-		public BookValue(boolean alwaysPlay) { this(alwaysPlay, 0, 0, 0); }
+		public BookValue(boolean alwaysPlay, boolean neverPlay) { this(alwaysPlay, neverPlay, 0, 0, 0); }
 
 		public String toString() 
 		{
-			return ((alwaysPlay ? "true" : "false") + " " + black + " " + white + " " + draw);
+			return ((alwaysPlay ? "true" : "false") + " " + (neverPlay ? "true" : "false") + " " + black + " " + white + " " + draw);
 		}
 	}
 

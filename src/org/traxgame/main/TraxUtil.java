@@ -110,7 +110,7 @@ public abstract class TraxUtil
 	      case '-': result.append('-'); break;
 	      default:
 	        // This should never happen
-		throw new RuntimeException("This should never happen (032).");
+		throw new IllegalArgumentException("This should never happen (032).");
 	  }
       }
       return result.toString();
