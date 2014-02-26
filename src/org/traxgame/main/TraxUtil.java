@@ -1,6 +1,6 @@
 /* 
    
-   Date: 3th of Januar 2009
+   Date: 26th of Februar 2014
    version 0.1
    All source under GPL version 2 
    (GNU General Public License - http://www.gnu.org/)
@@ -18,8 +18,9 @@ import java.util.StringTokenizer;
 public abstract class TraxUtil
 {
 
-    static boolean DEBUG=false;
+    static boolean LOG=false;
     static Random random_generator;
+
     static
     {
 	random_generator = new Random ();
@@ -27,6 +28,15 @@ public abstract class TraxUtil
     
     public static int getRandom(int limit) {
 	return random_generator.nextInt (limit);
+    }
+
+    public static void startLog() { LOG=true; }
+    public static void stopLog() { LOG=false; }
+
+    public static void log(String msg) {
+	if (LOG) {
+	    System.err.println(msg);
+	}
     }
     
     public static String getRandomMove (Traxboard t) throws IllegalMoveException {
@@ -50,24 +60,18 @@ public abstract class TraxUtil
 	    case Traxboard.WHITE:
 	    case Traxboard.BLACK:
 		if (t_copy.whoDidLastMove()==gameOverValue) {
-		    if (DEBUG) {
-			System.out.println("Winning move found");
-		    }
+		    log("Winning move found");
 		    return (moves.get(i));	/* Winning move found */
 		}
 		/* losing move found */
 	    losingMoves++;
-	    if (DEBUG) {
-		System.out.println("Losing move found");
-	    }
+	    log("Losing move found");
 	    break;
 	    case Traxboard.NOPLAYER:
 	    case Traxboard.DRAW:
 		moves_not_losing.add(moves.get(i));
-		if (DEBUG) {
-		    System.out.println("Not losing move found");
-		    System.out.println(moves_not_losing);
-		}
+		log("Not losing move found");
+		log(moves_not_losing.toString());
 		break;
 	    default:
 		/* This should never happen */
@@ -76,9 +80,7 @@ public abstract class TraxUtil
 	}
 	if (moves_not_losing.size()==0) {
 	    /* Only losing moves left */
-	    if (DEBUG) {
-		System.out.println("Only losing moves left");
-	    }
+	    log("Only losing moves left");
 	    return moves.get (0);
 	}
 	return moves_not_losing.get(random_generator.nextInt(moves_not_losing.size()));
@@ -118,7 +120,7 @@ public abstract class TraxUtil
 
     public static void main (String[]args) {
 	//System.out.println (getInput ());
-	DEBUG=true;
+	startLog();
 	
 	Traxboard tb=new Traxboard();
 	String move;
