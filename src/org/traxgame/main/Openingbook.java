@@ -35,7 +35,6 @@ public class Openingbook {
 			while ((s = reader.readLine()) != null) {
 			    	//lineno++;
 				tb = new Traxboard();
-				boolean useless = false;
 				boolean resign = false;
 				try {
 					for (String move : s.split("\\s")) {
@@ -46,12 +45,9 @@ public class Openingbook {
 						tb.makeMove(move);
 					}
 				} catch (IllegalMoveException e) {
-					useless = true;
+					continue;
 				}
 				if (!resign && tb.isGameOver() == Traxboard.NOPLAYER) {
-					useless = true;
-				}
-				if (useless) {
 					continue;
 				}
 				int gameOverValue;
