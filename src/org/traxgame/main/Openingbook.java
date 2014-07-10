@@ -1,6 +1,6 @@
 /* 
 
- Date: Februar 14 - 2014
+ Date: July 9 - 2014
  version 0.1
  All source under GPL version 2 
  (GNU General Public License - http://www.gnu.org/)
@@ -35,6 +35,7 @@ public class Openingbook {
 			while ((s = reader.readLine()) != null) {
 			    	//lineno++;
 				tb = new Traxboard();
+				boolean useless = false;
 				boolean resign = false;
 				try {
 					for (String move : s.split("\\s")) {
@@ -45,9 +46,12 @@ public class Openingbook {
 						tb.makeMove(move);
 					}
 				} catch (IllegalMoveException e) {
-					continue;
+					useless = true;
 				}
 				if (!resign && tb.isGameOver() == Traxboard.NOPLAYER) {
+					useless = true;
+				}
+				if (useless) {
 					continue;
 				}
 				int gameOverValue;
@@ -97,6 +101,7 @@ public class Openingbook {
 	    /* Need to find the right bookKey if any exist */
             BookKey bk1;
 	    BookKey bk2;
+	   
 	    
 	    for (int i=1; i<=4; i++) {
 		bk1=new BookKey(tb.getBorder(), tb.whoToMove());
@@ -110,8 +115,9 @@ public class Openingbook {
 		  }
 		  theBook.put(bk1,bv);
 		  return;
+
 		}
-		tb=tb.rotate();
+		if (i<4) tb=tb.rotate();
 	    }
             String newBorder=TraxUtil.reverseBorder(tb.getBorder());
 	    // How to handle tb.whoToMove()==Traxboard.NOPLAYER ? Is that a problem ?
@@ -129,7 +135,10 @@ public class Openingbook {
 		  theBook.put(bk2,bv);
 		  return;
 		}
-		tb=tb.rotate();
+		if (i<4) {
+		    tb=tb.rotate();
+		    newBorder=TraxUtil.reverseBorder(tb.getBorder());
+		}
 	    }
 	    theBook.put(new BookKey(tb.getBorder(),tb.whoToMove()),bv);
 	}
@@ -142,7 +151,12 @@ public class Openingbook {
 		BufferedReader reader;
 
 		if (from.equals("url")) {
-			reader = new BufferedReader(new InputStreamReader(getClass().getClassLoader().getResource("games/book.bin").openStream()));
+			try {
+			    reader = new BufferedReader(new InputStreamReader(getClass().getClassLoader().getResource("games/book.bin").openStream()));
+			} catch (NullPointerException e) {
+			    throw new IOException(e);
+			}
+
 		} else {
 			reader = new BufferedReader(new FileReader(new File("games/book.bin")));
 		}
@@ -158,12 +172,18 @@ public class Openingbook {
 		reader.close();
 	}
 
-	private void saveBook() throws IOException 
+	private void saveBook() throws IOException
+	{
+	    saveBook(7);
+	}
+
+	private void saveBook(int threshold) throws IOException 
 	{
 		BufferedWriter writer = new BufferedWriter(new FileWriter(new File("games/book.bin")));
 		for (Map.Entry<BookKey, BookValue> entry : theBook.entrySet()) {
-			if ((entry.getValue().neverPlay) || (entry.getValue().alwaysPlay) || (entry.getValue().white + entry.getValue().black + entry.getValue().draw > 2)) writer.write(entry.getKey() + " " + entry.getValue() + "\n");
-			//writer.write(entry.getKey() + " " + entry.getValue() + "\n");
+			if ((entry.getValue().neverPlay) || (entry.getValue().alwaysPlay) || (entry.getValue().white + entry.getValue().black + entry.getValue().draw >= threshold)) {
+			    writer.write(entry.getKey() + " " + entry.getValue() + "\n");
+			}
 		}
 		writer.close();
 	}
@@ -179,13 +199,17 @@ public class Openingbook {
 
 	public BookValue search(Traxboard tb) { 
 	    BookValue result;
+
+			result=theBook.get(new BookKey(tb.getBorder(),tb.whoDidLastMove()));
+			return result;
 	    
+			/*
 	    for (int i=1; i<=4; i++) {
 	      result=theBook.get(new BookKey(tb.getBorder(),tb.whoToMove()));
 	      if (result!=null) { 
 		  return result;
 	      }
-	      tb=tb.rotate();
+	      if (i<4) tb=tb.rotate();
 	    }
 	    String newBorder;
 	    // How to handle tb.whoToMove()==Traxboard.NOPLAYER ? Is that a problem ?
@@ -200,6 +224,7 @@ public class Openingbook {
 	    }
 	    newBorder=TraxUtil.reverseBorder(tb.getBorder());
 	    return theBook.get(new BookKey(newBorder, newWTM)); 
+			*/
 	}
 
 	public static void main(String[] args) 
@@ -232,7 +257,6 @@ public class Openingbook {
 
 		public int score(int wtm) 
 		{
-			//System.out.println("SCORE: "+white+" "+black+" "+draw);
 			if (alwaysPlay) return Integer.MAX_VALUE; 
 			if (neverPlay) return Integer.MIN_VALUE;
 			if (wtm==Traxboard.WHITE) return (TraxUtil.getRandom(50)+1000*black/(black+white+draw+1));

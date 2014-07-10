@@ -1,5 +1,5 @@
 /* 
-   Date: 5th of Februar 2014
+   Date: 9th of July 2014
    version 0.1
    All source under GPL version 2
    (GNU General Public License - http://www.gnu.org/)
@@ -29,7 +29,7 @@ public class ComputerPlayerUct extends ComputerPlayer
 	  book.loadBook();
 	}
 	catch (IOException e) {
-	  System.err.println("No games/book.bin found.");
+	  TraxUtil.log("No games/book.bin found.");
 	}
     }
    
@@ -94,7 +94,9 @@ public class ComputerPlayerUct extends ComputerPlayer
 	 Openingbook.BookValue bv=book.search(t_copy);
 	 if (bv!=null) {
 	   //System.out.println(move+": "+bv.alwaysPlay+bv.score(t_copy.whoToMove()));
-	   if (bv.alwaysPlay) return move;
+	   if (bv.alwaysPlay) {
+	       return move;
+	   }
 	   int score=bv.score(t_copy.whoToMove())+TraxUtil.getRandom(50);
 	   if ((score==bestScore && (TraxUtil.getRandom(10)%2==0)) || score>bestScore) {
 	     bestMove=move;
@@ -112,11 +114,12 @@ public class ComputerPlayerUct extends ComputerPlayer
  	simple=simpleMove(tb);
 	if (simple!=null) { 
 	    //System.out.println("Simple move found"); 
+	    TraxUtil.log("Simple move found");
 	    return simple; 
 	}
         simple=openingMove(tb);
 	if (simple!=null) { 
-	    //System.out.println("Move found in opening book."); 
+	    System.out.println("Move found in opening book."); 
 	    return simple; 
 	}
 

@@ -1,14 +1,14 @@
-package org.traxgame.main;
-
 /* 
    
-   Date: 26th of Februar 2014
+   Date: July 9 2014
    version 0.1
    All source under GPL version 2 
    (GNU General Public License - http://www.gnu.org/)
    contact traxplayer@gmail.com for more information about this code
    
 */
+
+package org.traxgame.main;
 
 import java.util.*;
 import java.io.*;
@@ -575,10 +575,10 @@ public class GnuTrax
   private void userLog (ArrayList < String > command)
   {
       if (command.size()>1) {
-	  //switch (command.get(1)) {
-	  //    case "on": TraxUtil.startLog(); break;
-	  //    case "off": TraxUtil.stopLog(); break;
-	  //}
+	  switch (command.get(1)) {
+	      case "on": TraxUtil.startLog(); break;
+	      case "off": TraxUtil.stopLog(); break;
+	  }
       }
   }
 
