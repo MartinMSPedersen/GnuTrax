@@ -1,9 +1,29 @@
 @0/ b1\ a2/
+@0/ b1\ b2\
+@0/ a2r b1u
+@0/ a2r b2d
+#
 @0+ b1/ c1/ a0+
+@0+ a1u a1u c1s
+a1c a2s 1ar b3s
+a1c 1ar 1as a1s
+#
 @0+ b1+ c1/ c0/ b0/ d2+ c4/
+@0+ b1+ a1u 1al b1l a2s b4r
+#
 @0+ b1+ b0/ @2+ c3\
+@0+ b1+ 1al c2s a3l
+#
 @0+ b1+ b0/ @2+ c3\ d3\ d4\
+#
 @0+ b1+ b0/ @2+ c3\ d2\ e2\
+#
 @0+ b1+ b0/ @2+ c3\ d2\ e2\ e3\ e0/
-
-
+#
+@0+ B1+ A0/ A3/
+@0+ b1+ a2r 1al
+#
+@0/ b1+ c1/ a0/ a2d
+@0/ b1+ c1/ b2r d1u
+@0/ a2+ a3l a1d b1r
+@0/ a2+ a3l b2d a4l
