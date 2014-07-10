@@ -2151,10 +2151,8 @@ public class Traxboard
 			return result;
 		for (i = 1; i < 9; i++) {
 			for (j = 1; j < 9; j++) {
-				for (k = 0; k < 4; k++) {
 					wnum[i][j] = 0;
 					bnum[i][j] = 0;
-				}
 			}
 		}
 		starti = 1;
