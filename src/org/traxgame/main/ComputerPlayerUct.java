@@ -25,15 +25,10 @@ public class ComputerPlayerUct extends ComputerPlayer
     public ComputerPlayerUct (int maxSimulations)
     {
 	this.maxSimulations = maxSimulations;
-	try {
-	  book.loadBook();
-	}
-	catch (IOException e) {
-	  TraxUtil.log("No games/book.bin found.");
-	}
+	book.loadBook();
     }
    
-    private String simpleMove(Traxboard tb) {
+    public String simpleMove(Traxboard tb) {
       int percent=TraxUtil.getRandom(100);
 
       if (tb.getNumOfTiles()==0) {

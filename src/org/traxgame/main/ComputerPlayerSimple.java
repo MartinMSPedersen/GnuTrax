@@ -10,11 +10,6 @@ package org.traxgame.main;
 
 public class ComputerPlayerSimple extends ComputerPlayer {
 	public String computerMove(Traxboard tb) {
-		try {
 			return TraxUtil.getRandomMove(tb);
-		} catch (IllegalMoveException e) {
-			e.printStackTrace();
-			throw new RuntimeException();
-		}
 	}
 }

@@ -33,7 +33,7 @@ public abstract class ComputerPlayer
     ComputerPlayer.evalType=Integer.parseInt(evaltype);
   }
      
-  protected String simpleMove(Traxboard tb) {
+  public String simpleMove(Traxboard tb) {
       if (tb.getNumOfTiles()>3) return null;
 
       int percent=TraxUtil.getRandom(100);
