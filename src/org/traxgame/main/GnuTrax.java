@@ -1,8 +1,8 @@
 /* 
    
-   Date: July 9 2014
+   Date: 26th of August 2014
    version 0.1
-   All source under GPL version 2 
+   All source under GPL version 3 or latter
    (GNU General Public License - http://www.gnu.org/)
    contact traxplayer@gmail.com for more information about this code
    
@@ -31,6 +31,9 @@ public class GnuTrax
     playerName = "";
     ponder = true;
     tb = new Traxboard ();
+    moveHistory = new ArrayList<String>();
+
+     
     if (computer_algorithme.equals ("simple"))
       {
 	cp = new ComputerPlayerSimple ();
@@ -39,11 +42,12 @@ public class GnuTrax
       {
 	cp = new ComputerPlayerUct ();
       }
-    else
-      {
-	//cp = new ComputerPlayerSimple ();
-        cp=new ComputerPlayerUct();
-      }
+    if (computer_algorithme.equals("iterative")) {
+      cp = new ComputerPlayerIterative();
+    }
+    if (computer_algorithme.equals("alphabeta")) {
+      cp = new ComputerPlayerAlphaBeta();
+    }
   }
 
   private boolean analyzeMode, autodisplay, logv, learning;
@@ -52,11 +56,9 @@ public class GnuTrax
   private String playerName;
   private Traxboard tb;
   private ComputerPlayer cp;
+  private ArrayList<String> moveHistory;
 
-  private void userAlarm (ArrayList < String > command)
-  {;
-  }
-
+  private void userAlarm (ArrayList < String > command) {; }
   private void userAnalyze ()
   {
     analyzeMode = true;
@@ -64,52 +66,59 @@ public class GnuTrax
   }
 
 
-  void userAnnotate ()
-  {;
+ private  void userAnnotate () {; }
+
+ private void userBack (ArrayList<String> command)
+  {
+      int end;
+
+      if (moveHistory.size()==0) return;
+      if (command.size()==0) { // remove last element
+      	end=1;
+      }
+      else {
+	  try {
+	    end=Integer.parseInt(command.get(0));
+	  } catch (NumberFormatException e) {
+	      return;
+	  }
+      }
+      for (int i=0; i<end; i++) {
+	    if (moveHistory.size()==0) return;
+	    moveHistory.remove(moveHistory.size()-1);
+      }
+      tb=new Traxboard();
+      for (String s : moveHistory) {
+        try { tb.makeMove(s); }
+	catch (IllegalMoveException e) {
+		throw new RuntimeException("This should never happen.");
+	}
+      }
   }
-  void userBack ()
-  {;
-  }
-  void userBench ()
-  {;
-  }
-  private void userBook (ArrayList < String > command)
-  {;
-  }
-  private void userBooks (ArrayList < String > command)
-  {;
-  }
-  private void userBlack ()
-  {;
-  }
-  private void userClock ()
-  {;
-  }
+
+  private void userBench () {; }
+  private void userBook (ArrayList < String > command) {; }
+  private void userBooks (ArrayList < String > command) {; }
+  private void userBlack () {; }
+  private void userClock () {; }
 
   private void userDisplay ()
   {
     System.out.println (tb);
   }
 
-  private void userSetDisplay (ArrayList < String > command)
-  {;
+  private void userSetDisplay (ArrayList < String > command) {; }
+  private void userEdit () {; }
+  private void userEnd () {; }
+
+  private void userExit () { 
+      goodbye ();
   }
-  private void userEdit ()
-  {;
-  }
-  private void userEnd ()
-  {;
-  }
-  private void userExit ()
-  {
-    goodbye ();
-  }
-  private void userForce (ArrayList < String > command)
-  {;
-  }
-  private void userGo ()
-  {
-    computerColour = tb.whoToMove ();
+  
+  private void userForce (ArrayList < String > command) {; }
+
+  private void userGo () { 
+      computerColour = tb.whoToMove ();
   }
 
   private void userHelp (ArrayList < String > command)
@@ -127,107 +136,103 @@ public class GnuTrax
     System.out.println ("");
     if (topic.equals (""))
       {
-	System.out.
-	  print ("alarm on|off..............turns audible alarm on/off\n");
-	System.out.
-	  print ("analyze...................analyze a game in progress\n");
-	System.out.
-	  print ("annotate..................annotate game [help].\n");
+	//System.out.
+	//  print ("alarm on|off..............turns audible alarm on/off\n");
+	//System.out.
+	//  print ("analyze...................analyze a game in progress\n");
+	//System.out.
+	//  print ("annotate..................annotate game [help].\n");
 	System.out.print ("back n....................undo n moves\n");
-	System.out.
-	  print ("bench.....................runs performance benchmark.\n");
-	System.out.
-	  print ("book......................controls book [help].\n");
+	//System.out.
+	//  print ("bench.....................runs performance benchmark.\n");
+	//System.out.
+	//  print ("book......................controls book [help].\n");
 	System.out.print ("black.....................sets black to move.\n");
-	System.out.print ("clock.....................displays the clock.\n");
+	//System.out.print ("clock.....................displays the clock.\n");
 	System.out.print ("display...................displays the board\n");
-	System.out.
-	  print ("display <n>...............sets display options [help]\n");
-	System.out.
-	  print ("edit......................edit board position. [help]\n");
-	System.out.print ("end.......................terminates program.\n");
-	System.out.
-	  print ("exit......................restores STDIN to keyboard.\n");
-	System.out.
-	  print ("force <move>..............forces specific move.\n");
+	//System.out.
+	//  print ("display <n>...............sets display options [help]\n");
+	//System.out.
+	//  print ("edit......................edit board position. [help]\n");
+	System.out.print ("exit......................terminates program.\n");
+	//System.out.
+	//  print ("force <move>..............forces specific move.\n");
 	System.out.
 	  print
 	  ("go........................initiates search (same as move).\n");
 	System.out.print ("help [command]............displays help.\n");
-	System.out.
-	  print ("hash n....................sets transposition table size\n");
-	System.out.
-	  print
-	  ("                          (n bytes, nK bytes or nM bytes)\n");
+	//System.out.
+	//  print ("hash n....................sets transposition table size\n");
+	//System.out.
+	//  print
+	//  ("                          (n bytes, nK bytes or nM bytes)\n");
 	System.out.print ("history...................display game moves.\n");
-	System.out.
-	  print
-	  ("import <filename>.........imports learning data (.lrn files).\n");
-	System.out.
-	  print ("info......................displays program settings.\n");
-	System.out.
-	  print ("input <filename>..........sets STDIN to <filename>.\n");
-	System.out.
-	  print ("learn on|off..............enables/disables learning.\n");
-	System.out.
-	  print
-	  ("load <file> <title>.......load a position from problem file.\n");
+	//System.out.
+	//  print
+	//  ("import <filename>.........imports learning data (.lrn files).\n");
+	//System.out.
+	//  print ("info......................displays program settings.\n");
+	//System.out.
+	//  print ("input <filename>..........sets STDIN to <filename>.\n");
+	//System.out.
+	//  print ("learn on|off..............enables/disables learning.\n");
+	//System.out.
+	//  print
+	//  ("load <file> <title>.......load a position from problem file.\n");
 	System.out.print ("log on|off................turn logging on/off.\n");
-	System.out.print ("more...\n");
-	TraxUtil.getInput ();
 	System.out.
 	  print
 	  ("move......................initiates search (same as go).\n");
-	System.out.
-	  print ("name......................sets opponent's name.\n");
+	//System.out.
+	//  print ("name......................sets opponent's name.\n");
 	System.out.
 	  print
 	  ("new.......................initialize and start new game.\n");
-	System.out.
-	  print
-	  ("noise n...................no status until n nodes searched.\n");
-	System.out.
-	  print
-	  ("perf.[long]...............times the move generator/make_move.\n");
-	System.out.
-	  print
-	  ("perft.....................tests the move generator/make_move.\n");
-	System.out.
-	  print ("ponder on|off.............toggle pondering off/on.\n");
-	System.out.
-	  print
-	  ("ponder move...............ponder \"move\" as predicted move.\n");
-	System.out.
-	  print
-	  ("read <filename>...........read moves in [from <filename>].\n");
-	System.out.
-	  print
-	  ("reada <filename>..........read moves in [from <filename>].\n");
-	System.out.
-	  print
-	  ("                          (appends to current game history.)\n");
+	//System.out.
+	//  print
+	//  ("noise n...................no status until n nodes searched.\n");
+	//System.out.
+	//  print
+	//  ("perf.[long]...............times the move generator/make_move.\n");
+	//System.out.
+	//  print
+	//  ("perft.....................tests the move generator/make_move.\n");
+	//System.out.
+	//  print ("ponder on|off.............toggle pondering off/on.\n");
+	//System.out.
+	//  print
+	//  ("ponder move...............ponder \"move\" as predicted move.\n");
+	//System.out.
+	//  print
+	//  ("read <filename>...........read moves in [from <filename>].\n");
+	//System.out.
+	//  print
+	//  ("reada <filename>..........read moves in [from <filename>].\n");
+	//System.out.
+	//  print
+	//  ("                          (appends to current game history.)\n");
 	System.out.
 	  print ("reset n...................reset game to move n.\n");
-	System.out.print ("savegame <filename>.......saves game.\n");
+	//System.out.print ("savegame <filename>.......saves game.\n");
 	System.out.
 	  print ("score.....................print evaluation of position.\n");
 	System.out.
 	  print ("sd n......................sets absolute search depth.\n");
-	System.out.
-	  print ("search <move>.............search specified move only.\n");
-	System.out.print ("settc.....................set time controls.\n");
-	System.out.
-	  print ("show book.................toggle book statistics.\n");
-	System.out.
-	  print ("st n......................sets absolute search time.\n");
-	System.out.
-	  print
-	  ("test <file> [N]...........test a suite of problems. [help]\n");
-	System.out.
-	  print ("time......................time controls. [help]\n");
-	System.out.
-	  print
-	  ("trace n...................display search tree below depth n.\n");
+	//System.out.
+	//  print ("search <move>.............search specified move only.\n");
+	//System.out.print ("settc.....................set time controls.\n");
+	//System.out.
+	//  print ("show book.................toggle book statistics.\n");
+	//System.out.
+	//  print ("st n......................sets absolute search time.\n");
+	//System.out.
+	//  print
+	//  ("test <file> [N]...........test a suite of problems. [help]\n");
+	//System.out.
+	//  print ("time......................time controls. [help]\n");
+	//System.out.
+	//  print
+	//  ("trace n...................display search tree below depth n.\n");
 	System.out.print ("white.....................sets white to move.\n");
 	System.out.println ();
 	return;
@@ -521,117 +526,98 @@ public class GnuTrax
   }
 
 
-  private void userHash (ArrayList < String > command)
-  {;
-  }
+  private void userHash (ArrayList < String > command) {; }
 
 
-  private void userHistory ()
+  private void userHistory (ArrayList<String> command)
   {
-    /*
-       String[].size_type numOfMoves;
-       String[].const_iterator iter;
-       int i;
-       int original_width;
-
-       original_width=cout.width();
-       cout.width(2);
-       iter=moveHistory->begin();
-       numOfMoves=moveHistory->size();
-       if (numOfMoves==0) return;
-       System.out.print("  White  Black\n");
-       i=1;
-       while (iter!=moveHistory->end()) {
-       System.out.print("  " << i << " " << (*iter));
-       iter++;
-       if (iter!=moveHistory->end()) {
-       System.out.print("   " << i+1 << " " << (*iter));
-       iter++;
-       }
-       System.out.println();
-       i+=2;
-       }
-       cout.width(original_width);
-     */
+      if (command.size()>1) {
+	for (String move : moveHistory) {
+	  System.out.print(move+" ");
+        }
+	System.out.println();
+	return;
+      }
+      if (moveHistory.size()==0) return;
+      System.out.println("   White  Black\n");
+      for (int i = 0; i < moveHistory.size(); i++) { 
+	  if (i<10) {
+	      System.out.print(" ");
+	  }
+	  System.out.print((i+1)+": " + moveHistory.get(i));
+	  i++;
+	  if (i<moveHistory.size()) { 
+	      System.out.print("    " + moveHistory.get(i));
+	  }
+	  System.out.println();
+      }
+      System.out.println();
   }
 
 
-  private void userImport (ArrayList < String > command)
-  {;
-  }
-  private void userInfo ()
-  {;
-  }
-  private void userInput (ArrayList < String > command)
-  {;
-  }
-  private void userLearn (ArrayList < String > command)
-  {;
-  }
-  private void userLoad (ArrayList < String > command)
-  {;
-  }
+  private void userImport (ArrayList < String > command) {; }
+  private void userInfo () {; }
+  private void userInput (ArrayList < String > command) {; }
+  private void userLearn (ArrayList < String > command) {; }
+  private void userLoad (ArrayList < String > command) {; }
 
   private void userLog (ArrayList < String > command)
   {
       if (command.size()>1) {
-	  switch (command.get(1)) {
-	      case "on": TraxUtil.startLog(); break;
-	      case "off": TraxUtil.stopLog(); break;
-	  }
+	if (command.get(1).equals("on")) {
+	  TraxUtil.startLog();
+	  return;
+	}
+	if (command.get(1).equals("off")) {
+	  TraxUtil.stopLog();
+	}
       }
   }
 
-  private void userName (ArrayList < String > command)
-  {;
-  }
+  private void userName (ArrayList < String > command) {; }
+
   private void userNew ()
   {
     tb = new Traxboard ();
     computerColour = Traxboard.BLACK;
-    /*
-       delete(moveHistory);
-       moveHistory=new String[] ;
-     */
+    moveHistory=new ArrayList<String>();
   }
 
 
-  private void userNoise (ArrayList < String > command)
-  {;
+  private void userNoise (ArrayList < String > command) {; }
+  private void userPerf (ArrayList < String > command) {; }
+  private void userPerft () {; }
+  private void userPonder (ArrayList < String > command) {; }
+  private void userRead (ArrayList < String > command) {; }
+  private void userReada (ArrayList < String > command) {; }
+  private void userReset (ArrayList < String > command) {; }
+  private void userSavegame (ArrayList < String > command) {; }
+
+  private void userScore () {
+     System.out.println("White Corners: "+tb.getNumberOfWhiteCorners());
+     System.out.println("Black Corners: "+tb.getNumberOfBlackCorners());
+     System.out.println("White Threats: "+tb.getNumberOfWhiteThreats());
+     System.out.println("Black Threats: "+tb.getNumberOfBlackThreats());
+     System.out.println("Evalution: "+(
+       tb.getNumberOfWhiteCorners()-tb.getNumberOfBlackCorners()+
+       5*tb.getNumberOfWhiteThreats()-5*tb.getNumberOfBlackThreats()));
   }
-  private void userPerf (ArrayList < String > command)
-  {;
+
+  private void userSd (ArrayList <String> command) {
+     if (command.size()==0) {
+       System.out.println("search level: "+ComputerPlayer.searchDepth);
+       return;
+     }
+     try {
+       ComputerPlayer.setSearchDepth(command.get(0));
+     } catch (NumberFormatException e) {
+      return;
+     }
+     System.out.println("search level: "+ComputerPlayer.searchDepth);
   }
-  private void userPerft ()
-  {;
-  }
-  private void userPonder (ArrayList < String > command)
-  {;
-  }
-  private void userRead (ArrayList < String > command)
-  {;
-  }
-  private void userReada (ArrayList < String > command)
-  {;
-  }
-  private void userReset (ArrayList < String > command)
-  {;
-  }
-  private void userSavegame (ArrayList < String > command)
-  {;
-  }
-  private void userScore ()
-  {;
-  }
-  private void userSd (ArrayList < String > command)
-  {;
-  }
-  private void userSearch (ArrayList < String > command)
-  {;
-  }
-  private void userSettc (ArrayList < String > command)
-  {;
-  }
+
+  private void userSearch (ArrayList < String > command) {; }
+  private void userSettc (ArrayList < String > command) {; }
 
   private void userShow (ArrayList < String > command)
   {
@@ -1226,27 +1212,17 @@ public class GnuTrax
       }
   }
 
-  private void userSt (ArrayList < String > command)
-  {;
-  }
-  private void userTest (ArrayList < String > command)
-  {;
-  }
-  private void userTime (ArrayList < String > command)
-  {;
-  }
-  private void userTrace (ArrayList < String > command)
-  {;
-  }
-  private void userWhite ()
-  {;
-  }
+  private void userSt (ArrayList < String > command) {; }
+  private void userTest (ArrayList < String > command) {; }
+  private void userTime (ArrayList < String > command) {; }
+  private void userTrace (ArrayList < String > command) {; }
+  private void userWhite () {; }
 
   private static void welcome ()
   {
     System.out.
       print
-      ("GnuTrax is copyright 2009 Martin M. Pedersen - email: traxplayer@gmail.com\n");
+      ("GnuTrax is copyright 2014 Martin M. S. Pedersen - email: martin@linux.com\n");
     System.out.
       print
       ("GnuTrax comes with ABSOLUTELY NO WARRANTY; for details type \"show warranty\".\n");
@@ -1268,9 +1244,7 @@ public class GnuTrax
   }
 
 
-  private void goodbye ()
-  {;
-  }
+  private void goodbye () {; }
 
   boolean checkForBookFile ()
   {
@@ -1297,91 +1271,173 @@ public class GnuTrax
 	System.out.println ("Black won.");
 	break;
       default:
-	/* This should never happen */
-	/*    assert(0); */
-	break;
+	// This should never happen
+	throw new RuntimeException("This should never happen.");
       }
   }
 
 
-  private void gotAMove (String theMove)
+  private void gotAMove(String theMove)
   {
-    try
-    {
+    try {
+      moveHistory.add(TraxUtil.normalizeMove(tb,theMove));
       tb.makeMove (theMove);
     }
-    catch (IllegalMoveException e)
-    {
+    catch (IllegalMoveException e) {
       System.out.println (theMove + ":  " + e);
       return;
     }
     System.out.println (tb);
-    /*      (*moveHistory).push_back(theMove); */
     checkForWin ();
   }
 
 
-  private void pbem ()
+  private void pbem()
   {
-      try { 
 	  String s;
 	  Traxboard tb=new Traxboard();
+	  try {
 	  BufferedReader reader=new BufferedReader(new InputStreamReader(System.in));
 	  while ((s=reader.readLine()) != null) {
 	      for (String move : s.split("\\s")) {
-		  try {
-		    tb.makeMove(move);
-		  }
-		  catch (IllegalMoveException e) {
-		      System.err.println("Illegal move: "+move);
-		      System.exit(1);
-		  }
+		    try {
+		      tb.makeMove(move);
+		    }
+		    catch (IllegalMoveException e) {
+		        System.err.println("Illegal move: "+move);
+		        System.exit(1);
+		    }
 	      }
 	  }
-	  System.out.println(cp.computerMove(tb));
       }
-      catch (IOException e) {
-	  throw new RuntimeException(e);
+      catch (IOException e) { 
+	  e.printStackTrace(); 
+	  System.exit(2);
+      }
+      switch (tb.isGameOver()) {
+	  case Traxboard.NOPLAYER:
+            System.out.println(cp.computerMove(tb));
+	    break;
+	  case Traxboard.DRAW:
+	    System.out.println(":DRAW");
+	    break;
+	  case Traxboard.WHITE:
+	    System.out.println(":WHITE");
+	    break;
+	  case Traxboard.BLACK:
+	    System.out.println(":BLACK");
+	    break;
+	  default:
+	    // This should never happen
+	    throw new RuntimeException("This should never happen.");
       }
   }
 
-  public static void main (String[]args)
+  public static void main(String[] args)
   {
     GnuTrax gnutrax = new GnuTrax ("simple");
 
-    if (args.length > 0)
-      {
-	for (int i = 0; i < args.length; i++)
-	  {
-	    if (args[i].equals ("--random"))
-	      {
-		gnutrax = new GnuTrax ("random");
-	      }
-	    if (args[i].equals ("--alphabeta"))
-	      {
-		gnutrax = new GnuTrax ("alphabeta");
-	      }
-
-	    if (args[i].equals ("--uct"))
-	      {
-		gnutrax = new GnuTrax ("uct");
-	      }
+    if (args.length > 0) {
+	for (String arg : args ) {
+	    if (arg.equals ("--random")) gnutrax = new GnuTrax ("random");
+	    if (arg.equals ("--alphabeta")) gnutrax = new GnuTrax ("alphabeta");
+	    if (arg.equals("--minimax")) gnutrax=new GnuTrax("minimax");
+	    if (arg.equals ("--uct")) gnutrax = new GnuTrax ("uct");
+	    if (arg.equals("--mcts")) gnutrax=new GnuTrax("mcts");
+	    if (arg.equals("--iterative")) gnutrax=new GnuTrax("iterative");
+	}
+	for (int i=0; i<args.length-1; i++) {
+          if (args[i].equals("--evaltype")) {
+	    try {
+	      ComputerPlayer.setEvalType(args[i+1]);
+	    }
+	    catch (NumberFormatException e) {
+	      System.err.println("bad or missing value for evaltype parameter");
+	      System.exit(4);
+	    }
 	  }
-	for (int i = 0; i < args.length; i++)
-	  {
-	    if (args[i].equals ("--pbem"))
-	      {
-		gnutrax.pbem ();
+	}
+	for (int i=0; i<args.length-1; i++) {
+          if (args[i].equals("--seed")) {
+	    try {
+	      ComputerPlayer.setSeed(args[i+1]);
+	    }
+	    catch (NumberFormatException e) {
+	      System.err.println("bad or missing value for seed parameter");
+	      System.exit(5);
+	    }
+	  }
+	}
+	for (int i=0; i<args.length-1; i++) {
+          if (args[i].equals("--searchdepth")) {
+	    try {
+	      ComputerPlayer.setSearchDepth(args[i+1]);
+	    }
+	    catch (NumberFormatException e) {
+	      System.err.println("bad or missing value for searchdepth parameter");
+	      System.exit(3);
+	    }
+	  }
+	}
+	for (String arg : args) {
+	    if (arg.equals ("--pbem")) {
+		gnutrax.pbem();
 		return;
-	      }
-	  }
-      }
-
+	    }
+	}
+	for (String arg : args) {
+	    if (arg.equals("--winner")) {
+		gnutrax.find_winner();
+		return;
+	    }
+	}
+    }
     welcome ();
     gnutrax.run ();
   }
 
-  private void run ()
+  private void find_winner() {
+	  String s;
+	  Traxboard tb=new Traxboard();
+	  try {
+	  BufferedReader reader=new BufferedReader(new InputStreamReader(System.in));
+	  while ((s=reader.readLine()) != null) {
+	      for (String move : s.split("\\s")) {
+		    try {
+		      tb.makeMove(move);
+		    }
+		    catch (IllegalMoveException e) {
+		        System.err.println("Illegal move: "+move);
+		        System.exit(1);
+		    }
+	      }
+	  }
+      }
+      catch (IOException e) { 
+	  e.printStackTrace(); 
+	  System.exit(2);
+      }
+      switch (tb.isGameOver()) {
+	  case Traxboard.NOPLAYER:
+	    System.out.println(" :NOPLAYER");
+	    break;
+	  case Traxboard.DRAW:
+	    System.out.println(" :DRAW");
+	    break;
+	  case Traxboard.WHITE:
+	    System.out.println(" :WHITE");
+	    break;
+	  case Traxboard.BLACK:
+	    System.out.println(" :BLACK");
+	    break;
+	  default:
+	    // This should never happen
+	    throw new RuntimeException("This should never happen.");
+      }
+      return;
+  }
+
+  private void run()
   {
     ArrayList < String > command = new ArrayList < String > (5);
     String line = "";
@@ -1392,7 +1448,7 @@ public class GnuTrax
 	else
 	  System.out.print ("Black");
 	System.out.print ("(");
-	//System.out.print(moveHistory.length+1);
+	System.out.print(moveHistory.size()+1);
 	System.out.print ("): ");
 	if ((tb.isGameOver () == Traxboard.NOPLAYER)
 	    && (tb.whoToMove () == computerColour))
@@ -1428,7 +1484,10 @@ public class GnuTrax
 	  }
 	if (line.equals ("back"))
 	  {
-	    userBack ();
+	    if (command.size()>0) {
+	      command.remove(0);
+	    }
+	    userBack(command);
 	    continue;
 	  }
 	if (line.equals ("bench"))
@@ -1503,9 +1562,9 @@ public class GnuTrax
 	    userHash (command);
 	    continue;
 	  }
-	if (line.equals ("history"))
+	if (line.equals ("history") || line.equals("hist") || line.equals("h"))
 	  {
-	    userHistory ();
+	    userHistory (command);
 	    continue;
 	  }
 	if (line.equals ("import"))
@@ -1595,7 +1654,10 @@ public class GnuTrax
 	  }
 	if (line.equals ("sd"))
 	  {
-	    userSd (command);
+	    if (command.size()>0) {
+	      command.remove(0);
+	    }
+	    userSd(command);
 	    continue;
 	  }
 	if (line.equals ("search"))
@@ -1640,8 +1702,19 @@ public class GnuTrax
 	  }
 	else
 	  {
-	    if (tb.isGameOver () == Traxboard.NOPLAYER)
+	    if (tb.isGameOver () == Traxboard.NOPLAYER) {
+	      if (tb.whoToMove () != computerColour) {
+		  String orgline=line;
+		  try {
+		    line=TraxUtil.normalizeMove(tb,line);
+		  }
+		  catch (IllegalMoveException e) {
+		    //throw new RuntimeException();
+		  }
+		  if (line==null) line=orgline;
+	      }
 	      gotAMove (line);
+	    }
 	  }
       }
   }
