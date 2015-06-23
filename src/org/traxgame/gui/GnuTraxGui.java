@@ -17,17 +17,20 @@ public class GnuTraxGui extends JFrame {
 	private JPanel outerPanel;
 	private java.util.List<ImagePanel> board;
 	private GnuTrax gnuTraxGame;
-	private Loading loading;
+	private LoadingFrame loading;
+
+	private GnuTraxGui mainWindow;
 
 	public GnuTraxGui() {
 		super("GnuTrax 1.0");
 		setResizable(false);
 		setMinimumSize(new Dimension(80, 80));
 		// setMaximumSize(new Dimension(80, 80));
-		loading = new Loading(this);
+		loading = new LoadingFrame(this);//new Loading(this);
 		loading.setVisible(false);
 		board = new ArrayList<ImagePanel>();
 		newGame("simple");
+		mainWindow = this;
 	}
 
 	private void newGame(String ai) {
@@ -160,37 +163,52 @@ public class GnuTraxGui extends JFrame {
 		newGameBoard();
 	}
 
+	public void showLoading() {
+		System.out.println("BEFORE");
+		loading.setVisible(true);
+		mainWindow.setVisible(false);
+	}
+
+	private void hideLoading() {
+		System.out.println("AFTER");
+		loading.setVisible(false);
+		mainWindow.setVisible(true);
+		clearBoard();
+		drawBoard();
+		repaint();
+		checkForWinner();
+	}
+
 	private void makeAiMove() {
-		new Thread(new Runnable() {
-			@Override
-			public void run() {
-				SwingUtilities.invokeLater(new Runnable() {
-					@Override
-					public void run() {
-						loading.setVisible(true);
-					}
+		new Thread(() -> {
+            try {
+                SwingUtilities.invokeAndWait(() -> {
+					loading.setVisible(true);
+					mainWindow.setVisible(false);
 				});
+            } catch (Exception e) {
 
-				try {
-					String aiMove = gnuTraxGame.makeComputerMove();
-					gnuTraxGame.gotAMove(aiMove);
-				} catch (IllegalMoveException ime) {
-					System.out
-							.println("AI made an illegal move... very strange");
-				}
+            }
 
-				SwingUtilities.invokeLater(new Runnable() {
-					@Override
-					public void run() {
-						loading.setVisible(false);
-						clearBoard();
-						drawBoard();
-						repaint();
-						checkForWinner();
-					}
-				});
-			}
+            try {
+                String aiMove = gnuTraxGame.makeComputerMove();
+                gnuTraxGame.gotAMove(aiMove);
+            } catch (IllegalMoveException ime) {
+                System.out.println("AI made an illegal move... very strange");
+            }
 
+            try {
+                SwingUtilities.invokeLater(() -> {
+                    loading.setVisible(false);
+                    mainWindow.setVisible(true);
+                    clearBoard();
+                    drawBoard();
+                    repaint();
+                    checkForWinner();
+                });
+            } catch (Exception e) {
+
+            }
 		}).start();
 	}
 
@@ -215,6 +233,7 @@ public class GnuTraxGui extends JFrame {
 		}
 		if (aiMayMove) {
 			makeAiMove();
+
 			if (checkForWinner())
 				return;
 		}
@@ -223,8 +242,8 @@ public class GnuTraxGui extends JFrame {
 
 	public java.util.List<Tile> getPossibleTilesForPosition(int x, int y) {
 		java.util.List<Tile> possibleMoves = new ArrayList<Tile>();
-		java.util.List<Integer> theMoves = this.gnuTraxGame.getPossibleMoves(x,
-				y);
+		java.util.List<Integer> theMoves = this.gnuTraxGame.getPossibleMoves(y,
+				x);
 		for (Integer move : theMoves) {
 			possibleMoves.add(tiles[move.intValue()]);
 		}
@@ -314,11 +333,11 @@ public class GnuTraxGui extends JFrame {
 	}
 
 	private void showAndChooseAi() {
-		Object[] possibilities = { "simple (easy)", "uct (hard)", "quit" };
+		Object[] possibilities = { "simple (easy)", "uct (hard)", "alphabeta (hrad)", "iterative (medium)","quit" };
 		int s = JOptionPane.showOptionDialog(this, "Choose AI:", "New game",
 				JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE,
 				null, possibilities, possibilities[0]);
-		if (s == 2)
+		if (s == 4)
 			System.exit(0);
 		newGame(((String) possibilities[s]).split(" ")[0]);
 	}

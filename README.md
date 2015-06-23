@@ -1,3 +1,11 @@
+GnuTrax cli
+===========
+
+To run the cli version please use:
+```
+java -cp gnutraxgui.jar org.traxgame.cli.GnuTraxCli
+```
+
 GnuTrax
 =======
 
