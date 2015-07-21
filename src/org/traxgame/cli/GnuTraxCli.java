@@ -1,16 +1,18 @@
 package org.traxgame.cli;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.List;
 
-import org.traxgame.main.GnuTrax;
-import org.traxgame.main.IllegalMoveException;
-import org.traxgame.main.TraxUtil;
-import org.traxgame.main.Traxboard;
+import org.traxgame.main.*;
 
 public class GnuTraxCli {
 
 	private GnuTrax gnutrax;
-	
+	private Traxboard tb;
+	private List<String> moveHistory;
 	void userAnnotate() {
 		;
 	}
@@ -468,13 +470,7 @@ public class GnuTraxCli {
 		;
 	}
 
-	private void userScore() {
-		;
-	}
 
-	private void userSd(ArrayList<String> command) {
-		;
-	}
 	private void userGo() {
 		gnutrax.setComputerColor(gnutrax.getBoard().whoToMove());
 	}
@@ -487,6 +483,53 @@ public class GnuTraxCli {
 	private void userSettc(ArrayList<String> command) {
 		;
 	}
+	private void userHistory(ArrayList<String> command) {
+		if (command.size() > 1) {
+			for (String move : moveHistory) {
+				System.out.print(move + " ");
+			}
+			System.out.println();
+			return;
+		}
+		if (moveHistory.size() == 0) return;
+		System.out.println("   White  Black\n");
+		for (int i = 0; i < moveHistory.size(); i++) {
+			if (i < 10) {
+				System.out.print(" ");
+			}
+			System.out.print((i + 1) + ": " + moveHistory.get(i));
+			i++;
+			if (i < moveHistory.size()) {
+				System.out.print("    " + moveHistory.get(i));
+			}
+			System.out.println();
+		}
+		System.out.println();
+	}
+
+	private void userScore() {
+		System.out.println("White Corners: " + tb.getNumberOfWhiteCorners());
+		System.out.println("Black Corners: " + tb.getNumberOfBlackCorners());
+		System.out.println("White Threats: " + tb.getNumberOfWhiteThreats());
+		System.out.println("Black Threats: " + tb.getNumberOfBlackThreats());
+		System.out.println("Evalution: " + (
+				tb.getNumberOfWhiteCorners() - tb.getNumberOfBlackCorners() +
+						5 * tb.getNumberOfWhiteThreats() - 5 * tb.getNumberOfBlackThreats()));
+	}
+
+	private void userSd(ArrayList<String> command) {
+		if (command.size() == 0) {
+			System.out.println("search level: " + ComputerPlayer.searchDepth);
+			return;
+		}
+		try {
+			ComputerPlayer.setSearchDepth(command.get(0));
+		} catch (NumberFormatException e) {
+			return;
+		}
+		System.out.println("search level: " + ComputerPlayer.searchDepth);
+	}
+
 
 	private void userShow(ArrayList<String> command) {
 		String topic;
@@ -499,411 +542,579 @@ public class GnuTraxCli {
 
 		if (topic.equals("warranty")) {
 			System.out.print("\n        NO WARRANTY\n");
-			System.out
-					.print("BECAUSE THE PROGRAM IS LICENSED FREE OF CHARGE, THERE IS NO WARRANTY\n");
-			System.out
-					.print("FOR THE PROGRAM, TO THE EXTENT PERMITTED BY APPLICABLE LAW.  EXCEPT WHEN\n");
-			System.out
-					.print("OTHERWISE STATED IN WRITING THE COPYRIGHT HOLDERS AND/OR OTHER PARTIES\n");
-			System.out
-					.print("PROVIDE THE PROGRAM \"AS IS\" WITHOUT WARRANTY OF ANY KIND, EITHER EXPRESSED\n");
-			System.out
-					.print("OR IMPLIED, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF\n");
-			System.out
-					.print("MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  THE ENTIRE RISK AS\n");
-			System.out
-					.print("TO THE QUALITY AND PERFORMANCE OF THE PROGRAM IS WITH YOU.  SHOULD THE\n");
-			System.out
-					.print("PROGRAM PROVE DEFECTIVE, YOU ASSUME THE COST OF ALL NECESSARY SERVICING,\n");
+			System.out.
+					print
+							("BECAUSE THE PROGRAM IS LICENSED FREE OF CHARGE, THERE IS NO WARRANTY\n");
+			System.out.
+					print
+							("FOR THE PROGRAM, TO THE EXTENT PERMITTED BY APPLICABLE LAW.  EXCEPT WHEN\n");
+			System.out.
+					print
+							("OTHERWISE STATED IN WRITING THE COPYRIGHT HOLDERS AND/OR OTHER PARTIES\n");
+			System.out.
+					print
+							("PROVIDE THE PROGRAM \"AS IS\" WITHOUT WARRANTY OF ANY KIND, EITHER EXPRESSED\n");
+			System.out.
+					print
+							("OR IMPLIED, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF\n");
+			System.out.
+					print
+							("MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  THE ENTIRE RISK AS\n");
+			System.out.
+					print
+							("TO THE QUALITY AND PERFORMANCE OF THE PROGRAM IS WITH YOU.  SHOULD THE\n");
+			System.out.
+					print
+							("PROGRAM PROVE DEFECTIVE, YOU ASSUME THE COST OF ALL NECESSARY SERVICING,\n");
 			System.out.print("REPAIR OR CORRECTION.\n");
 			System.out.println();
-			System.out
-					.print("IN NO EVENT UNLESS REQUIRED BY APPLICABLE LAW OR AGREED TO IN WRITING\n");
-			System.out
-					.print("WILL ANY COPYRIGHT HOLDER, OR ANY OTHER PARTY WHO MAY MODIFY AND/OR\n");
-			System.out
-					.print("REDISTRIBUTE THE PROGRAM AS PERMITTED ABOVE, BE LIABLE TO YOU FOR DAMAGES,\n");
-			System.out
-					.print("INCLUDING ANY GENERAL, SPECIAL, INCIDENTAL OR CONSEQUENTIAL DAMAGES ARISING\n");
-			System.out
-					.print("OUT OF THE USE OR INABILITY TO USE THE PROGRAM (INCLUDING BUT NOT LIMITED\n");
-			System.out
-					.print("TO LOSS OF DATA OR DATA BEING RENDERED INACCURATE OR LOSSES SUSTAINED BY\n");
-			System.out
-					.print("YOU OR THIRD PARTIES OR A FAILURE OF THE PROGRAM TO OPERATE WITH ANY OTHER\n");
-			System.out
-					.print("PROGRAMS), EVEN IF SUCH HOLDER OR OTHER PARTY HAS BEEN ADVISED OF THE\n");
+			System.out.
+					print
+							("IN NO EVENT UNLESS REQUIRED BY APPLICABLE LAW OR AGREED TO IN WRITING\n");
+			System.out.
+					print
+							("WILL ANY COPYRIGHT HOLDER, OR ANY OTHER PARTY WHO MAY MODIFY AND/OR\n");
+			System.out.
+					print
+							("REDISTRIBUTE THE PROGRAM AS PERMITTED ABOVE, BE LIABLE TO YOU FOR DAMAGES,\n");
+			System.out.
+					print
+							("INCLUDING ANY GENERAL, SPECIAL, INCIDENTAL OR CONSEQUENTIAL DAMAGES ARISING\n");
+			System.out.
+					print
+							("OUT OF THE USE OR INABILITY TO USE THE PROGRAM (INCLUDING BUT NOT LIMITED\n");
+			System.out.
+					print
+							("TO LOSS OF DATA OR DATA BEING RENDERED INACCURATE OR LOSSES SUSTAINED BY\n");
+			System.out.
+					print
+							("YOU OR THIRD PARTIES OR A FAILURE OF THE PROGRAM TO OPERATE WITH ANY OTHER\n");
+			System.out.
+					print
+							("PROGRAMS), EVEN IF SUCH HOLDER OR OTHER PARTY HAS BEEN ADVISED OF THE\n");
 			System.out.println("POSSIBILITY OF SUCH DAMAGES.\n");
 			return;
 		}
 		if (topic.equals("conditions")) {
 			System.out.print("        GNU GENERAL PUBLIC LICENSE\n");
-			System.out
-					.print("   TERMS AND CONDITIONS FOR COPYING, DISTRIBUTION AND MODIFICATION\n");
+			System.out.
+					print
+							("   TERMS AND CONDITIONS FOR COPYING, DISTRIBUTION AND MODIFICATION\n");
 			System.out.println();
-			System.out
-					.print("  0. This License applies to any program or other work which contains\n");
-			System.out
-					.print("a notice placed by the copyright holder saying it may be distributed\n");
-			System.out
-					.print("under the terms of this General Public License.  The \"Program\", below,\n");
-			System.out
-					.print("refers to any such program or work, and a \"work based on the Program\"\n");
-			System.out
-					.print("means either the Program or any derivative work under copyright law:\n");
-			System.out
-					.print("that is to say, a work containing the Program or a portion of it,\n");
-			System.out
-					.print("either verbatim or with modifications and/or translated into another\n");
-			System.out
-					.print("language.  (Hereinafter, translation is included without limitation in\n");
-			System.out
-					.print("the term \"modification\".)  Each licensee is addressed as \"you\".\n");
+			System.out.
+					print
+							("  0. This License applies to any program or other work which contains\n");
+			System.out.
+					print
+							("a notice placed by the copyright holder saying it may be distributed\n");
+			System.out.
+					print
+							("under the terms of this General Public License.  The \"Program\", below,\n");
+			System.out.
+					print
+							("refers to any such program or work, and a \"work based on the Program\"\n");
+			System.out.
+					print
+							("means either the Program or any derivative work under copyright law:\n");
+			System.out.
+					print
+							("that is to say, a work containing the Program or a portion of it,\n");
+			System.out.
+					print
+							("either verbatim or with modifications and/or translated into another\n");
+			System.out.
+					print
+							("language.  (Hereinafter, translation is included without limitation in\n");
+			System.out.
+					print
+							("the term \"modification\".)  Each licensee is addressed as \"you\".\n");
 			System.out.println();
-			System.out
-					.print("Activities other than copying, distribution and modification are not\n");
-			System.out
-					.print("covered by this License; they are outside its scope.  The act of\n");
-			System.out
-					.print("running the Program is not restricted, and the output from the Program\n");
-			System.out
-					.print("is covered only if its contents constitute a work based on the\n");
-			System.out
-					.print("Program (independent of having been made by running the Program).\n");
-			System.out
-					.print("Whether that is true depends on what the Program does.\n");
-			System.out
-					.print("  1. You may copy and distribute verbatim copies of the Program's\n");
-			System.out
-					.print("source code as you receive it, in any medium, provided that you\n");
-			System.out
-					.print("conspicuously and appropriately publish on each copy an appropriate\n");
-			System.out
-					.print("copyright notice and disclaimer of warranty; keep intact all the\n");
-			System.out
-					.print("notices that refer to this License and to the absence of any warranty;\n");
+			System.out.
+					print
+							("Activities other than copying, distribution and modification are not\n");
+			System.out.
+					print
+							("covered by this License; they are outside its scope.  The act of\n");
+			System.out.
+					print
+							("running the Program is not restricted, and the output from the Program\n");
+			System.out.
+					print
+							("is covered only if its contents constitute a work based on the\n");
+			System.out.
+					print
+							("Program (independent of having been made by running the Program).\n");
+			System.out.
+					print("Whether that is true depends on what the Program does.\n");
+			System.out.
+					print
+							("  1. You may copy and distribute verbatim copies of the Program's\n");
+			System.out.
+					print
+							("source code as you receive it, in any medium, provided that you\n");
+			System.out.
+					print
+							("conspicuously and appropriately publish on each copy an appropriate\n");
+			System.out.
+					print
+							("copyright notice and disclaimer of warranty; keep intact all the\n");
+			System.out.
+					print
+							("notices that refer to this License and to the absence of any warranty;\n");
 			System.out.println("more...\n");
 			TraxUtil.getInput();
-			System.out
-					.print("and give any other recipients of the Program a copy of this License\n");
+			System.out.
+					print
+							("and give any other recipients of the Program a copy of this License\n");
 			System.out.print("along with the Program.\n");
 			System.out.println();
-			System.out
-					.print("You may charge a fee for the physical act of transferring a copy, and\n");
-			System.out
-					.print("you may at your option offer warranty protection in exchange for a fee.\n");
+			System.out.
+					print
+							("You may charge a fee for the physical act of transferring a copy, and\n");
+			System.out.
+					print
+							("you may at your option offer warranty protection in exchange for a fee.\n");
 			System.out.println();
-			System.out
-					.print("  2. You may modify your copy or copies of the Program or any portion\n");
-			System.out
-					.print("of it, thus forming a work based on the Program, and copy and\n");
-			System.out
-					.print("distribute such modifications or work under the terms of Section 1\n");
-			System.out
-					.print("above, provided that you also meet all of these conditions:\n");
+			System.out.
+					print
+							("  2. You may modify your copy or copies of the Program or any portion\n");
+			System.out.
+					print
+							("of it, thus forming a work based on the Program, and copy and\n");
+			System.out.
+					print
+							("distribute such modifications or work under the terms of Section 1\n");
+			System.out.
+					print
+							("above, provided that you also meet all of these conditions:\n");
 			System.out.println();
-			System.out
-					.print("    a) You must cause the modified files to carry prominent notices\n");
-			System.out
-					.print("    stating that you changed the files and the date of any change.\n");
+			System.out.
+					print
+							("    a) You must cause the modified files to carry prominent notices\n");
+			System.out.
+					print
+							("    stating that you changed the files and the date of any change.\n");
 			System.out.println();
-			System.out
-					.print("    b) You must cause any work that you distribute or publish, that in\n");
-			System.out
-					.print("    whole or in part contains or is derived from the Program or any\n");
-			System.out
-					.print("    part thereof, to be licensed as a whole at no charge to all third\n");
+			System.out.
+					print
+							("    b) You must cause any work that you distribute or publish, that in\n");
+			System.out.
+					print
+							("    whole or in part contains or is derived from the Program or any\n");
+			System.out.
+					print
+							("    part thereof, to be licensed as a whole at no charge to all third\n");
 			System.out.print("    parties under the terms of this License.\n");
-			System.out
-					.print("    c) If the modified program normally reads commands interactively\n");
-			System.out
-					.print("    when run, you must cause it, when started running for such\n");
-			System.out
-					.print("    interactive use in the most ordinary way, to print or display an\n");
-			System.out
-					.print("    announcement including an appropriate copyright notice and a\n");
-			System.out
-					.print("    notice that there is no warranty (or else, saying that you provide\n");
-			System.out
-					.print("    a warranty) and that users may redistribute the program under\n");
+			System.out.
+					print
+							("    c) If the modified program normally reads commands interactively\n");
+			System.out.
+					print
+							("    when run, you must cause it, when started running for such\n");
+			System.out.
+					print
+							("    interactive use in the most ordinary way, to print or display an\n");
+			System.out.
+					print
+							("    announcement including an appropriate copyright notice and a\n");
+			System.out.
+					print
+							("    notice that there is no warranty (or else, saying that you provide\n");
+			System.out.
+					print
+							("    a warranty) and that users may redistribute the program under\n");
 			System.out.print("more...\n");
 			TraxUtil.getInput();
-			System.out
-					.print("    these conditions, and telling the user how to view a copy of this\n");
-			System.out
-					.print("    License.  (Exception: if the Program itself is interactive but\n");
-			System.out
-					.print("    does not normally print such an announcement, your work based on\n");
-			System.out
-					.print("    the Program is not required to print an announcement.)\n");
+			System.out.
+					print
+							("    these conditions, and telling the user how to view a copy of this\n");
+			System.out.
+					print
+							("    License.  (Exception: if the Program itself is interactive but\n");
+			System.out.
+					print
+							("    does not normally print such an announcement, your work based on\n");
+			System.out.
+					print
+							("    the Program is not required to print an announcement.)\n");
 			System.out.println();
-			System.out
-					.print("These requirements apply to the modified work as a whole.  If\n");
-			System.out
-					.print("identifiable sections of that work are not derived from the Program,\n");
-			System.out
-					.print("and can be reasonably considered independent and separate works in\n");
-			System.out
-					.print("themselves, then this License, and its terms, do not apply to those\n");
-			System.out
-					.print("sections when you distribute them as separate works.  But when you\n");
-			System.out
-					.print("distribute the same sections as part of a whole which is a work based\n");
-			System.out
-					.print("on the Program, the distribution of the whole must be on the terms of\n");
-			System.out
-					.print("this License, whose permissions for other licensees extend to the\n");
-			System.out
-					.print("entire whole, and thus to each and every part regardless of who wrote it.\n");
+			System.out.
+					print
+							("These requirements apply to the modified work as a whole.  If\n");
+			System.out.
+					print
+							("identifiable sections of that work are not derived from the Program,\n");
+			System.out.
+					print
+							("and can be reasonably considered independent and separate works in\n");
+			System.out.
+					print
+							("themselves, then this License, and its terms, do not apply to those\n");
+			System.out.
+					print
+							("sections when you distribute them as separate works.  But when you\n");
+			System.out.
+					print
+							("distribute the same sections as part of a whole which is a work based\n");
+			System.out.
+					print
+							("on the Program, the distribution of the whole must be on the terms of\n");
+			System.out.
+					print
+							("this License, whose permissions for other licensees extend to the\n");
+			System.out.
+					print
+							("entire whole, and thus to each and every part regardless of who wrote it.\n");
 			System.out.println();
-			System.out
-					.print("Thus, it is not the intent of this section to claim rights or contest\n");
-			System.out
-					.print("your rights to work written entirely by you; rather, the intent is to\n");
-			System.out
-					.print("exercise the right to control the distribution of derivative or\n");
+			System.out.
+					print
+							("Thus, it is not the intent of this section to claim rights or contest\n");
+			System.out.
+					print
+							("your rights to work written entirely by you; rather, the intent is to\n");
+			System.out.
+					print
+							("exercise the right to control the distribution of derivative or\n");
 			System.out.print("collective works based on the Program.\n");
 			System.out.println();
-			System.out
-					.print("In addition, mere aggregation of another work not based on the Program\n");
-			System.out
-					.print("with the Program (or with a work based on the Program) on a volume of\n");
-			System.out
-					.print("a storage or distribution medium does not bring the other work under\n");
+			System.out.
+					print
+							("In addition, mere aggregation of another work not based on the Program\n");
+			System.out.
+					print
+							("with the Program (or with a work based on the Program) on a volume of\n");
+			System.out.
+					print
+							("a storage or distribution medium does not bring the other work under\n");
 			System.out.print("the scope of this License.\n");
 			System.out.print("more...\n");
 			TraxUtil.getInput();
-			System.out
-					.print("  3. You may copy and distribute the Program (or a work based on it,\n");
-			System.out
-					.print("under Section 2) in object code or executable form under the terms of\n");
-			System.out
-					.print("Sections 1 and 2 above provided that you also do one of the following:\n");
+			System.out.
+					print
+							("  3. You may copy and distribute the Program (or a work based on it,\n");
+			System.out.
+					print
+							("under Section 2) in object code or executable form under the terms of\n");
+			System.out.
+					print
+							("Sections 1 and 2 above provided that you also do one of the following:\n");
 			System.out.println();
-			System.out
-					.print("    a) Accompany it with the complete corresponding machine-readable\n");
-			System.out
-					.print("    source code, which must be distributed under the terms of Sections\n");
-			System.out
-					.print("    1 and 2 above on a medium customarily used for software interchange; or,\n");
+			System.out.
+					print
+							("    a) Accompany it with the complete corresponding machine-readable\n");
+			System.out.
+					print
+							("    source code, which must be distributed under the terms of Sections\n");
+			System.out.
+					print
+							("    1 and 2 above on a medium customarily used for software interchange; or,\n");
 			System.out.println();
-			System.out
-					.print("    b) Accompany it with a written offer, valid for at least three\n");
-			System.out
-					.print("    years, to give any third party, for a charge no more than your\n");
-			System.out
-					.print("    cost of physically performing source distribution, a complete\n");
-			System.out
-					.print("    machine-readable copy of the corresponding source code, to be\n");
-			System.out
-					.print("    distributed under the terms of Sections 1 and 2 above on a medium\n");
-			System.out
-					.print("    customarily used for software interchange; or,\n");
+			System.out.
+					print
+							("    b) Accompany it with a written offer, valid for at least three\n");
+			System.out.
+					print
+							("    years, to give any third party, for a charge no more than your\n");
+			System.out.
+					print
+							("    cost of physically performing source distribution, a complete\n");
+			System.out.
+					print
+							("    machine-readable copy of the corresponding source code, to be\n");
+			System.out.
+					print
+							("    distributed under the terms of Sections 1 and 2 above on a medium\n");
+			System.out.
+					print("    customarily used for software interchange; or,\n");
 			System.out.println();
-			System.out
-					.print("    c) Accompany it with the information you received as to the offer\n");
-			System.out
-					.print("    to distribute corresponding source code.  (This alternative is\n");
-			System.out
-					.print("    allowed only for noncommercial distribution and only if you\n");
-			System.out
-					.print("    received the program in object code or executable form with such\n");
-			System.out
-					.print("    an offer, in accord with Subsection b above.)\n");
+			System.out.
+					print
+							("    c) Accompany it with the information you received as to the offer\n");
+			System.out.
+					print
+							("    to distribute corresponding source code.  (This alternative is\n");
+			System.out.
+					print
+							("    allowed only for noncommercial distribution and only if you\n");
+			System.out.
+					print
+							("    received the program in object code or executable form with such\n");
+			System.out.
+					print("    an offer, in accord with Subsection b above.)\n");
 			System.out.println();
-			System.out
-					.print("The source code for a work means the preferred form of the work for\n");
-			System.out
-					.print("making modifications to it.  For an executable work, complete source\n");
-			System.out
-					.print("code means all the source code for all modules it contains, plus any\n");
+			System.out.
+					print
+							("The source code for a work means the preferred form of the work for\n");
+			System.out.
+					print
+							("making modifications to it.  For an executable work, complete source\n");
+			System.out.
+					print
+							("code means all the source code for all modules it contains, plus any\n");
 			System.out.print("more...\n");
 			TraxUtil.getInput();
-			System.out
-					.print("associated interface definition files, plus the scripts used to\n");
-			System.out
-					.print("control compilation and installation of the executable.  However, as a\n");
-			System.out
-					.print("special exception, the source code distributed need not include\n");
-			System.out
-					.print("anything that is normally distributed (in either source or binary\n");
-			System.out
-					.print("form) with the major components (compiler, kernel, and so on) of the\n");
-			System.out
-					.print("operating system on which the executable runs, unless that component\n");
+			System.out.
+					print
+							("associated interface definition files, plus the scripts used to\n");
+			System.out.
+					print
+							("control compilation and installation of the executable.  However, as a\n");
+			System.out.
+					print
+							("special exception, the source code distributed need not include\n");
+			System.out.
+					print
+							("anything that is normally distributed (in either source or binary\n");
+			System.out.
+					print
+							("form) with the major components (compiler, kernel, and so on) of the\n");
+			System.out.
+					print
+							("operating system on which the executable runs, unless that component\n");
 			System.out.print("itself accompanies the executable.\n");
 			System.out.println();
-			System.out
-					.print("If distribution of executable or object code is made by offering\n");
-			System.out
-					.print("access to copy from a designated place, then offering equivalent\n");
-			System.out
-					.print("access to copy the source code from the same place counts as\n");
-			System.out
-					.print("distribution of the source code, even though third parties are not\n");
-			System.out
-					.print("compelled to copy the source along with the object code.\n");
+			System.out.
+					print
+							("If distribution of executable or object code is made by offering\n");
+			System.out.
+					print
+							("access to copy from a designated place, then offering equivalent\n");
+			System.out.
+					print
+							("access to copy the source code from the same place counts as\n");
+			System.out.
+					print
+							("distribution of the source code, even though third parties are not\n");
+			System.out.
+					print
+							("compelled to copy the source along with the object code.\n");
 			System.out.println();
-			System.out
-					.print("  4. You may not copy, modify, sublicense, or distribute the Program\n");
-			System.out
-					.print("except as expressly provided under this License.  Any attempt\n");
-			System.out
-					.print("otherwise to copy, modify, sublicense or distribute the Program is\n");
-			System.out
-					.print("private void, and will automatically terminate your rights under this License.\n");
-			System.out
-					.print("However, parties who have received copies, or rights, from you under\n");
-			System.out
-					.print("this License will not have their licenses terminated so long as such\n");
+			System.out.
+					print
+							("  4. You may not copy, modify, sublicense, or distribute the Program\n");
+			System.out.
+					print
+							("except as expressly provided under this License.  Any attempt\n");
+			System.out.
+					print
+							("otherwise to copy, modify, sublicense or distribute the Program is\n");
+			System.out.
+					print
+							("private void, and will automatically terminate your rights under this License.\n");
+			System.out.
+					print
+							("However, parties who have received copies, or rights, from you under\n");
+			System.out.
+					print
+							("this License will not have their licenses terminated so long as such\n");
 			System.out.print("parties remain in full compliance.\n");
 			System.out.println();
-			System.out
-					.print("  5. You are not required to accept this License, since you have not\n");
-			System.out
-					.print("signed it.  However, nothing else grants you permission to modify or\n");
-			System.out
-					.print("distribute the Program or its derivative works.  These actions are\n");
+			System.out.
+					print
+							("  5. You are not required to accept this License, since you have not\n");
+			System.out.
+					print
+							("signed it.  However, nothing else grants you permission to modify or\n");
+			System.out.
+					print
+							("distribute the Program or its derivative works.  These actions are\n");
 			System.out.print("more...\n");
 			TraxUtil.getInput();
-			System.out
-					.print("prohibited by law if you do not accept this License.  Therefore, by\n");
-			System.out
-					.print("modifying or distributing the Program (or any work based on the\n");
-			System.out
-					.print("Program), you indicate your acceptance of this License to do so, and\n");
-			System.out
-					.print("all its terms and conditions for copying, distributing or modifying\n");
+			System.out.
+					print
+							("prohibited by law if you do not accept this License.  Therefore, by\n");
+			System.out.
+					print
+							("modifying or distributing the Program (or any work based on the\n");
+			System.out.
+					print
+							("Program), you indicate your acceptance of this License to do so, and\n");
+			System.out.
+					print
+							("all its terms and conditions for copying, distributing or modifying\n");
 			System.out.print("the Program or works based on it.\n");
 			System.out.println();
-			System.out
-					.print("  6. Each time you redistribute the Program (or any work based on the\n");
-			System.out
-					.print("Program), the recipient automatically receives a license from the\n");
-			System.out
-					.print("original licensor to copy, distribute or modify the Program subject to\n");
-			System.out
-					.print("these terms and conditions.  You may not impose any further\n");
-			System.out
-					.print("restrictions on the recipients' exercise of the rights granted herein.\n");
-			System.out
-					.print("You are not responsible for enforcing compliance by third parties to\n");
+			System.out.
+					print
+							("  6. Each time you redistribute the Program (or any work based on the\n");
+			System.out.
+					print
+							("Program), the recipient automatically receives a license from the\n");
+			System.out.
+					print
+							("original licensor to copy, distribute or modify the Program subject to\n");
+			System.out.
+					print
+							("these terms and conditions.  You may not impose any further\n");
+			System.out.
+					print
+							("restrictions on the recipients' exercise of the rights granted herein.\n");
+			System.out.
+					print
+							("You are not responsible for enforcing compliance by third parties to\n");
 			System.out.print("this License.\n");
 			System.out.println();
-			System.out
-					.print("  7. If, as a consequence of a court judgment or allegation of patent\n");
-			System.out
-					.print("infringement or for any other reason (not limited to patent issues),\n");
-			System.out
-					.print("conditions are imposed on you (whether by court order, agreement or\n");
-			System.out
-					.print("otherwise) that contradict the conditions of this License, they do not\n");
-			System.out
-					.print("excuse you from the conditions of this License.  If you cannot\n");
-			System.out
-					.print("distribute so as to satisfy simultaneously your obligations under this\n");
-			System.out
-					.print("License and any other pertinent obligations, then as a consequence you\n");
-			System.out
-					.print("may not distribute the Program at all.  For example, if a patent\n");
-			System.out
-					.print("license would not permit royalty-free redistribution of the Program by\n");
-			System.out
-					.print("all those who receive copies directly or indirectly through you, then\n");
+			System.out.
+					print
+							("  7. If, as a consequence of a court judgment or allegation of patent\n");
+			System.out.
+					print
+							("infringement or for any other reason (not limited to patent issues),\n");
+			System.out.
+					print
+							("conditions are imposed on you (whether by court order, agreement or\n");
+			System.out.
+					print
+							("otherwise) that contradict the conditions of this License, they do not\n");
+			System.out.
+					print
+							("excuse you from the conditions of this License.  If you cannot\n");
+			System.out.
+					print
+							("distribute so as to satisfy simultaneously your obligations under this\n");
+			System.out.
+					print
+							("License and any other pertinent obligations, then as a consequence you\n");
+			System.out.
+					print
+							("may not distribute the Program at all.  For example, if a patent\n");
+			System.out.
+					print
+							("license would not permit royalty-free redistribution of the Program by\n");
+			System.out.
+					print
+							("all those who receive copies directly or indirectly through you, then\n");
 			System.out.print("more...\n");
 			TraxUtil.getInput();
-			System.out
-					.print("the only way you could satisfy both it and this License would be to\n");
-			System.out
-					.print("refrain entirely from distribution of the Program.\n");
+			System.out.
+					print
+							("the only way you could satisfy both it and this License would be to\n");
+			System.out.
+					print("refrain entirely from distribution of the Program.\n");
 			System.out.println();
-			System.out
-					.print("If any portion of this section is held invalid or unenforceable under\n");
-			System.out
-					.print("any particular circumstance, the balance of the section is intended to\n");
-			System.out
-					.print("apply and the section as a whole is intended to apply in other\n");
+			System.out.
+					print
+							("If any portion of this section is held invalid or unenforceable under\n");
+			System.out.
+					print
+							("any particular circumstance, the balance of the section is intended to\n");
+			System.out.
+					print
+							("apply and the section as a whole is intended to apply in other\n");
 			System.out.print("circumstances.\n");
 			System.out.println();
-			System.out
-					.print("It is not the purpose of this section to induce you to infringe any\n");
-			System.out
-					.print("patents or other property right claims or to contest validity of any\n");
-			System.out
-					.print("such claims; this section has the sole purpose of protecting the\n");
-			System.out
-					.print("integrity of the free software distribution system, which is\n");
-			System.out
-					.print("implemented by public license practices.  Many people have made\n");
-			System.out
-					.print("generous contributions to the wide range of software distributed\n");
-			System.out
-					.print("through that system in reliance on consistent application of that\n");
-			System.out
-					.print("system; it is up to the author/donor to decide if he or she is willing\n");
-			System.out
-					.print("to distribute software through any other system and a licensee cannot\n");
+			System.out.
+					print
+							("It is not the purpose of this section to induce you to infringe any\n");
+			System.out.
+					print
+							("patents or other property right claims or to contest validity of any\n");
+			System.out.
+					print
+							("such claims; this section has the sole purpose of protecting the\n");
+			System.out.
+					print
+							("integrity of the free software distribution system, which is\n");
+			System.out.
+					print
+							("implemented by public license practices.  Many people have made\n");
+			System.out.
+					print
+							("generous contributions to the wide range of software distributed\n");
+			System.out.
+					print
+							("through that system in reliance on consistent application of that\n");
+			System.out.
+					print
+							("system; it is up to the author/donor to decide if he or she is willing\n");
+			System.out.
+					print
+							("to distribute software through any other system and a licensee cannot\n");
 			System.out.print("impose that choice.\n");
 			System.out.println();
-			System.out
-					.print("This section is intended to make thoroughly clear what is believed to\n");
+			System.out.
+					print
+							("This section is intended to make thoroughly clear what is believed to\n");
 			System.out.print("be a consequence of the rest of this License.\n");
 			System.out.println();
-			System.out
-					.print("  8. If the distribution and/or use of the Program is restricted in\n");
-			System.out
-					.print("certain countries either by patents or by copyrighted interfaces, the\n");
+			System.out.
+					print
+							("  8. If the distribution and/or use of the Program is restricted in\n");
+			System.out.
+					print
+							("certain countries either by patents or by copyrighted interfaces, the\n");
 			System.out.println("more...\n");
 			TraxUtil.getInput();
-			System.out
-					.print("original copyright holder who places the Program under this License\n");
-			System.out
-					.print("may add an explicit geographical distribution limitation excluding\n");
-			System.out
-					.print("those countries, so that distribution is permitted only in or among\n");
-			System.out
-					.print("countries not thus excluded.  In such case, this License incorporates\n");
-			System.out
-					.print("the limitation as if written in the body of this License.\n");
+			System.out.
+					print
+							("original copyright holder who places the Program under this License\n");
+			System.out.
+					print
+							("may add an explicit geographical distribution limitation excluding\n");
+			System.out.
+					print
+							("those countries, so that distribution is permitted only in or among\n");
+			System.out.
+					print
+							("countries not thus excluded.  In such case, this License incorporates\n");
+			System.out.
+					print
+							("the limitation as if written in the body of this License.\n");
 			System.out.println();
-			System.out
-					.print("  9. The Free Software Foundation may publish revised and/or new versions\n");
-			System.out
-					.print("of the General Public License from time to time.  Such new versions will\n");
-			System.out
-					.print("be similar in spirit to the present version, but may differ in detail to\n");
+			System.out.
+					print
+							("  9. The Free Software Foundation may publish revised and/or new versions\n");
+			System.out.
+					print
+							("of the General Public License from time to time.  Such new versions will\n");
+			System.out.
+					print
+							("be similar in spirit to the present version, but may differ in detail to\n");
 			System.out.print("address new problems or concerns.\n");
 			System.out.println();
-			System.out
-					.print("Each version is given a distinguishing version number.  If the Program\n");
-			System.out
-					.print("specifies a version number of this License which applies to it and \"any\n");
-			System.out
-					.print("later version\", you have the option of following the terms and conditions\n");
-			System.out
-					.print("either of that version or of any later version published by the Free\n");
-			System.out
-					.print("Software Foundation.  If the Program does not specify a version number of\n");
-			System.out
-					.print("this License, you may choose any version ever published by the Free Software\n");
+			System.out.
+					print
+							("Each version is given a distinguishing version number.  If the Program\n");
+			System.out.
+					print
+							("specifies a version number of this License which applies to it and \"any\n");
+			System.out.
+					print
+							("later version\", you have the option of following the terms and conditions\n");
+			System.out.
+					print
+							("either of that version or of any later version published by the Free\n");
+			System.out.
+					print
+							("Software Foundation.  If the Program does not specify a version number of\n");
+			System.out.
+					print
+							("this License, you may choose any version ever published by the Free Software\n");
 			System.out.print("Foundation.\n");
 			System.out.println();
-			System.out
-					.print("  10. If you wish to incorporate parts of the Program into other free\n");
-			System.out
-					.print("programs whose distribution conditions are different, write to the author\n");
-			System.out
-					.print("to ask for permission.  For software which is copyrighted by the Free\n");
-			System.out
-					.print("Software Foundation, write to the Free Software Foundation; we sometimes\n");
-			System.out
-					.print("make exceptions for this.  Our decision will be guided by the two goals\n");
+			System.out.
+					print
+							("  10. If you wish to incorporate parts of the Program into other free\n");
+			System.out.
+					print
+							("programs whose distribution conditions are different, write to the author\n");
+			System.out.
+					print
+							("to ask for permission.  For software which is copyrighted by the Free\n");
+			System.out.
+					print
+							("Software Foundation, write to the Free Software Foundation; we sometimes\n");
+			System.out.
+					print
+							("make exceptions for this.  Our decision will be guided by the two goals\n");
 			System.out.print("more...\n");
 			TraxUtil.getInput();
-			System.out
-					.print("of preserving the free status of all derivatives of our free software and\n");
-			System.out
-					.println("of promoting the sharing and reuse of software generally.\n");
+			System.out.
+					print
+							("of preserving the free status of all derivatives of our free software and\n");
+			System.out.
+					println
+							("of promoting the sharing and reuse of software generally.\n");
 		}
 	}
 
@@ -927,19 +1138,30 @@ public class GnuTraxCli {
 		;
 	}
 
-	public static String welcome() {
-		StringBuilder sb = new StringBuilder();
-		sb.append("GnuTrax is copyright 2009 Martin M. Pedersen - email: traxplayer@gmail.com\n");
-		sb.append("GnuTrax comes with ABSOLUTELY NO WARRANTY; for details type \"show warranty\".\n");
-		sb.append("This is free software, and you are welcome to redistribute it\n");
-		sb.append("under certain conditions; type \"show conditions\" for details.\n");
-		sb.append("\n");
-		sb.append("type \"help\" to get a list of the commands you can use in this program.\n");
-		sb.append("\n");
-		sb.append("    ---===###   GNUTRAX version: 0.1 welcomes you.   ###===---\n");
-		sb.append("");
-		return sb.toString();
+	private static void welcome() {
+		System.out.
+				print
+						("GnuTrax is copyright 2014 Martin M. S. Pedersen - email: martin@linux.com\n");
+		System.out.
+				print
+						("GnuTrax comes with ABSOLUTELY NO WARRANTY; for details type \"show warranty\".\n");
+		System.out.
+				print
+						("This is free software, and you are welcome to redistribute it\n");
+		System.out.
+				print
+						("under certain conditions; type \"show conditions\" for details.\n");
+		System.out.print("\n");
+		System.out.
+				print
+						("type \"help\" to get a list of the commands you can use in this program.\n");
+		System.out.print("\n");
+		System.out.
+				print
+						("    ---===###   GNUTRAX version: 0.1 welcomes you.   ###===---\n");
+		System.out.println();
 	}
+
 
 	private void goodbye() {
 		;
@@ -953,74 +1175,160 @@ public class GnuTraxCli {
 			return;
 		System.out.print("Game over. The result is ");
 		switch (gameValue) {
-		case Traxboard.DRAW:
-			System.out.println("Draw.");
-			break;
-		case Traxboard.WHITE:
-			System.out.println("White won.");
-			break;
-		case Traxboard.BLACK:
-			System.out.println("Black won.");
-			break;
-		default:
-			/* This should never happen */
-			/* assert(0); */
-			break;
+			case Traxboard.DRAW:
+				System.out.println("Draw.");
+				break;
+			case Traxboard.WHITE:
+				System.out.println("White won.");
+				break;
+			case Traxboard.BLACK:
+				System.out.println("Black won.");
+				break;
+			default:
+				// This should never happen
+				throw new RuntimeException("This should never happen.");
 		}
-	}
-
-	private static boolean pbem() {
-		/*
-		 * read moves from stdin until eof and then compute and print a move and
-		 * exit.
-		 */
-		/*
-		 * 
-		 * String[] moves; String[] .size_type numOfMoves; Traxboard t; unsigned
-		 * int i; string result;
-		 * 
-		 * moves=Util.getInput(cin); numOfMoves=moves.size(); i=0; try { while
-		 * (i<numOfMoves) { t.makeMove(moves[i]); i++; } } catch (string error)
-		 * { System.out.print((i+1) << ": " << error << endl; return
-		 * EXIT_FAILURE; }
-		 * 
-		 * if (t.isGameOver()!=Traxboard.NOPLAYER) { return EXIT_SUCCESS; }
-		 * result=cp->computerMove(t,11); System.out.println(result);
-		 */
-		return true;
 	}
 	public static void main(String[] args) {
 		new GnuTraxCli(args);
 	}
+	private void pbem() {
+		String s;
+		Traxboard tb = new Traxboard();
+		try {
+			BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
+			while ((s = reader.readLine()) != null) {
+				for (String move : s.split("\\s")) {
+					try {
+						tb.makeMove(move);
+					} catch (IllegalMoveException e) {
+						System.err.println("Illegal move: " + move);
+						System.exit(1);
+					}
+				}
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+			System.exit(2);
+		}
+		switch (tb.isGameOver()) {
+			case Traxboard.NOPLAYER:
+				System.out.println(gnutrax.getComputerPlayer().computerMove(tb));
+				break;
+			case Traxboard.DRAW:
+				System.out.println(":DRAW");
+				break;
+			case Traxboard.WHITE:
+				System.out.println(":WHITE");
+				break;
+			case Traxboard.BLACK:
+				System.out.println(":BLACK");
+				break;
+			default:
+				// This should never happen
+				throw new RuntimeException("This should never happen.");
+		}
+	}
 
 	public GnuTraxCli(String[] args) {
 		gnutrax = new GnuTrax("simple");
-
+		moveHistory = gnutrax.getMoveHistory();
 		if (args.length > 0) {
-			for (int i = 0; i < args.length; i++) {
-				if (args[i].equals("--random")) {
-					gnutrax = new GnuTrax("random");
-				}
-				if (args[i].equals("--alphabeta")) {
-					gnutrax = new GnuTrax("alphabeta");
-				}
-
-				if (args[i].equals("--uct")) {
-					gnutrax = new GnuTrax("uct");
+			for (String arg : args) {
+				if (arg.equals("--random")) gnutrax = new GnuTrax("random");
+				if (arg.equals("--alphabeta")) gnutrax = new GnuTrax("alphabeta");
+				if (arg.equals("--minimax")) gnutrax = new GnuTrax("minimax");
+				if (arg.equals("--uct")) gnutrax = new GnuTrax("uct");
+				if (arg.equals("--mcts")) gnutrax = new GnuTrax("mcts");
+				if (arg.equals("--iterative")) gnutrax = new GnuTrax("iterative");
+			}
+			for (int i = 0; i < args.length - 1; i++) {
+				if (args[i].equals("--evaltype")) {
+					try {
+						ComputerPlayer.setEvalType(args[i + 1]);
+					} catch (NumberFormatException e) {
+						System.err.println("bad or missing value for evaltype parameter");
+						System.exit(4);
+					}
 				}
 			}
-			for (int i = 0; i < args.length; i++) {
-				if (args[i].equals("--pbem")) {
+			for (int i = 0; i < args.length - 1; i++) {
+				if (args[i].equals("--seed")) {
+					try {
+						ComputerPlayer.setSeed(args[i + 1]);
+					} catch (NumberFormatException e) {
+						System.err.println("bad or missing value for seed parameter");
+						System.exit(5);
+					}
+				}
+			}
+			for (int i = 0; i < args.length - 1; i++) {
+				if (args[i].equals("--searchdepth")) {
+					try {
+						ComputerPlayer.setSearchDepth(args[i + 1]);
+					} catch (NumberFormatException e) {
+						System.err.println("bad or missing value for searchdepth parameter");
+						System.exit(3);
+					}
+				}
+			}
+			for (String arg : args) {
+				if (arg.equals("--pbem")) {
 					pbem();
 					return;
 				}
 			}
+			for (String arg : args) {
+				if (arg.equals("--winner")) {
+					find_winner();
+					return;
+				}
+			}
 		}
-
-		System.out.println(welcome());
+		tb = gnutrax.getBoard();
+		welcome();
 		run();
 	}
-	
+
+	private void find_winner() {
+		String s;
+		Traxboard tb = new Traxboard();
+		try {
+			BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
+			while ((s = reader.readLine()) != null) {
+				for (String move : s.split("\\s")) {
+					try {
+						tb.makeMove(move);
+					} catch (IllegalMoveException e) {
+						System.err.println("Illegal move: " + move);
+						System.exit(1);
+					}
+				}
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+			System.exit(2);
+		}
+		switch (tb.isGameOver()) {
+			case Traxboard.NOPLAYER:
+				System.out.println(" :NOPLAYER");
+				break;
+			case Traxboard.DRAW:
+				System.out.println(" :DRAW");
+				break;
+			case Traxboard.WHITE:
+				System.out.println(" :WHITE");
+				break;
+			case Traxboard.BLACK:
+				System.out.println(" :BLACK");
+				break;
+			default:
+				// This should never happen
+				throw new RuntimeException("This should never happen.");
+		}
+		return;
+	}
+
 	private void run() {
 		ArrayList<String> command = new ArrayList<String>(5);
 		String line = "";
@@ -1238,5 +1546,17 @@ public class GnuTraxCli {
 			}
 		}
 	}
+	private void gotAMove(String theMove) {
+		try {
+			moveHistory.add(TraxUtil.normalizeMove(tb, theMove));
+			tb.makeMove(theMove);
+		} catch (IllegalMoveException e) {
+			System.out.println(theMove + ":  " + e);
+			return;
+		}
+		System.out.println(tb);
+		checkForWin();
+	}
+
 
 }
